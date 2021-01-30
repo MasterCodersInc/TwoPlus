@@ -17,6 +17,7 @@ async function getDocRef(documentID) {
 
 const EditorUID = (props) => {
   const reactAceRef = useRef();
+  const editorOutput = useRef();
   let editor;
   let documentInfo;
   let documentReference;
@@ -56,11 +57,9 @@ const EditorUID = (props) => {
         }
 
         applyingDeltas = true;
+
         editor.setValue(updatedInfo.data().pageData);
-        // editor
-        //   .getSession()
-        //   .getDocument()
-        //   .applyDeltas(updatedInfo.data().deltas);
+
         applyingDeltas = false;
       });
     }
@@ -73,7 +72,24 @@ const EditorUID = (props) => {
     <div>
       <h4>{uid}</h4>
       <div>EDITOR UID TEST PAGE</div>
-      <AceEditor ref={reactAceRef} mode="javascript" theme="chaos" />
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <AceEditor ref={reactAceRef} mode="javascript" theme="chaos" />
+        <AceEditor ref={editorOutput} mode="javascript" />
+      </div>
+      <button
+        onClick={() => {
+          try {
+            let ans = eval(editor.getValue());
+            console.log(typeof ans);
+            editorOutput.current.editor.setValue(String(ans), 1);
+          } catch (e) {
+            editorOutput.current.editor.setValue(e.message, 1);
+          }
+          return;
+        }}
+      >
+        Eval Code
+      </button>
     </div>
   );
 };
