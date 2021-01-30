@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "./components/theme";
 
-import Editor from "./Editor";
 import firebase from "./firebase";
 
 import { AuthProvider } from "./contexts/AuthContext";
@@ -12,6 +11,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import SignUp from "./components/SignUp";
 import Landing from "./components/Landing";
 import Login from "./components/Login";
+import EditorUID from "./EditorUID";
 
 firebase.firestore().collection("times").add({
   title: "rubiks cube",
@@ -25,7 +25,7 @@ function App() {
         <AuthProvider>
           <Switch>
             <Route exact path="/" component={Landing} />
-            <Route exact path="/editor" component={Editor} />
+            <Route exact path="/editor" component={EditorUID} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/login" component={Login} />
           </Switch>

@@ -1,39 +1,93 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AceEditor from "react-ace";
 import firebase from "./firebase";
 
 const firestore = firebase.firestore();
+const docRef = firestore.collection("collabData").doc("user1");
 
 const Editor = (props) => {
-  const reactAceRef = React.useRef(null);
-  let editor = null;
+  const reactAceRef = useRef(null);
+  let editor = useRef(null);
+  //change in the editor
+  //ROUTE A
+  //1. send editor changes to the database
+  //2. when database data changes, listener triggers
+  //3. useEffect() which would change state of code
+  //
 
-  useEffect(() => {
-    editor = reactAceRef.current.editor;
+  //componentDidMount
+  useEffect(async () => {
+    editor.current = reactAceRef.current.editor;
+    const snapshot = await docRef.get();
+    editor.current.setValue(snapshot.data().newData, 1);
+    console.log("NEW TAB OPENS: ", snapshot.data().newData);
   }, []);
 
-  firestore
-    .collection("collabData")
-    .doc("user1")
-    .onSnapshot((doc) => {
-      console.log("COMING BACK FROM SERVER", doc.data());
+  //ROUTE B
+  //1. send editor changes and update state
+  //2. when state updates, send to database
+  //3. when database data changes, listener triggers
+  //4. CHECK if the editor's current value = state
+  //4a. If YES, do NOTHING!
+  //4b. Else, editor.setValue(state, 1)
 
-      if (editor) {
-        editor.setValue(doc.data().data, 1);
+  async function onChangeHandler(newData, event) {
+    console.log("FROM ONCHANGEHANDLER", newData);
+    const snapshot = await docRef.get();
+    if (newData !== snapshot.data().newData) {
+      await sendToFirebase(newData);
+    }
+  }
+
+  // useEffect(() => {
+
+  // }, [code])
+
+  function sendToFirebase(updatedData) {
+    docRef.set({ newData: updatedData });
+  }
+
+  docRef.onSnapshot((doc) => {
+    if (editor.current) {
+      console.log(
+        "CHECKING SNAPSHOT METHOD: editor",
+        editor.current.getValue(),
+        "newData",
+        doc.data().newData
+      );
+      if (editor.current.getValue() !== doc.data().newData) {
+        editor.current.setValue(doc.data().newData, 1);
       }
-    });
+    }
+  });
 
-  const sendToFirebase = (data) => {
-    console.log(data);
-    firestore.collection("collabData").doc("user1").set({ data: data });
-  };
+  // docRef.onSnapshot((doc) => {
+  //   console.log('editors current value', editor.current.getValue())
+  //   if(editor.current.getValue() !== doc.newData){
+  //     console.log('doc', doc, 'editor.current.getValue()', editor.current.getValue())
+  //     editor.current.setValue(doc, 1);
+  //   }
+  //   if(i < 2){
+
+  //     i++;
+  //   }
+
+  //   // if(editor.current.getValue() !== code){
+  //   //   editor.current.setValue(code, 1)
+  //   // }
+  // })
 
   return (
     <div>
-      <AceEditor ref={reactAceRef} mode="javascript" theme="chaos" />
+      <AceEditor
+        ref={reactAceRef}
+        mode="javascript"
+        theme="chaos"
+        onChange={onChangeHandler}
+      />
       <button
         onClick={() => {
-          sendToFirebase(editor.getValue());
+          sendToFirebase(editor.current.getValue());
         }}
       >
         Get Code?
