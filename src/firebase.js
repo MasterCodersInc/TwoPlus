@@ -2,14 +2,14 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 
 var firebaseConfig = {
-  apiKey: "AIzaSyCSqQ39xBQ8VYgY3MlB0KtvolT-BlBkB1I",
-  authDomain: "two-plus.firebaseapp.com",
-  databaseURL: "https://two-plus-default-rtdb.firebaseio.com",
-  projectId: "two-plus",
-  storageBucket: "two-plus.appspot.com",
-  messagingSenderId: "167071841158",
-  appId: "1:167071841158:web:0591883805fc6e20d54a07",
-  measurementId: "G-DVMMR0M5RP",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGE_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
