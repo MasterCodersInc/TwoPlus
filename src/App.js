@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-
+import Editor from "./Editor";
 import firebase from "./firebase";
 
 firebase.firestore().collection("times").add({
@@ -12,6 +12,7 @@ function App() {
   return (
     <div>
       <h1>Just Clock It</h1>
+      <Editor />
     </div>
   );
 }
