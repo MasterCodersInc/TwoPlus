@@ -25,9 +25,10 @@ export default createMuiTheme({
   },
   typography: {
     h1: {
-      fontFamily: "Krona One",
+      fontFamily: "Presicav",
       letterSpacing: 5,
       fontSize: "2.25em",
+      fontWeight: "600",
     },
     body1: {
       fontFamily: "Montserrat",

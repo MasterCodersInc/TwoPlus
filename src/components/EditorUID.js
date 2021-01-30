@@ -1,7 +1,7 @@
 // eslint-disable-no-unused-vars
 import React, { useEffect, useRef, useState } from "react";
 import AceEditor from "react-ace";
-import firebase from "./firebase";
+import firebase from "../firebase";
 const docID = "TD7BhcsTcki87KrsPkKy";
 const uid = Math.floor(Math.random().toString() * 1000);
 const openPageTimestamp = Date.now();
@@ -80,7 +80,7 @@ const EditorUID = (props) => {
         onClick={() => {
           try {
             let ans = eval(editor.getValue());
-            console.log(typeof ans);
+
             editorOutput.current.editor.setValue(String(ans), 1);
           } catch (e) {
             editorOutput.current.editor.setValue(e.message, 1);
