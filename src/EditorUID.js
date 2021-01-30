@@ -70,9 +70,9 @@ const EditorUID = (props) => {
 
   return (
     <div>
-      <h4>{uid}</h4>
+      <h4 style={{ marginLeft: 50 }}>{uid}</h4>
       <div>EDITOR UID TEST PAGE</div>
-      <div style={{ display: "flex", flexDirection: "row" }}>
+      <div style={{ display: "flex", flexDirection: "row", marginLeft: 50 }}>
         <AceEditor ref={reactAceRef} mode="javascript" theme="chaos" />
         <AceEditor ref={editorOutput} mode="javascript" />
       </div>
