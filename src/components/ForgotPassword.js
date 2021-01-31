@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthContext";
 
@@ -30,39 +30,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default function ForgotPassword() {
   const classes = useStyles();
   const theme = useTheme();
-  const history = useHistory();
 
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { login, currentUser, logout } = useAuth();
+  const { resetPassword } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  async function handleLogout() {
-    setError("");
-
-    try {
-      await logout();
-      history.push("/login");
-    } catch {
-      setError("Failed to log out");
-    }
-  }
+  const [message, setMessage] = useState();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
+      setMessage("");
       setError("");
       setLoading(true);
-      console.log("!!!!!", email, password);
-      await login(email, password);
-      history.push("/");
+      await resetPassword(email);
+      setMessage("Check your inbox for further instructions");
     } catch (error) {
-      setError("Failed to log in");
+      setError("Failed to reset password");
       console.log(error);
     }
     setLoading(false);
@@ -79,9 +67,9 @@ export default function SignUp() {
             color: theme.palette.common.colorOne,
           }}
         >
-          Log In
+          Reset Password
         </Typography>
-        <Typography> {currentUser && currentUser.email}</Typography>
+        <Typography>{message}</Typography>
         {error && <Typography>{error}</Typography>}
       </Grid>
       <Grid
@@ -109,18 +97,9 @@ export default function SignUp() {
               fullWidth
               variant="filled"
             ></TextField>
-            <TextField
-              name="password"
-              type="password"
-              placeholder="enter your password here"
-              label="Password"
-              onChange={(e) => setPassword(e.currentTarget.value)}
-              fullWidth
-              variant="filled"
-              style={{ marginTop: "1em", marginBottom: "1em" }}
-            ></TextField>
+
             <Grid item>
-              <Link to="/forgotpassword">Forgot Password?</Link>
+              <Link to="/login">Log In</Link>
             </Grid>
 
             <Button
@@ -128,13 +107,10 @@ export default function SignUp() {
               type="submit"
               classes={{ root: classes.button1 }}
             >
-              Submit
+              Reset Password
             </Button>
           </form>
         </Grid>
-        <Button onClick={handleLogout} classes={{ root: classes.button2 }}>
-          Log Out
-        </Button>
       </Grid>
     </Grid>
   );
