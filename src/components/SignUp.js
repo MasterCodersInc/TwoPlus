@@ -47,7 +47,7 @@ export default function SignUp() {
 
     try {
       await logout();
-      history.push("/signup");
+      history.push("/login");
     } catch {
       setError("Failed to log out");
     }
@@ -63,6 +63,7 @@ export default function SignUp() {
       setLoading(true);
       console.log("!!!!!", email, password);
       await signup(email, password);
+      history.push("/");
     } catch (error) {
       setError("Failed to create an account");
       console.log(error);

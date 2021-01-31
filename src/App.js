@@ -12,6 +12,8 @@ import { AuthProvider } from "./contexts/AuthContext";
 import SignUp from "./components/SignUp";
 import Landing from "./components/Landing";
 import Login from "./components/Login";
+import UserProfile from "./components/UserProfile";
+import PrivateRoute from "./components/PrivateRoute";
 
 firebase.firestore().collection("times").add({
   title: "rubiks cube",
@@ -28,6 +30,7 @@ function App() {
             <Route exact path="/editor" component={Editor} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/login" component={Login} />
+            <PrivateRoute exact path="/profile" component={UserProfile} />
           </Switch>
         </AuthProvider>
       </BrowserRouter>
