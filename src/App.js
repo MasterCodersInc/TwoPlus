@@ -1,7 +1,12 @@
-import logo from "./logo.svg";
-import "./App.css";
+import React from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+
 import Editor from "./Editor";
 import firebase from "./firebase";
+
+import { AuthProvider } from "./contexts/AuthContext";
+
+import SignUp from "./components/SignUp";
 
 firebase.firestore().collection("times").add({
   title: "rubiks cube",
@@ -11,8 +16,14 @@ firebase.firestore().collection("times").add({
 function App() {
   return (
     <div>
-      <h1>Just Clock It</h1>
-      <Editor />
+      <AuthProvider>
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/editor" component={Editor} />
+            <Route exact path="/signup" component={SignUp} />
+          </Switch>
+        </BrowserRouter>
+      </AuthProvider>
     </div>
   );
 }
