@@ -37,8 +37,7 @@ export default function SignUp() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordConf, setPasswordConf] = useState("");
-  const { signup, currentUser, logout } = useAuth();
+  const { login, currentUser, logout } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -47,7 +46,7 @@ export default function SignUp() {
 
     try {
       await logout();
-      history.push("/signup");
+      history.push("/login");
     } catch {
       setError("Failed to log out");
     }
@@ -55,14 +54,12 @@ export default function SignUp() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (password !== passwordConf) {
-      return setError("Passwords do not match");
-    }
+
     try {
       setError("");
       setLoading(true);
       console.log("!!!!!", email, password);
-      await signup(email, password);
+      await login(email, password);
     } catch (error) {
       setError("Failed to create an account");
       console.log(error);
@@ -81,7 +78,7 @@ export default function SignUp() {
             color: theme.palette.common.colorOne,
           }}
         >
-          Sign Up
+          Log In
         </Typography>
         <Typography> {currentUser && currentUser.email}</Typography>
         {error && <Typography>{error}</Typography>}
@@ -120,15 +117,6 @@ export default function SignUp() {
               fullWidth
               variant="filled"
               style={{ marginTop: "1em", marginBottom: "1em" }}
-            ></TextField>
-            <TextField
-              name="passwordConf"
-              type="password"
-              placeholder="confirm your password here"
-              label="Password Confirmation"
-              onChange={(e) => setPasswordConf(e.currentTarget.value)}
-              fullWidth
-              variant="filled"
             ></TextField>
 
             <Button
