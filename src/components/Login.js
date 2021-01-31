@@ -60,8 +60,9 @@ export default function SignUp() {
       setLoading(true);
       console.log("!!!!!", email, password);
       await login(email, password);
+      history.push("/");
     } catch (error) {
-      setError("Failed to create an account");
+      setError("Failed to log in");
       console.log(error);
     }
     setLoading(false);
