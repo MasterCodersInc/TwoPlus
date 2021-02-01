@@ -8,6 +8,8 @@ import Grid from "@material-ui/core/Grid";
 import Toolbar from "@material-ui/core/Toolbar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 
 import logo from "../assets/logo.png";
 
@@ -23,6 +25,11 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     marginLeft: "4em",
     marginTop: ".5em",
+  },
+  navName: {
+    color: theme.palette.common.colorOne,
+    fontWeight: 600,
+    fontFamily: "Krona One",
   },
   tab: {
     color: theme.palette.common.colorOne,
@@ -43,8 +50,11 @@ export default function NavBar() {
     <React.Fragment>
       <AppBar className={classes.appBar}>
         <Toolbar disableGutters className={classes.toolbar}>
-          <Grid item>
-            <img src={logo} alt="2+" style={{ width: "3em" }} />
+          <Grid item container alignItems="center">
+            <Button component={Link} to="/">
+              <img src={logo} alt="2+" style={{ width: "3em" }} />
+            </Button>
+            <Typography className={classes.navName}>Two Plus</Typography>
           </Grid>
           <Grid
             item

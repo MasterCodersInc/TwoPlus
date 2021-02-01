@@ -70,7 +70,13 @@ export default function SignUp() {
 
   return (
     <Grid container direction="column" justify="center" alignItems="center">
-      <Grid item>
+      <Grid
+        item
+        container
+        direction="column"
+        justify="center"
+        alignItems="center"
+      >
         <Typography
           variant="h1"
           style={{
@@ -98,7 +104,7 @@ export default function SignUp() {
           direction="column"
           alignItems="center"
           justify="center"
-          style={{ minWidth: "50%" }}
+          style={{ minWidth: "70%" }}
         >
           <form onSubmit={handleSubmit} className={classes.form}>
             <TextField
