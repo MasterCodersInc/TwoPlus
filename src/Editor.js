@@ -18,10 +18,10 @@ const Editor = (props) => {
   //
 
   //componentDidMount
-  useEffect(async () => {
+  useEffect( async () => {
     editor.current = reactAceRef.current.editor;
     const snapshot = await docRef.get();
-    console.log('get from table', snapshot.data())
+    console.log('get from table', snapshot)
     editor.current.setValue(snapshot.data().newData, 1)
   },[])
 
@@ -45,8 +45,12 @@ async function onChangeHandler (newData, event){
   
 // }, [code])
 
+// timestamp 
+
 function sendToFirebase(updatedData) {
+  console.log('befor we set the data' ,updatedData)
   docRef.set({newData: updatedData})
+ 
 }
 
 
