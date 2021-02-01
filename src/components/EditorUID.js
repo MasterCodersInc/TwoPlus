@@ -6,7 +6,7 @@ import {useParams} from 'react-router-dom'
 const uid = Math.floor(Math.random().toString() * 1000);
 
 const firestore = firebase.firestore();
-const collabData = firestore.collection("collabData");
+const collabData = firestore.collection("posts");
 
 //function to run on editor load to grab correct docID
 async function getDocRef(documentID) {
@@ -32,7 +32,7 @@ const EditorUID = (props) => {
       documentReference = await getDocRef(docID);
       console.log('DOC REF:', documentReference)
       documentInfo = await documentReference.get();
-      console.log('DOC INFO:', documentInfo);
+      console.log('DOC INFO:', documentInfo.data());
       editor.setValue(documentInfo.data().editorData);
 
       //set up editor event listener. This is mostly for newUsers entering.
