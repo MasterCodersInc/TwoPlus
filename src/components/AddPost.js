@@ -8,12 +8,11 @@ const AddPost = (props) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
 
-    // const firestore = firebase.firestore();
-    // const postsRef = firestore.collection('posts')
+    const postsRef = firebase.firestore().collection('posts');
 
     const onSubmitHandler = async (e) => {
         e.preventDefault();
-        firebase.firestore().collection('posts').add({title:title, description});
+        await postsRef.add({title:title, description});
     }
 
     return(
