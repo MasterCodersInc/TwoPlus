@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default function UpdateProfile() {
   const classes = useStyles();
   const theme = useTheme();
   const history = useHistory();
@@ -38,37 +38,36 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
-  const { signup, currentUser, logout } = useAuth();
+  const { currentUser, updatePassword, updateEmail } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  async function handleLogout() {
-    setError("");
-
-    try {
-      await logout();
-      history.push("/login");
-    } catch {
-      setError("Failed to log out");
-    }
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();
     if (password !== passwordConf) {
       return setError("Passwords do not match");
     }
-    try {
-      setError("");
-      setLoading(true);
-      console.log("!!!!!", email, password);
-      await signup(email, password);
-      history.push("/");
-    } catch (error) {
-      setError("Failed to create an account");
-      console.log(error);
+
+    const promises = [];
+    setLoading(true);
+    setError("");
+    if (email !== currentUser.email) {
+      promises.push(updateEmail(email));
     }
-    setLoading(false);
+    if (password !== currentUser.password) {
+      promises.push(updatePassword(password));
+    }
+
+    Promise.all(promises)
+      .then(() => {
+        history.push("/");
+      })
+      .catch(() => {
+        setError("Failed to update account");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   return (
@@ -82,7 +81,7 @@ export default function SignUp() {
             color: theme.palette.common.colorOne,
           }}
         >
-          Sign Up
+          Update Profile
         </Typography>
         <Typography> {currentUser && currentUser.email}</Typography>
         {error && <Typography>{error}</Typography>}
@@ -109,6 +108,7 @@ export default function SignUp() {
               placeholder="enter your email here"
               label="E-mail"
               onChange={(e) => setEmail(e.currentTarget.value)}
+              defaultValue={currentUser.email}
               fullWidth
               variant="filled"
             ></TextField>
@@ -137,13 +137,10 @@ export default function SignUp() {
               type="submit"
               classes={{ root: classes.button1 }}
             >
-              Submit
+              Update
             </Button>
           </form>
         </Grid>
-        <Button onClick={handleLogout} classes={{ root: classes.button2 }}>
-          Log Out
-        </Button>
       </Grid>
     </Grid>
   );

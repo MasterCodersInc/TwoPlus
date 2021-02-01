@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthContext";
 
@@ -60,8 +60,9 @@ export default function SignUp() {
       setLoading(true);
       console.log("!!!!!", email, password);
       await login(email, password);
+      history.push("/");
     } catch (error) {
-      setError("Failed to create an account");
+      setError("Failed to log in");
       console.log(error);
     }
     setLoading(false);
@@ -69,7 +70,13 @@ export default function SignUp() {
 
   return (
     <Grid container direction="column" justify="center" alignItems="center">
-      <Grid item>
+      <Grid
+        item
+        container
+        direction="column"
+        justify="center"
+        alignItems="center"
+      >
         <Typography
           variant="h1"
           style={{
@@ -97,7 +104,7 @@ export default function SignUp() {
           direction="column"
           alignItems="center"
           justify="center"
-          style={{ minWidth: "50%" }}
+          style={{ minWidth: "70%" }}
         >
           <form onSubmit={handleSubmit} className={classes.form}>
             <TextField
@@ -118,6 +125,9 @@ export default function SignUp() {
               variant="filled"
               style={{ marginTop: "1em", marginBottom: "1em" }}
             ></TextField>
+            <Grid item>
+              <Link to="/forgotpassword">Forgot Password?</Link>
+            </Grid>
 
             <Button
               disabled={loading}
