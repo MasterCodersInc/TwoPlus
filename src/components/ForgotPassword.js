@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.colorOne,
     marginTop: "2em",
     fontFamily: "Montserrat",
-    width: "8em",
+    width: "12em",
   },
   button2: {
     color: "#fff",
@@ -78,39 +78,30 @@ export default function ForgotPassword() {
         direction="column"
         justify="center"
         alignItems="center"
-        style={{ minWidth: "40%" }}
+        style={{ width: "70%" }}
       >
-        <Grid
-          item
-          container
-          direction="column"
-          alignItems="center"
-          justify="center"
-          style={{ minWidth: "50%" }}
-        >
-          <form onSubmit={handleSubmit} className={classes.form}>
-            <TextField
-              name="email"
-              placeholder="enter your email here"
-              label="E-mail"
-              onChange={(e) => setEmail(e.currentTarget.value)}
-              fullWidth
-              variant="filled"
-            ></TextField>
+        <form onSubmit={handleSubmit} className={classes.form}>
+          <TextField
+            name="email"
+            placeholder="enter your email here"
+            label="E-mail"
+            onChange={(e) => setEmail(e.currentTarget.value)}
+            fullWidth
+            variant="filled"
+          ></TextField>
 
-            <Grid item>
-              <Link to="/login">Log In</Link>
-            </Grid>
+          <Grid item>
+            <Link to="/login">Log In</Link>
+          </Grid>
 
-            <Button
-              disabled={loading}
-              type="submit"
-              classes={{ root: classes.button1 }}
-            >
-              Reset Password
-            </Button>
-          </form>
-        </Grid>
+          <Button
+            disabled={loading}
+            type="submit"
+            classes={{ root: classes.button1 }}
+          >
+            Reset Password
+          </Button>
+        </form>
       </Grid>
     </Grid>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthContext";
 
@@ -30,53 +30,49 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default function UpdateProfile() {
   const classes = useStyles();
   const theme = useTheme();
   const history = useHistory();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, currentUser, logout } = useAuth();
+  const [passwordConf, setPasswordConf] = useState("");
+  const { currentUser, updatePassword, updateEmail } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleLogout() {
-    setError("");
-
-    try {
-      await logout();
-      history.push("/login");
-    } catch {
-      setError("Failed to log out");
-    }
-  }
-
   async function handleSubmit(e) {
     e.preventDefault();
-
-    try {
-      setError("");
-      setLoading(true);
-      console.log("!!!!!", email, password);
-      await login(email, password);
-      history.push("/");
-    } catch (error) {
-      setError("Failed to log in");
-      console.log(error);
+    if (password !== passwordConf) {
+      return setError("Passwords do not match");
     }
-    setLoading(false);
+
+    const promises = [];
+    setLoading(true);
+    setError("");
+    if (email !== currentUser.email) {
+      promises.push(updateEmail(email));
+    }
+    if (password !== currentUser.password) {
+      promises.push(updatePassword(password));
+    }
+
+    Promise.all(promises)
+      .then(() => {
+        history.push("/");
+      })
+      .catch(() => {
+        setError("Failed to update account");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   return (
     <Grid container direction="column" justify="center" alignItems="center">
-      <Grid
-        item
-        container
-        direction="column"
-        justify="center"
-        alignItems="center"
-      >
+      <Grid item>
         <Typography
           variant="h1"
           style={{
@@ -85,7 +81,7 @@ export default function SignUp() {
             color: theme.palette.common.colorOne,
           }}
         >
-          Log In
+          Update Profile
         </Typography>
         <Typography> {currentUser && currentUser.email}</Typography>
         {error && <Typography>{error}</Typography>}
@@ -104,7 +100,7 @@ export default function SignUp() {
           direction="column"
           alignItems="center"
           justify="center"
-          style={{ minWidth: "70%" }}
+          style={{ minWidth: "50%" }}
         >
           <form onSubmit={handleSubmit} className={classes.form}>
             <TextField
@@ -112,6 +108,7 @@ export default function SignUp() {
               placeholder="enter your email here"
               label="E-mail"
               onChange={(e) => setEmail(e.currentTarget.value)}
+              defaultValue={currentUser.email}
               fullWidth
               variant="filled"
             ></TextField>
@@ -125,22 +122,25 @@ export default function SignUp() {
               variant="filled"
               style={{ marginTop: "1em", marginBottom: "1em" }}
             ></TextField>
-            <Grid item>
-              <Link to="/forgotpassword">Forgot Password?</Link>
-            </Grid>
+            <TextField
+              name="passwordConf"
+              type="password"
+              placeholder="confirm your password here"
+              label="Password Confirmation"
+              onChange={(e) => setPasswordConf(e.currentTarget.value)}
+              fullWidth
+              variant="filled"
+            ></TextField>
 
             <Button
               disabled={loading}
               type="submit"
               classes={{ root: classes.button1 }}
             >
-              Submit
+              Update
             </Button>
           </form>
         </Grid>
-        <Button onClick={handleLogout} classes={{ root: classes.button2 }}>
-          Log Out
-        </Button>
       </Grid>
     </Grid>
   );
