@@ -2,17 +2,26 @@ import React, {useState} from 'react';
 import {TextField, Button} from '@material-ui/core'
 import {useAuth} from '../contexts/AuthContext'
 import firebase from '../firebase';
+import {Redirect} from 'react-router-dom'
 
-const AddPost = (props) => {
+const AddPost = ({history}) => {
     const {currentUser} = useAuth();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-
     const postsRef = firebase.firestore().collection('posts');
 
-    const onSubmitHandler = async (e) => {
+    const onSubmitHandler = (e) => {
         e.preventDefault();
-        await postsRef.add({title:title, description});
+        postsRef.add({title:title, description, editorData: 'Start Coding Here!'}).then((docRef) => {
+            // return <Redirect to={{
+            //     pathname: `/posts/${docRef.id}`,
+            //     state: {
+            //         doc: docRef
+            //     }
+            // }} />
+            console.log('DOCREF:',docRef)
+            history.push({pathname: `/posts/${docRef.id}`})
+        });  
     }
 
     return(
