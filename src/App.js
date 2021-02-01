@@ -17,11 +17,14 @@ import ForgotPassword from "./components/ForgotPassword";
 import UpdateProfile from "./components/UpdateProfile";
 import NavBar from "./components/NavBar";
 import EditorUID from "./components/EditorUID";
+import Post from './components/Post'
+import AddPost from './components/AddPost'
 
-firebase.firestore().collection("times").add({
-  title: "rubiks cube",
-  time_seconds: 45,
-});
+firebase.firestore()
+//.collection("times").add({
+//   title: "rubiks cube",
+//   time_seconds: 45,
+// });
 
 function App() {
   return (
@@ -37,6 +40,8 @@ function App() {
             <Route exact path="/forgotpassword" component={ForgotPassword} />
             <PrivateRoute exact path="/profile" component={UserProfile} />
             <PrivateRoute exact path="/updateprof" component={UpdateProfile} />
+            <Route exact path='/posts/add'component={AddPost}/>
+            <Route exact path='/posts/:postId'component={Post}/>
           </Switch>
         </AuthProvider>
       </BrowserRouter>
