@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import AceEditor from "react-ace";
 import firebase from "../firebase";
 import {useParams} from 'react-router-dom'
-const uid = Math.floor(Math.random().toString() * 1000);
+import {useAuth} from '../contexts/AuthContext' 
 
 const firestore = firebase.firestore();
 const collabData = firestore.collection("posts");
@@ -15,6 +15,8 @@ async function getDocRef(documentID) {
 }
 
 const EditorUID = (props) => {
+  const {currentUser} = useAuth();
+  const uid = currentUser.email;
   const {postId} = useParams();
   const docID = postId;
   console.log('DOC ID:', docID)
@@ -42,7 +44,7 @@ const EditorUID = (props) => {
         }
 
         documentReference.update({
-          pageData: editor.getValue(),
+          editorData: editor.getValue(),
           docChanges: [{ changeID: uid, timeStamp: Date.now() }],
           deltas: e,
         });
