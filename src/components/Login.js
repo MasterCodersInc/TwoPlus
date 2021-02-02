@@ -37,20 +37,9 @@ export default function SignUp() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, currentUser, logout } = useAuth();
+  const { login, currentUser } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  async function handleLogout() {
-    setError("");
-
-    try {
-      await logout();
-      history.push("/login");
-    } catch {
-      setError("Failed to log out");
-    }
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -60,6 +49,7 @@ export default function SignUp() {
       setLoading(true);
       console.log("!!!!!", email, password);
       await login(email, password);
+
       history.push("/");
     } catch (error) {
       setError("Failed to log in");
@@ -138,9 +128,6 @@ export default function SignUp() {
             </Button>
           </form>
         </Grid>
-        <Button onClick={handleLogout} classes={{ root: classes.button2 }}>
-          Log Out
-        </Button>
       </Grid>
     </Grid>
   );

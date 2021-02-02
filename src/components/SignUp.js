@@ -3,6 +3,8 @@ import { useHistory } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthContext";
 
+import firebase from "../firebase";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -38,20 +40,11 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
-  const { signup, currentUser, logout } = useAuth();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const { signup, currentUser } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  async function handleLogout() {
-    setError("");
-
-    try {
-      await logout();
-      history.push("/login");
-    } catch {
-      setError("Failed to log out");
-    }
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -63,6 +56,10 @@ export default function SignUp() {
       setLoading(true);
       console.log("!!!!!", email, password);
       await signup(email, password);
+      firebase
+        .firestore()
+        .collection("users")
+        .add({ firstName, lastName, email, password });
       history.push("/");
     } catch (error) {
       setError("Failed to create an account");
@@ -105,6 +102,20 @@ export default function SignUp() {
         >
           <form onSubmit={handleSubmit} className={classes.form}>
             <TextField
+              name="firstName"
+              label="First Name"
+              onChange={(e) => setFirstName(e.currentTarget.value)}
+              fullWidth
+              variant="filled"
+            ></TextField>
+            <TextField
+              name="lastName"
+              label="Last Name"
+              onChange={(e) => setLastName(e.currentTarget.value)}
+              fullWidth
+              variant="filled"
+            ></TextField>
+            <TextField
               name="email"
               placeholder="enter your email here"
               label="E-mail"
@@ -141,9 +152,6 @@ export default function SignUp() {
             </Button>
           </form>
         </Grid>
-        <Button onClick={handleLogout} classes={{ root: classes.button2 }}>
-          Log Out
-        </Button>
       </Grid>
     </Grid>
   );
