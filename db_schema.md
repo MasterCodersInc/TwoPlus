@@ -4,7 +4,8 @@
 const DB = {
   users: [
     userId: {
-      name: String
+      firstName: String,
+      lastName: String,
       email: String
       posts: [String, String, String]
     },
