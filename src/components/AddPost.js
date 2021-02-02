@@ -14,7 +14,12 @@ const AddPost = ({history}) => {
 
     const onSubmitHandler = (e) => {
         e.preventDefault();
-        postsRef.add({title:title, description, editorData: 'Start Coding Here!'}).then((docRef) => {
+        postsRef.add({
+            title:title, 
+            description, 
+            editorData: 'Start Coding Here!',
+            docChanges: [{changeID: ''}]
+        }).then((docRef) => {
             // return <Redirect to={{
             //     pathname: `/posts/${docRef.id}`,
             //     state: {
