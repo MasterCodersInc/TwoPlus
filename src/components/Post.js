@@ -7,9 +7,8 @@ const Post = (props) => {
     console.log(currentUser)
     return (
         <div>
-            <div>
-                {/* Div with users inside post */}
-            </div>
+            <div>Title Field</div>
+            <div>Description</div>
             <EditorUID uid={currentUser.uid}/>
             {/* <Chat /> */}
         </div>
