@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthContext";
+import firebase from "../firebase";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -35,18 +36,17 @@ export default function UpdateProfile() {
   const theme = useTheme();
   const history = useHistory();
 
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordConf, setPasswordConf] = useState("");
+
   const { currentUser, updatePassword, updateEmail } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (password !== passwordConf) {
-      return setError("Passwords do not match");
-    }
 
     const promises = [];
     setLoading(true);
@@ -56,6 +56,14 @@ export default function UpdateProfile() {
     }
     if (password !== currentUser.password) {
       promises.push(updatePassword(password));
+    }
+    if (firstName !== currentUser.firstName) {
+      promises.push(
+        firebase.firestore().collection("users").update({ firstName })
+      );
+    }
+    if (lastName !== currentUser.lastName) {
+      promises.push(firebase.firestore().collection("users").add({ lastName }));
     }
 
     Promise.all(promises)
@@ -83,7 +91,6 @@ export default function UpdateProfile() {
         >
           Update Profile
         </Typography>
-        <Typography> {currentUser && currentUser.email}</Typography>
         {error && <Typography>{error}</Typography>}
       </Grid>
       <Grid
@@ -104,32 +111,36 @@ export default function UpdateProfile() {
         >
           <form onSubmit={handleSubmit} className={classes.form}>
             <TextField
-              name="email"
-              placeholder="enter your email here"
-              label="E-mail"
-              onChange={(e) => setEmail(e.currentTarget.value)}
-              defaultValue={currentUser.email}
-              fullWidth
-              variant="filled"
-            ></TextField>
-            <TextField
-              name="password"
-              type="password"
-              placeholder="enter your password here"
-              label="Password"
-              onChange={(e) => setPassword(e.currentTarget.value)}
+              label="First Name"
+              onChange={(e) => setFirstName(e.currentTarget.value)}
               fullWidth
               variant="filled"
               style={{ marginTop: "1em", marginBottom: "1em" }}
             ></TextField>
             <TextField
-              name="passwordConf"
-              type="password"
-              placeholder="confirm your password here"
-              label="Password Confirmation"
-              onChange={(e) => setPasswordConf(e.currentTarget.value)}
+              label="Last Name"
+              onChange={(e) => setLastName(e.currentTarget.value)}
               fullWidth
               variant="filled"
+              style={{ marginTop: "1em", marginBottom: "1em" }}
+            ></TextField>
+            <TextField
+              name="email"
+              label="E-mail"
+              onChange={(e) => setEmail(e.currentTarget.value)}
+              defaultValue={currentUser.email}
+              fullWidth
+              variant="filled"
+              style={{ marginTop: "1em", marginBottom: "1em" }}
+            ></TextField>
+            <TextField
+              name="password"
+              type="password"
+              label="Password"
+              onChange={(e) => setPassword(e.currentTarget.value)}
+              fullWidth
+              variant="filled"
+              style={{ marginTop: "1em", marginBottom: "1em" }}
             ></TextField>
 
             <Button

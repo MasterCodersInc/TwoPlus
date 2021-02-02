@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 
-import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -45,6 +46,20 @@ const useStyles = makeStyles((theme) => ({
 export default function NavBar() {
   const classes = useStyles();
   const theme = useTheme();
+  const history = useHistory();
+  const [error, setError] = useState("");
+  const { currentUser, logout } = useAuth();
+
+  async function handleLogout() {
+    setError("");
+
+    try {
+      await logout();
+      history.push("/login");
+    } catch {
+      setError("Failed to log out");
+    }
+  }
 
   return (
     <React.Fragment>
@@ -62,26 +77,49 @@ export default function NavBar() {
             justify="flex-end"
             style={{ marginRight: "4em" }}
           >
-            <Tabs>
-              <Tab
-                component={Link}
-                to="/login"
-                label="Sign In"
-                className={classes.tab}
-              />
-              <Tab
-                component={Link}
-                to="/signup"
-                label="Sign Up"
-                className={classes.tab}
-              />
-              <Tab
-                component={Link}
-                to="/editor"
-                label="Editor"
-                className={classes.tab}
-              />
-            </Tabs>
+            {currentUser ? (
+              <Tabs>
+                <Button
+                  onClick={handleLogout}
+                  classes={{ root: classes.button2 }}
+                >
+                  Log Out
+                </Button>
+                <Tab
+                  component={Link}
+                  to="/profile"
+                  label="Account"
+                  className={classes.tab}
+                />
+                <Tab
+                  component={Link}
+                  to="/editor"
+                  label="Editor"
+                  className={classes.tab}
+                />
+              </Tabs>
+            ) : (
+              <Tabs>
+                <Tab
+                  component={Link}
+                  to="/login"
+                  label="Sign In"
+                  className={classes.tab}
+                />
+                <Tab
+                  component={Link}
+                  to="/signup"
+                  label="Sign Up"
+                  className={classes.tab}
+                />
+                <Tab
+                  component={Link}
+                  to="/editor"
+                  label="Editor"
+                  className={classes.tab}
+                />
+              </Tabs>
+            )}
           </Grid>
         </Toolbar>
       </AppBar>
