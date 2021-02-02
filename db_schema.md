@@ -4,7 +4,8 @@
 const DB = {
   users: [
     userId: {
-      name: String
+      firstName: String,
+      lastName: String,
       email: String
       posts: [String, String, String]
     },
@@ -14,9 +15,10 @@ const DB = {
       userRef: String (userId),
       title: String,
       description: String,
+      docChanges:[{
+        changeID: String
+      }],
       editorData: String,
-      mostRecentChangeBy: String (userId)
-      changedOn: String (timestamp)
       messages:[{
         content: String,
         timestamp: String
