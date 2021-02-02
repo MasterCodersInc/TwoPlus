@@ -1,10 +1,13 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
-const colorOne = '#5B56E9';
-const colorTwo = '#889DE2';
-const colorThree = '#9CCBF4';
-const colorFour = '#BEBEBE';
-const colorWhite = '#fff';
+
+const colorOne = "#5B56E9";
+const colorTwo = "#889DE2";
+const colorThree = "#9CCBF4";
+const colorFour = "#BEBEBE";
+const colorFive = "#F5F5FA";
+const colorWhite = "#fff";
+
 
 export default createMuiTheme({
   spacing: 4,
@@ -14,6 +17,7 @@ export default createMuiTheme({
       colorTwo: colorTwo,
       colorThree: colorThree,
       colorFour: colorFour,
+      colorFive: colorFive,
       colorWhite: colorWhite,
     },
     primary: {
@@ -39,8 +43,9 @@ export default createMuiTheme({
     body2: {
       fontSize: '.8em',
       fontWeight: 400,
-      fontFamily: 'Lato',
-      letterSpacing: 3,
+      fontFamily: "Lato",
+      letterSpacing: 2,
+
     },
   },
 });
