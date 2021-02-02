@@ -14,9 +14,10 @@ const DB = {
       userRef: String (userId),
       title: String,
       description: String,
+      docChanges:[{
+        changeID: String
+      }],
       editorData: String,
-      mostRecentChangeBy: String (userId)
-      changedOn: String (timestamp)
       messages:[{
         content: String,
         timestamp: String
