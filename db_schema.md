@@ -7,7 +7,8 @@ const DB = {
       firstName: String,
       lastName: String,
       email: String
-      posts: [String, String, String]
+      posts: [String, String, String],
+      isAdmin: Bool
     },
   ],
   posts:[
