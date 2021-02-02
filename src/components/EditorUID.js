@@ -2,12 +2,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import AceEditor from "react-ace";
 import firebase from "../firebase";
-const docID = "TD7BhcsTcki87KrsPkKy";
-const uid = Math.floor(Math.random().toString() * 1000);
-const openPageTimestamp = Date.now();
+import {useParams} from 'react-router-dom'
+import {useAuth} from '../contexts/AuthContext' 
 
 const firestore = firebase.firestore();
-const collabData = firestore.collection("collabData");
+const collabData = firestore.collection("posts");
 
 //function to run on editor load to grab correct docID
 async function getDocRef(documentID) {
@@ -16,6 +15,11 @@ async function getDocRef(documentID) {
 }
 
 const EditorUID = (props) => {
+  const {currentUser} = useAuth();
+  const uid = currentUser.email;
+  const {postId} = useParams();
+  const docID = postId;
+  console.log('DOC ID:', docID)
   const reactAceRef = useRef();
   const editorOutput = useRef();
   let editor;
@@ -28,8 +32,10 @@ const EditorUID = (props) => {
     async function fetchData() {
       editor = reactAceRef.current.editor;
       documentReference = await getDocRef(docID);
+      console.log('DOC REF:', documentReference)
       documentInfo = await documentReference.get();
-      editor.setValue(documentInfo.data().pageData);
+      console.log('DOC INFO:', documentInfo.data());
+      editor.setValue(documentInfo.data().editorData);
 
       //set up editor event listener. This is mostly for newUsers entering.
       editor.on("change", (e) => {
@@ -38,7 +44,7 @@ const EditorUID = (props) => {
         }
 
         documentReference.update({
-          pageData: editor.getValue(),
+          editorData: editor.getValue(),
           docChanges: [{ changeID: uid, timeStamp: Date.now() }],
           deltas: e,
         });
@@ -58,7 +64,7 @@ const EditorUID = (props) => {
 
         applyingDeltas = true;
 
-        editor.setValue(updatedInfo.data().pageData);
+        editor.setValue(updatedInfo.data().editorData);
 
         applyingDeltas = false;
       });
