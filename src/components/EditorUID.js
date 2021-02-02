@@ -33,7 +33,7 @@ const EditorUID = (props) => {
       console.log('DOC REF:', documentReference)
       documentInfo = await documentReference.get();
       console.log('DOC INFO:', documentInfo.data());
-      editor.setValue(documentInfo.data().collabData);
+      editor.setValue(documentInfo.data().editorData);
 
       //set up editor event listener. This is mostly for newUsers entering.
       editor.on("change", (e) => {
@@ -62,7 +62,7 @@ const EditorUID = (props) => {
 
         applyingDeltas = true;
 
-        editor.setValue(updatedInfo.data().pageData);
+        editor.setValue(updatedInfo.data().editorData);
 
         applyingDeltas = false;
       });
