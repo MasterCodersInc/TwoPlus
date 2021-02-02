@@ -20,12 +20,6 @@ import EditorUID from "./components/EditorUID";
 import Post from './components/Post'
 import AddPost from './components/AddPost'
 
-firebase.firestore()
-//.collection("times").add({
-//   title: "rubiks cube",
-//   time_seconds: 45,
-// });
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
