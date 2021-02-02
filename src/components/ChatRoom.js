@@ -7,11 +7,17 @@ import { useAuth } from '../contexts/AuthContext';
 const ChatRoom = () => {
   const { currentUser } = useAuth();
   const db = firebase.firestore();
+  const {uid} = currentUser
+  const {email} = currentUser
+//   const userInfo = db.collection("users").doc(email)
 
   const [messages, setMessage] = useState([]);
   const [newMessage, setNewMessage] = useState('');
 
-const {uid} = currentUser
+//   console.log('specific user info', userInfo)
+
+
+// console.log('im the current user', currentUser.email)
   //we storing the chat msg's of our user inside our messages coll
 
   //Order and limit data
@@ -19,9 +25,10 @@ const {uid} = currentUser
 
   useEffect(() => {
     if (db) {
+        // console.log('this is db', db)
       const unsubscribe = db
         .collection('messages')
-        .orderBy('createdAt')
+        .orderBy("uid")
         .limit(50)
         .onSnapshot((querySnapshot) => {
           // get all documents from collection - with ids
@@ -31,14 +38,14 @@ const {uid} = currentUser
           }));
           //then update the state
           setMessage(data);
-          console.log('this is all messages', data);
+      
         });
 
       //detach listener
       return unsubscribe;
     }
   }, [db]);
-
+// console.log('this is user id', )
   const handleOnChange = (e) => {
     setNewMessage(e.target.value);
   };
@@ -57,8 +64,11 @@ const {uid} = currentUser
       });
     }
   };
-
-//   console.log('this is new message', newMessage, uid);
+//   const currentUserMessages = currentUser.uid 
+console.log('all message uid', messages );
+// console.log('user uid', uid);
+  const specificUser = messages.uid == currentUser.uid
+  console.log('a specific user  message', specificUser );
   return (
     <div>
       <ul>
@@ -66,6 +76,7 @@ const {uid} = currentUser
           <li key={message.id}>
             <ChatMsg {...message} />
           </li>
+         
         ))}
       </ul>
       <div className="mb-6 mx-4">

@@ -1,5 +1,4 @@
-import React from "react";
-
+import React from 'react';
 export default function Landing() {
-  return <div>HELLO!</div>;
+  return <div>landing...</div>;
 }
