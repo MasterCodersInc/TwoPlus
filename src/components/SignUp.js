@@ -59,7 +59,7 @@ export default function SignUp() {
       firebase
         .firestore()
         .collection("users")
-        .add({ firstName, lastName, email, password });
+        .add({ firstName, lastName, email });
       history.push("/");
     } catch (error) {
       setError("Failed to create an account");
