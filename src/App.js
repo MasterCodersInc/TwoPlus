@@ -38,7 +38,7 @@ function App() {
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/forgotpassword" component={ForgotPassword} />
-            <Route exact Path="/chat" component={ChatRoom} />
+            <Route exact path="/chat" component={ChatRoom} />
             <PrivateRoute exact path="/profile" component={UserProfile} />
             <PrivateRoute exact path="/updateprof" component={UpdateProfile} />
             <Route exact path='/posts/add' component={AddPost}/>
