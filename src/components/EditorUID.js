@@ -33,7 +33,7 @@ const EditorUID = (props) => {
       console.log('DOC REF:', documentReference)
       documentInfo = await documentReference.get();
       console.log('DOC INFO:', documentInfo.data());
-      editor.setValue(documentInfo.data().editorData);
+      editor.setValue(documentInfo.data().collabData);
 
       //set up editor event listener. This is mostly for newUsers entering.
       editor.on("change", (e) => {

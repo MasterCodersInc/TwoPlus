@@ -8,17 +8,11 @@ const ChatRoom = () => {
   const { currentUser } = useAuth();
   const db = firebase.firestore();
   const {uid} = currentUser
-  const {email} = currentUser
-//   const userInfo = db.collection("users").doc(email)
+
+
 
   const [messages, setMessage] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-
-//   console.log('specific user info', userInfo)
-
-
-// console.log('im the current user', currentUser.email)
-  //we storing the chat msg's of our user inside our messages coll
 
   //Order and limit data
   //By default, a query retrieves all documents that satisfy the query in ascending order by document ID. You can specify the sort order for your data using orderBy(), and you can limit the number of documents retrieved using limit().
@@ -28,13 +22,13 @@ const ChatRoom = () => {
         // console.log('this is db', db)
       const unsubscribe = db
         .collection('messages')
-        .orderBy("uid")
+        .orderBy("createdAt")
         .limit(50)
         .onSnapshot((querySnapshot) => {
           // get all documents from collection - with ids
           const data = querySnapshot.docs.map((doc) => ({
             ...doc.data(),
-            id: doc.id,
+            id:doc.id
           }));
           //then update the state
           setMessage(data);
@@ -64,17 +58,14 @@ const ChatRoom = () => {
       });
     }
   };
-//   const currentUserMessages = currentUser.uid 
-console.log('all message uid', messages );
-// console.log('user uid', uid);
-  const specificUser = messages.uid == currentUser.uid
-  console.log('a specific user  message', specificUser );
+
+
   return (
     <div>
       <ul>
         {messages.map((message) => (
           <li key={message.id}>
-            <ChatMsg {...message} />
+            <ChatMsg message={message} currentUserId={uid}/>
           </li>
          
         ))}
