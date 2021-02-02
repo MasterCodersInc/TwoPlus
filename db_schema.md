@@ -21,6 +21,7 @@ const DB = {
       }],
       editorData: String,
       messages:[{
+        userRef: String,
         content: String,
         timestamp: String
       }],
