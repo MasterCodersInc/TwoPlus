@@ -50,6 +50,7 @@ const AddPost = ({ history }) => {
   const fileRef = React.useRef();
 
   const onSubmitHandler = (e) => {
+    //if type ===discuss
     e.preventDefault();
     postsRef
       .add({
