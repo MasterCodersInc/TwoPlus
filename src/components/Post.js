@@ -5,6 +5,7 @@ import {useAuth} from '../contexts/AuthContext'
 import ChatRoom from './ChatRoom'
 import firebase from '../firebase'
 import {Typography, Button, Grid} from '@material-ui/core'
+import {useTheme, withStyles} from '@material-ui/core/styles'
 
 const Post = (props) => {
     const {currentUser} = useAuth();
@@ -29,6 +30,21 @@ const Post = (props) => {
         setPost({...post, isActive: !post.isActive});
     }
 
+    const theme = useTheme();
+    const colorToToggleActive = post?.isActive ? theme.palette.common.colorRed:theme.palette.common.colorGreen 
+    const colorHoverToggle = post?.isActive ? '#aa2e25' : '#357a38'
+    
+    const ColorButton = withStyles((theme) => ({
+        root: {
+          color: 'white',
+          backgroundColor: `${colorToToggleActive}`,
+          '&:hover': {
+            backgroundColor:  `${colorHoverToggle}`,
+            // opacity: '70%'
+           },
+        },
+      }))(Button);
+
     return (
         <div>
             <Grid
@@ -37,7 +53,8 @@ const Post = (props) => {
                 justify='space-between'
                 alignItems='center'>
                 <Typography variant='h5'>{post?.title || ''}</Typography>
-                <Button variant='contained' color='secondary' onClick={toggleActive}>{buttonName}</Button>
+                <Button variant='contained' color='secondary' onClick={toggleActive}>Let Other Users Code</Button>
+                <ColorButton variant='contained' onClick={toggleActive}>{buttonName}</ColorButton>
             </Grid>
             <Typography>{post.description || ''}</Typography>
             <EditorUID uid={currentUser.uid} disabled={!post?.isActive}/>

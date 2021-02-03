@@ -7,6 +7,8 @@ const colorThree = "#9CCBF4";
 const colorFour = "#BEBEBE";
 const colorFive = "#F5F5FA";
 const colorWhite = "#fff";
+const colorRed = '#f44336'; //Fire Opal https://coolors.co/e95f5f
+const colorGreen = '#6fbf73'; //Ocean Green https://coolors.co/73b691
 
 
 export default createMuiTheme({
@@ -19,6 +21,8 @@ export default createMuiTheme({
       colorFour: colorFour,
       colorFive: colorFive,
       colorWhite: colorWhite,
+      colorRed: colorRed,
+      colorGreen: colorGreen
     },
     primary: {
       main: colorOne,
