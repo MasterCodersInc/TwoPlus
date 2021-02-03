@@ -1,34 +1,50 @@
-import React, { useEffect, useState } from 'react'
-import EditorUID from './EditorUID'
-import {useAuth} from '../contexts/AuthContext'
-import ChatRoom from './ChatRoom'
-import firebase from '../firebase'
+import React, { useEffect, useState } from 'react';
+import EditorUID from './EditorUID';
+import { useAuth } from '../contexts/AuthContext';
+import ChatRoom from './ChatRoom';
+import firebase from '../firebase';
 
 const Post = (props) => {
-    const {currentUser} = useAuth();
-    const [post, setPost] = useState('');
-    let title;
-    //grab post from DB
-    const postRef = firebase.firestore().collection('posts').doc(`${props.match.params.postId}`)
+  const { currentUser } = useAuth();
+  const [post, setPost] = useState('');
+  let title;
+  //grab post from DB
+  const postRef = firebase
+    .firestore()
+    .collection('posts')
+    .doc(`${props.match.params.postId}`);
 
-    useEffect(() => {
-       async function getPostData(){
-            const postFromDb = await postRef.get();
-            const postData = postFromDb.data();
-            setPost(postData);
-        }
-        getPostData();
-    },[])
+  useEffect(() => {
+    async function getPostData() {
+      const postFromDb = await postRef.get();
+      const postData = postFromDb.data();
+      setPost(postData);
+    }
+    getPostData();
+  }, []);
 
-    title = post ? post.title : '';
-    return (
-        <div>
-            <div>{post.title || ''}</div>
-            <div>{post.description || ''}</div>
-            <EditorUID uid={currentUser.uid}/>
-            <ChatRoom />
-        </div>
-    )
-}
+  // delete the document
+  title = post ? post.title : '';
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          firebase
+            .firestore()
+            .collection('posts')
+            .doc(`${props.match.params.postId}`)
+            .delete();
+        }}
+      >
+        Remove
+      </button>
+      <div>{post.title || ''}</div>
+      <div>{post.description || ''}</div>
+      <EditorUID uid={currentUser.uid} />
+      <ChatRoom postRef={postRef} postId={props.match.params.postId} />
+    </div>
+  );
+};
 
 export default Post;
