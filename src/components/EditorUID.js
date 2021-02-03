@@ -14,7 +14,7 @@ async function getDocRef(documentID) {
   return document;
 }
 
-const EditorUID = (props) => {
+const EditorUID = ({disabled}) => {
   const {currentUser} = useAuth();
   const uid = currentUser.email;
   const {postId} = useParams();
@@ -72,21 +72,27 @@ const EditorUID = (props) => {
     fetchData();
   }, []);
 
-  //editor onChangeListener
+  //componentDidUpdate
+  useEffect(() => {
+    if(disabled){
+      reactAceRef.current.editor?.setReadOnly(true);
+    } else{
+      reactAceRef.current.editor?.setReadOnly(false);
+    }
+  },[disabled])
 
   return (
     <div>
       <h4 style={{ marginLeft: 50 }}>{uid}</h4>
-      <div>EDITOR UID TEST PAGE</div>
       <div style={{ display: "flex", flexDirection: "row", marginLeft: 50 }}>
         <AceEditor ref={reactAceRef} mode="javascript" theme="chaos" />
         <AceEditor ref={editorOutput} mode="javascript" />
       </div>
+      {/* evaluate code in editor */}
       <button
         onClick={() => {
           try {
             let ans = eval(editor.getValue());
-
             editorOutput.current.editor.setValue(String(ans), 1);
           } catch (e) {
             editorOutput.current.editor.setValue(e.message, 1);

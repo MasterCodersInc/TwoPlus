@@ -4,7 +4,7 @@ import ChatMsg from './ChatMsg';
 import { useAuth } from '../contexts/AuthContext';
 // this display's  the chat message.. and input field to allow user to send message
 
-const ChatRoom = ({ postId, postRef }) => {
+const ChatRoom = ({ postId, postRef, disabled}) => {
   const { currentUser } = useAuth();
   const db = firebase.firestore();
   const { uid } = currentUser;
@@ -39,7 +39,7 @@ const ChatRoom = ({ postId, postRef }) => {
       return unsubscribe;
     }
   }, [db]);
-  // console.log('this is user id', )
+  
   const handleOnChange = (e) => {
     setNewMessage(e.target.value);
   };
@@ -75,7 +75,7 @@ const ChatRoom = ({ postId, postRef }) => {
             onChange={handleOnChange}
             placeholder="Type your message here..."
           />
-          <button type="submit" disabled={!newMessage}>
+          <button type="submit" disabled={!newMessage || disabled}>
             Send
           </button>
         </form>
