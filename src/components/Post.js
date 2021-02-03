@@ -3,6 +3,7 @@ import EditorUID from "./EditorUID";
 import { useAuth } from "../contexts/AuthContext";
 import ChatRoom from "./ChatRoom";
 import firebase from "../firebase";
+import DiscussPost from "./DiscussPost";
 
 const Post = (props) => {
   const { currentUser } = useAuth();
@@ -23,20 +24,28 @@ const Post = (props) => {
     getPostData();
   }, []);
 
-  //if typeOf post === "discuss", return Discuss Comp
+  if (!post) {
+    return <div>Loading...</div>;
+  }
 
-  //if typeOf post === "you", return You Comp
+  if (post.postType === "discuss") {
+    return (
+      <div>
+        <DiscussPost post={post} />
+      </div>
+    );
+  }
 
-  //if typeOf post === "live", return Live Editor
-
-  return (
-    <div>
-      <div>{post.title || ""}</div>
-      <div>{post.description || ""}</div>
-      <EditorUID uid={currentUser.uid} />
-      <ChatRoom />
-    </div>
-  );
+  if (post.postType === "live") {
+    return (
+      <div>
+        <div>{post.title || ""}</div>
+        <div>{post.description || ""}</div>
+        <EditorUID uid={currentUser.uid} />
+        <ChatRoom />
+      </div>
+    );
+  }
 };
 
 export default Post;

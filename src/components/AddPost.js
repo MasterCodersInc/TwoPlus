@@ -35,13 +35,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AddPost = ({ history }) => {
+  //hooks
   const classes = useStyles();
   const theme = useTheme();
   const { currentUser } = useAuth();
+
+  //state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [postType, setPostType] = useState("");
   const postsRef = firebase.firestore().collection("posts");
+
+  //refs
+  const fileRef = React.useRef();
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -55,7 +61,7 @@ const AddPost = ({ history }) => {
         docChanges: [{ changeID: "" }],
       })
       .then((docRef) => {
-        history.push({ pathname: `/posts/${docRef.id}` });
+        history.push({ pathname: `/posts/${docRef.id}`, postType: postType });
       });
   };
 
@@ -85,13 +91,14 @@ const AddPost = ({ history }) => {
             value={title}
             style={{ marginTop: "1em", marginBottom: "1em" }}
             onChange={(e) => setTitle(e.currentTarget.value)}
+            variant="filled"
           />
           {title === "" && (
             <Typography
               style={{
                 marginBottom: "1em",
-                marginTop: "2em",
-                color: theme.palette.common.colorOne,
+
+                color: theme.palette.common.colorThree,
               }}
             >
               Your post must include a descriptive title.
@@ -123,13 +130,29 @@ const AddPost = ({ history }) => {
             <Typography
               style={{
                 marginBottom: "1em",
-                marginTop: "2em",
-                color: theme.palette.common.colorOne,
+                color: theme.palette.common.colorThree,
               }}
             >
               You must choose a post type.
             </Typography>
           )}
+
+          {postType === "you" && (
+            <div>
+              <Button
+                type="button"
+                classes={{ root: classes.button2 }}
+                style={{ width: "fit-content" }}
+                onClick={() => {
+                  fileRef.current.click();
+                }}
+              >
+                Upload a pic of your sick rig!
+              </Button>
+              <input ref={fileRef} type="file" hidden={true} />
+            </div>
+          )}
+
           <Button
             disabled={postType === "" || title === ""}
             type="submit"
