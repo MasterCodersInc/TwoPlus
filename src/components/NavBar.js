@@ -106,12 +106,6 @@ export default function NavBar() {
                   label="Sign Up"
                   className={classes.tab}
                 />
-                <Tab
-                  component={Link}
-                  to="/editor"
-                  label="Editor"
-                  className={classes.tab}
-                />
               </Tabs>
             )}
           </Grid>
