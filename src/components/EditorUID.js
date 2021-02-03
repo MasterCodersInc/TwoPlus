@@ -74,7 +74,6 @@ const EditorUID = ({disabled}) => {
 
   //componentDidUpdate
   useEffect(() => {
-    console.log('USE EFFECT DISABLED', disabled)
     if(disabled){
       reactAceRef.current.editor?.setReadOnly(true);
     } else{
