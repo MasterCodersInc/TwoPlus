@@ -29,9 +29,13 @@ const useStyles = makeStyles((theme) => ({
     width: "75%",
     paddingTop: "1em",
   },
+  responseContainer: {
+    background: theme.palette.common.white,
+    width: "75%",
+    marginTop: "1em",
+  },
   responses: {
     background: theme.palette.common.colorFive,
-    width: "75%",
     marginTop: "1em",
   },
 }));
@@ -43,6 +47,7 @@ const DiscussPost = ({ post }) => {
   const classes = useStyles();
   const [responses, setResponses] = React.useState();
   const [responsesRef, setResponsesRef] = React.useState();
+  const [replyText, setReplyText] = React.useState();
 
   useEffect(() => {
     async function fetchPostReplies() {
@@ -59,7 +64,7 @@ const DiscussPost = ({ post }) => {
 
   useEffect(() => {
     if (responsesRef) {
-      responsesRef.onSnapshot((querySnapshot) => {
+      responsesRef.orderBy("timestamp").onSnapshot((querySnapshot) => {
         const data = querySnapshot.docs.map((doc) => {
           return { doc: doc.data() };
         });
@@ -70,13 +75,12 @@ const DiscussPost = ({ post }) => {
 
   const onReplyHandler = () => {
     responsesRef.add({
-      content: "Very cool question! I can't help",
+      content: replyText,
       userRef: currentUser.uid,
       timestamp: Date.now(),
     });
+    setReplyText("");
   };
-  console.log(responses);
-  console.log(responsesRef);
   return (
     <Grid container direction="column" justify="center" alignItems="center">
       <Grid classes={{ root: classes.initialPost }} item>
@@ -88,11 +92,20 @@ const DiscussPost = ({ post }) => {
           Asked by: {currentUser.email}
         </Typography>
       </Grid>
-      <Grid container classes={{ root: classes.responses }}>
+      <Grid container classes={{ root: classes.responseContainer }}>
         {responses && (
           <div>
             {responses.map((response) => {
-              return <h4>{response.doc.content}</h4>;
+              return (
+                <Grid classes={{ root: classes.responses }}>
+                  <Typography
+                    variant="body2"
+                    style={{ marginTop: ".6em", marginBottom: ".6em" }}
+                  >
+                    {response.doc.content}
+                  </Typography>
+                </Grid>
+              );
             })}
           </div>
         )}
@@ -105,6 +118,9 @@ const DiscussPost = ({ post }) => {
           multiline
           rows={5}
           variant="filled"
+          onChange={(e) => {
+            setReplyText(e.target.value);
+          }}
         ></TextField>
         <Button classes={{ root: classes.button1 }} onClick={onReplyHandler}>
           Reply
