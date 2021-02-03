@@ -32,9 +32,9 @@ const EditorUID = ({disabled}) => {
     async function fetchData() {
       editor = reactAceRef.current.editor;
       documentReference = await getDocRef(docID);
-      console.log('DOC REF:', documentReference)
+      // console.log('DOC REF:', documentReference)
       documentInfo = await documentReference.get();
-      console.log('DOC INFO:', documentInfo.data());
+      // console.log('DOC INFO:', documentInfo.data());
       editor.setValue(documentInfo.data().editorData);
 
       //set up editor event listener. This is mostly for newUsers entering.
@@ -49,14 +49,14 @@ const EditorUID = ({disabled}) => {
           deltas: e,
         });
 
-        console.log("changed in FB");
+        // console.log("changed in FB");
       });
 
       documentReference.onSnapshot(async () => {
         let updatedInfo = await documentReference.get();
         let userWhoMadeChanges = updatedInfo.data().docChanges[0].changeID;
 
-        console.log("WHO CHANGED: ", userWhoMadeChanges, "ME: ", uid);
+        // console.log("WHO CHANGED: ", userWhoMadeChanges, "ME: ", uid);
 
         if (userWhoMadeChanges === uid) {
           return;

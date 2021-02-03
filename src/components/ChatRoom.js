@@ -4,12 +4,10 @@ import ChatMsg from './ChatMsg';
 import { useAuth } from '../contexts/AuthContext';
 // this display's  the chat message.. and input field to allow user to send message
 
-const ChatRoom = ({disabled}) => {
+const ChatRoom = ({ postId, postRef, disabled}) => {
   const { currentUser } = useAuth();
   const db = firebase.firestore();
-  const {uid} = currentUser
-
-
+  const { uid } = currentUser;
 
   const [messages, setMessage] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -17,30 +15,31 @@ const ChatRoom = ({disabled}) => {
   //Order and limit data
   //By default, a query retrieves all documents that satisfy the query in ascending order by document ID. You can specify the sort order for your data using orderBy(), and you can limit the number of documents retrieved using limit().
 
+  // .collection('posts')
+  // .orderBy("createdAt")
+  // .limit(50)
   useEffect(() => {
     if (db) {
-        // console.log('this is db', db)
-      const unsubscribe = db
+      // console.log('this is db', db)
+      const unsubscribe = postRef
         .collection('messages')
-        .orderBy("createdAt")
+        .orderBy('createdAt')
         .limit(50)
         .onSnapshot((querySnapshot) => {
           // get all documents from collection - with ids
           const data = querySnapshot.docs.map((doc) => ({
             ...doc.data(),
-            id:doc.id
+            id: doc.id,
           }));
           //then update the state
           setMessage(data);
-      
         });
 
       //detach listener
       return unsubscribe;
     }
   }, [db]);
-
-// console.log('this is user id', )
+  
   const handleOnChange = (e) => {
     setNewMessage(e.target.value);
   };
@@ -50,26 +49,23 @@ const ChatRoom = ({disabled}) => {
 
     //missing userID
     if (db) {
-        
       // Add new message in Firestore
-      db.collection('messages').add({
+      postRef.collection('messages').add({
         text: newMessage,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-       uid, //generates a timestamp
+        uid,
       });
     }
   };
-
 
   return (
     <div>
       <ul>
         {messages.map((message) => (
-          <li key={message.id}>
-            <ChatMsg message={message} currentUserId={uid}/>
-          </li>
-         
-        ))}
+            <li key={message.id}>
+              <ChatMsg message={message} currentUserId={uid} />
+            </li>
+          ))}
       </ul>
       <div className="mb-6 mx-4">
         <form onSubmit={handleOnSubmit}>

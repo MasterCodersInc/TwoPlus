@@ -47,6 +47,17 @@ const Post = (props) => {
 
     return (
         <div>
+           <button
+            onClick={() => {
+              firebase
+                .firestore()
+                .collection('posts')
+                .doc(`${props.match.params.postId}`)
+                .delete();
+            }}
+          >
+            Remove
+          </button>
             <Grid
                 container
                 direction='row'
