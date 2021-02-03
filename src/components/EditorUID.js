@@ -14,8 +14,9 @@ async function getDocRef(documentID) {
   return document;
 }
 
-const EditorUID = ({disabled}) => {
+const EditorUID = ({disabled, enableCollab}) => {
   const {currentUser} = useAuth();
+  const [collab, setCollab] = useState(enableCollab)
   const uid = currentUser.email;
   const {postId} = useParams();
   const docID = postId;
@@ -26,6 +27,7 @@ const EditorUID = ({disabled}) => {
   let documentInfo;
   let documentReference;
   let applyingDeltas = false;
+  let ownerId;
 
   //grab data on component did mount
   useEffect(() => {
@@ -35,7 +37,9 @@ const EditorUID = ({disabled}) => {
       console.log('DOC REF:', documentReference)
       documentInfo = await documentReference.get();
       console.log('DOC INFO:', documentInfo.data());
-      editor.setValue(documentInfo.data().editorData);
+      let documentData = documentInfo.data();
+      ownerId = documentData.userRef
+      editor.setValue(documentData.editorData);
 
       //set up editor event listener. This is mostly for newUsers entering.
       editor.on("change", (e) => {
@@ -43,13 +47,14 @@ const EditorUID = ({disabled}) => {
           return;
         }
 
-        documentReference.update({
-          editorData: editor.getValue(),
-          docChanges: [{ changeID: uid, timeStamp: Date.now() }],
-          deltas: e,
-        });
-
-        console.log("changed in FB");
+        if(collab || currentUser.uid === ownerId) {
+          console.log(collab, currentUser.uid === ownerId)
+          documentReference.update({
+            editorData: editor.getValue(),
+            docChanges: [{ changeID: uid, timeStamp: Date.now() }],
+            deltas: e,
+          });
+        }
       });
 
       documentReference.onSnapshot(async () => {
@@ -72,7 +77,7 @@ const EditorUID = ({disabled}) => {
     fetchData();
   }, []);
 
-  //componentDidUpdate
+  //componentDidUpdate disabled
   useEffect(() => {
     if(disabled){
       reactAceRef.current.editor?.setReadOnly(true);
@@ -81,8 +86,18 @@ const EditorUID = ({disabled}) => {
     }
   },[disabled])
 
+  //componentDidUpdate collab
+  useEffect(() => {
+    if(enableCollab){
+      setCollab(true);
+    } else{
+      setCollab(false);
+    }
+  },[collab])
+    
   return (
     <div>
+      {console.log('INSIDE EDITOR ENABLE COLLAB', enableCollab)}
       <h4 style={{ marginLeft: 50 }}>{uid}</h4>
       <div style={{ display: "flex", flexDirection: "row", marginLeft: 50 }}>
         <AceEditor ref={reactAceRef} mode="javascript" theme="chaos" />

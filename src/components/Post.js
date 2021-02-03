@@ -11,6 +11,7 @@ const Post = (props) => {
     const {currentUser} = useAuth();
     const {postId} = useParams();
     const [post, setPost] = useState('');
+    const [enableCollab, setEnableCollab] = useState(false)
     const buttonName = post.isActive ? "Close Post" : "Open Post";
     //get post's doc reference
     const postRef = firebase.firestore().collection('posts').doc(`${postId}`);
@@ -30,9 +31,14 @@ const Post = (props) => {
         setPost({...post, isActive: !post.isActive});
     }
 
+    function toggleEditor(){
+        const newCollabStage = !enableCollab;
+        setEnableCollab(!enableCollab)
+    }
+
     const theme = useTheme();
     const colorToToggleActive = post?.isActive ? theme.palette.common.colorRed:theme.palette.common.colorGreen 
-    const colorHoverToggle = post?.isActive ? '#aa2e25' : '#357a38'
+    const colorHoverToggle = post?.isActive ? theme.palette.common.colorRedHover : theme.palette.common.colorGreenHover
     
     const ColorButton = withStyles((theme) => ({
         root: {
@@ -40,24 +46,29 @@ const Post = (props) => {
           backgroundColor: `${colorToToggleActive}`,
           '&:hover': {
             backgroundColor:  `${colorHoverToggle}`,
-            // opacity: '70%'
            },
         },
       }))(Button);
 
     return (
         <div>
+            {console.log('ON RENDER TOGGLE', enableCollab)}
             <Grid
                 container
                 direction='row'
                 justify='space-between'
-                alignItems='center'>
+                alignItems='center' >
                 <Typography variant='h5'>{post?.title || ''}</Typography>
-                <Button variant='contained' color='secondary' onClick={toggleActive}>Let Other Users Code</Button>
-                <ColorButton variant='contained' onClick={toggleActive}>{buttonName}</ColorButton>
+                <div>
+                    {
+                        currentUser.uid === post.userRef && 
+                        <Button variant='contained' color='secondary' onClick={toggleEditor}>Enable Collab</Button> 
+                    }
+                    <ColorButton variant='contained' onClick={toggleActive}>{buttonName}</ColorButton>
+                </div>
             </Grid>
             <Typography>{post.description || ''}</Typography>
-            <EditorUID uid={currentUser.uid} disabled={!post?.isActive}/>
+            <EditorUID uid={currentUser.uid} disabled={!post?.isActive} enableCollab={enableCollab}/>
             <ChatRoom disabled={!post?.isActive}/>
         </div>
     )
