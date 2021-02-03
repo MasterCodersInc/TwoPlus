@@ -75,13 +75,13 @@ export default function UserProfile() {
         </Grid>
         <Grid item container className={classes.tabs}>
           <Tabs>
-            <Tab label="Your Info" className={classes.tab} />
             <Tab
               component={Link}
-              to="/savedcollabs"
-              label="Saved Collabs"
+              to="profile"
+              label="Your Info"
               className={classes.tab}
             />
+            <Tab label="Saved Collabs" className={classes.tab} />
             <Tab
               component={Link}
               to="/savedcontent"
@@ -91,35 +91,7 @@ export default function UserProfile() {
           </Tabs>
         </Grid>
         <Grid item container alignItems="center" className={classes.infoCont}>
-          <Grid item className={classes.infoText}>
-            <Typography variant="body1">First Name</Typography>
-            <Typography variant="body2">{user.firstName}</Typography>
-          </Grid>
-          <Grid item className={classes.infoText}>
-            <Typography variant="body1">Last Name</Typography>
-            <Typography variant="body2">{user.lastName}</Typography>
-          </Grid>
-          <Grid item className={classes.infoText}>
-            <Typography variant="body1">Email</Typography>
-            <Typography variant="body2">{user.email}</Typography>
-          </Grid>
-          <Grid item className={classes.infoText}>
-            <Typography variant="body1">Username</Typography>
-            <Typography variant="body2">{user.userName}</Typography>
-          </Grid>
-          <Button
-            variant="filled"
-            component={Link}
-            to="updateprof"
-            classes={{ root: classes.editButton }}
-          >
-            Edit
-          </Button>
-          <img
-            src={rect}
-            alt="rectangle with shadows"
-            className={classes.shadowRectangle}
-          />
+          <Typography>this is where user saved COLLABS will go</Typography>
         </Grid>
       </Grid>
     </Grid>
