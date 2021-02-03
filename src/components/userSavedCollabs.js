@@ -51,17 +51,27 @@ export default function UserProfile() {
   const classes = useStyles();
   const theme = useTheme();
   const [user, setUser] = useState({});
+  const [userPosts, setUserPosts] = useState([]);
   const { currentUser } = useAuth();
   const db = firebase.firestore();
   const email = currentUser.email;
+  const UID = currentUser.uid;
 
   // in a use effect to trigger the re-render
   useEffect(() => {
     const userObjLoc = db.collection("users").where("email", "==", `${email}`);
+
     // a pointer/reference of the data that we want
     userObjLoc.get().then((objData) => {
       // giving back an array of data objs that matches
       objData.forEach((doc) => setUser(doc.data()));
+    });
+
+    const userPosts = db.collection("posts").where("userRef", "==", `${UID}`);
+    userPosts.get().then((postObj) => {
+      let postsArr = postObj.docs.map((doc) => ({ ...doc.data() }));
+      console.log(postsArr);
+      setUserPosts(postsArr);
     });
   }, []);
 
@@ -91,7 +101,23 @@ export default function UserProfile() {
           </Tabs>
         </Grid>
         <Grid item container alignItems="center" className={classes.infoCont}>
-          <Typography>this is where user saved COLLABS will go</Typography>
+          {userPosts.map((post) => (
+            <Grid item container alignItems="center">
+              <Grid item>
+                <Typography>{post.title}</Typography>
+              </Grid>
+              <Grid item>
+                <Typography>Created By:</Typography>
+                <Typography>{user.firstName}</Typography>
+              </Grid>
+              <img
+                src={rect}
+                alt="rectangle with shadows"
+                className={classes.shadowRectangle}
+              />
+            </Grid>
+          ))}
+          {/* <Grid>{userPosts[0]?.title}</Grid> */}
         </Grid>
       </Grid>
     </Grid>
