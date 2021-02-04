@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DiscussPost = ({ post }) => {
-  const { currentUser } = useAuth();
+  const { currentUser, firestoreUser } = useAuth();
   const { postId } = useParams();
   const theme = useTheme();
   const classes = useStyles();
@@ -89,7 +89,7 @@ const DiscussPost = ({ post }) => {
         </Typography>
         <Typography variant="body2">{post.description}</Typography>
         <Typography variant="subtitle1" style={{ marginTop: "1em" }}>
-          Asked by: {currentUser.email}
+          Asked by: {firestoreUser.firstName}
         </Typography>
       </Grid>
       <Grid container classes={{ root: classes.responseContainer }}>
