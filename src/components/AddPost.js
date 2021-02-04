@@ -16,7 +16,9 @@ const AddPost = ({history}) => {
             title:title, 
             description, 
             editorData: 'Start Coding Here!',
-            docChanges: [{changeID: ''}]
+            docChanges: [{changeID: ''}],
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            isActive: true
         }).then((docRef) => {
             history.push({pathname: `/posts/${docRef.id}`})
         });  

@@ -12,6 +12,9 @@ const Post = (props) => {
     const {postId} = useParams();
     const [post, setPost] = useState('');
     const buttonName = post.isActive ? "Close Post" : "Open Post";
+    const theme = useTheme();
+    const colorToToggleActive = post?.isActive ? theme.palette.common.colorRed:theme.palette.common.colorGreen 
+    const colorHoverToggle = post?.isActive ? '#aa2e25' : '#357a38';
     //get post's doc reference
     const postRef = firebase.firestore().collection('posts').doc(`${postId}`);
 
@@ -29,10 +32,6 @@ const Post = (props) => {
         postRef.update({isActive: !post.isActive});
         setPost({...post, isActive: !post.isActive});
     }
-
-    const theme = useTheme();
-    const colorToToggleActive = post?.isActive ? theme.palette.common.colorRed:theme.palette.common.colorGreen 
-    const colorHoverToggle = post?.isActive ? '#aa2e25' : '#357a38'
     
     const ColorButton = withStyles((theme) => ({
         root: {
@@ -40,7 +39,6 @@ const Post = (props) => {
           backgroundColor: `${colorToToggleActive}`,
           '&:hover': {
             backgroundColor:  `${colorHoverToggle}`,
-            // opacity: '70%'
            },
         },
       }))(Button);
@@ -52,7 +50,7 @@ const Post = (props) => {
               firebase
                 .firestore()
                 .collection('posts')
-                .doc(`${props.match.params.postId}`)
+                .doc(`${postId}`)
                 .delete();
             }}
           >
@@ -67,9 +65,9 @@ const Post = (props) => {
                 <Button variant='contained' color='secondary' onClick={toggleActive}>Let Other Users Code</Button>
                 <ColorButton variant='contained' onClick={toggleActive}>{buttonName}</ColorButton>
             </Grid>
-            <Typography>{post.description || ''}</Typography>
+            <Typography>{post?.description || ''}</Typography>
             <EditorUID uid={currentUser.uid} disabled={!post?.isActive}/>
-            <ChatRoom disabled={!post?.isActive}/>
+            <ChatRoom disabled={!post?.isActive} postId={postId} postRef={postRef}/>
         </div>
     )
 }
