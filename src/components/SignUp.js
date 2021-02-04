@@ -61,7 +61,11 @@ export default function SignUp() {
       firebase
         .firestore()
         .collection("users")
-        .add({ firstName, lastName, email, isAdmin });
+        .add({ 
+          firstName: firstName.slice(0,1).toUpperCase().concat(firstName.slice(1).toLowerCase()), 
+          lastName: lastName.slice(0,1).toUpperCase().concat(lastName.slice(1).toLowerCase()),
+          email, 
+          isAdmin });
       history.push("/");
     } catch (error) {
       setError("Failed to create an account");

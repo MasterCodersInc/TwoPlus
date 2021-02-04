@@ -87,6 +87,15 @@ export default function NavBar() {
                 >
                   Log Out
                 </Button>
+                {
+                  firestoreUser.isAdmin && 
+                  <Tab 
+                    component={Link}
+                    to='/users'
+                    label='Users'
+                    className={classes.tab}
+                  />
+                }
                 {  
                   firestoreUser.isAdmin &&
                   <Tab
