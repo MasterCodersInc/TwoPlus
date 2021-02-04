@@ -29,18 +29,32 @@ export default function Landing() {
   const classes = useStyles();
   const theme = useTheme();
   const [posts, setPosts] = useState();
+  const [disccuss, setDiscuss] = useState();
 
   useEffect(() => {
     const postsLoc = firebase
       .firestore()
       .collection("posts")
-      .orderBy("timestamp")
+      .orderBy("timestamp", "desc")
       .limit(5);
 
     postsLoc.get().then((postObj) => {
       let postsArr = postObj.docs.map((doc) => ({ ...doc.data() }));
       console.log(postsArr);
       setPosts(postsArr);
+    });
+
+    const discussLoc = firebase
+      .firestore()
+      .collection("posts")
+      .where("postType", "==", "discuss")
+      .orderBy("timestamp")
+      .limit(5);
+
+    discussLoc.get().then((discussObj) => {
+      let discussArr = discussObj.docs.map((doc) => ({ ...doc.data() }));
+      console.log("DA", discussArr);
+      setDiscuss(discussArr);
     });
   }, []);
 
@@ -118,8 +132,8 @@ export default function Landing() {
           <Grid item container>
             <Typography variant="body1">Recent Live Collab Sessions</Typography>
             {posts &&
-              posts.map((post) => (
-                <Grid item container alignItems="center">
+              posts.map((post, index) => (
+                <Grid key={index} item container alignItems="center">
                   <Grid
                     item
                     direction="column"
@@ -131,6 +145,42 @@ export default function Landing() {
                       variant="body2"
                     >
                       {post.title}
+                    </Typography>
+                    <Grid item>
+                      <Typography variant="body2">#hashtags</Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid item style={{ marginLeft: "2em" }}>
+                    <Typography variant="body2">Status:</Typography>
+                    <Typography variant="body2" style={{ fontWeight: 300 }}>
+                      In Collab
+                    </Typography>
+                  </Grid>
+                  <Grid item style={{ marginLeft: "2em" }}>
+                    <Typography variant="body2">Created By:</Typography>
+                    <Typography variant="body2" style={{ fontWeight: 300 }}>
+                      In Collab
+                    </Typography>
+                  </Grid>
+                </Grid>
+              ))}
+          </Grid>
+          <Grid item container style={{ marginTop: "5em" }}>
+            <Typography variant="body1">Recent Discussions</Typography>
+            {disccuss &&
+              disccuss.map((disc, index) => (
+                <Grid key={index} item container alignItems="center">
+                  <Grid
+                    item
+                    direction="column"
+                    style={{ marginTop: ".5em", marginBottom: ".5em" }}
+                  >
+                    <Typography
+                      component={Link}
+                      to="/posts/:postId"
+                      variant="body2"
+                    >
+                      {disc.title}
                     </Typography>
                     <Grid item>
                       <Typography variant="body2">#hashtags</Typography>
