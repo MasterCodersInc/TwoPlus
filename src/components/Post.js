@@ -62,9 +62,11 @@ const Post = (props) => {
                 <div>
                     {
                         currentUser.uid === post.userRef && 
-                        <Button variant='contained' color='secondary' onClick={toggleEditor}>Enable Collab</Button> 
-                    }
-                    <ColorButton variant='contained' onClick={toggleActive}>{buttonName}</ColorButton>
+                        <Grid>
+                          <Button variant='contained' color='secondary' onClick={toggleEditor}>Enable Collab</Button> 
+                          <ColorButton variant='contained' onClick={toggleActive}>{buttonName}</ColorButton>
+                        </Grid>
+                    }   
                 </div>
             </Grid>
             <Typography>{post.description || ''}</Typography>
