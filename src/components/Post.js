@@ -42,7 +42,6 @@ const Post = (props) => {
       const postData = postFromDb.data();
       setPost(postData);
     }
-
     getPostData();
   }, []);
 
@@ -60,7 +59,8 @@ const Post = (props) => {
   if (!post) {
     return <div>Loading...</div>;
   }
-  if (post.postType === "discuss") {
+
+  if (post.postType === "discuss" || post.postType === "you") {
     return <DiscussPost post={post} />;
   }
   if (post.postType === "live") {
