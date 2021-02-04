@@ -145,7 +145,7 @@ export default function SignUp() {
               variant="filled"
             ></TextField>
             {
-              firestoreUser?.isAdmin &&
+              firestoreUser && firestoreUser.isAdmin &&
               <Grid>
                 <FormControlLabel 
                   value='isAdmin'
