@@ -79,6 +79,7 @@ const AddPost = ({ history }) => {
         docChanges: [{ changeID: "" }],
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         isActive: true,
+        enableCollab: true,
         imageRef: imageRefId,
       })
       .then((docRef) => {

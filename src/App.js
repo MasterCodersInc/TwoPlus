@@ -21,7 +21,9 @@ import Post from "./components/Post";
 import AddPost from "./components/AddPost";
 import userSavedCollabs from "./components/userSavedCollabs";
 import savedContent from "./components/savedContent";
+import Users from './components/Users'
 import UserLanding from "./components/UserLanding";
+
 
 function App() {
   return (
@@ -41,6 +43,7 @@ function App() {
             <Route exact path="/posts/:postId" component={Post} />
             <Route exact path="/savedcollabs" component={userSavedCollabs} />
             <Route exact path="/savedcontent" component={savedContent} />
+            <Route exact path='/users' component={Users} />
             <Route exact path="/userhome" component={UserLanding} />
           </Switch>
         </AuthProvider>
