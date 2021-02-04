@@ -38,6 +38,7 @@ export default function SignUp() {
   const history = useHistory();
 
   const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -59,7 +60,7 @@ export default function SignUp() {
       firebase
         .firestore()
         .collection("users")
-        .add({ firstName, lastName, email });
+        .add({ firstName, lastName, email, userName });
       history.push("/");
     } catch (error) {
       setError("Failed to create an account");
@@ -120,6 +121,14 @@ export default function SignUp() {
               placeholder="enter your email here"
               label="E-mail"
               onChange={(e) => setEmail(e.currentTarget.value)}
+              fullWidth
+              variant="filled"
+            ></TextField>
+            <TextField
+              name="userName"
+              placeholder="enter your userName here"
+              label="User Name"
+              onChange={(e) => setUserName(e.currentTarget.value)}
               fullWidth
               variant="filled"
             ></TextField>
