@@ -38,15 +38,14 @@ const Post = (props) => {
       const postFromDb = await postRef.get();
       const postData = postFromDb.data();
       setPost(postData);
-    }
-
-    function toggleEditor(){
-        const newCollabStage = !enableCollab;
-        setEnableCollab(!enableCollab)
-    }
-    
+    }    
     getPostData();
   }, []);
+    
+  function toggleEditor(){
+      const newCollabStage = !enableCollab;
+      setEnableCollab(!enableCollab)
+  }
 
   function toggleActive() {
     postRef.update({ isActive: !post.isActive });
