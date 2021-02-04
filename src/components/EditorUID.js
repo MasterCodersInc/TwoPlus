@@ -34,7 +34,7 @@ const EditorUID = ({disabled, enableCollab}) => {
     async function fetchData() {
       editor = reactAceRef.current.editor;
       documentReference = await getDocRef(docID);
-      console.log('DOC REF:', documentReference)
+      // console.log('DOC REF:', documentReference)
       documentInfo = await documentReference.get();
       console.log('DOC INFO:', documentInfo.data());
       let documentData = documentInfo.data();
@@ -61,7 +61,7 @@ const EditorUID = ({disabled, enableCollab}) => {
         let updatedInfo = await documentReference.get();
         let userWhoMadeChanges = updatedInfo.data().docChanges[0].changeID;
 
-        console.log("WHO CHANGED: ", userWhoMadeChanges, "ME: ", uid);
+        // console.log("WHO CHANGED: ", userWhoMadeChanges, "ME: ", uid);
 
         if (userWhoMadeChanges === uid) {
           return;

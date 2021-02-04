@@ -13,6 +13,11 @@ const Post = (props) => {
     const [post, setPost] = useState('');
     const [enableCollab, setEnableCollab] = useState(false)
     const buttonName = post.isActive ? "Close Post" : "Open Post";
+    const theme = useTheme();
+    const colorToToggleActive = post?.isActive ? theme.palette.common.colorRed:theme.palette.common.colorGreen 
+    const colorHoverToggle = post?.isActive ? theme.palette.common.colorRedHover : theme.palette.common.colorGreenHover
+    // const colorToToggleActive = post?.isActive ? theme.palette.common.colorRed:theme.palette.common.colorGreen 
+    // const colorHoverToggle = post?.isActive ? '#aa2e25' : '#357a38';
     //get post's doc reference
     const postRef = firebase.firestore().collection('posts').doc(`${postId}`);
 
@@ -35,10 +40,6 @@ const Post = (props) => {
         const newCollabStage = !enableCollab;
         setEnableCollab(!enableCollab)
     }
-
-    const theme = useTheme();
-    const colorToToggleActive = post?.isActive ? theme.palette.common.colorRed:theme.palette.common.colorGreen 
-    const colorHoverToggle = post?.isActive ? theme.palette.common.colorRedHover : theme.palette.common.colorGreenHover
     
     const ColorButton = withStyles((theme) => ({
         root: {
@@ -69,9 +70,9 @@ const Post = (props) => {
                     }   
                 </div>
             </Grid>
-            <Typography>{post.description || ''}</Typography>
-            <EditorUID uid={currentUser.uid} disabled={!post?.isActive} enableCollab={enableCollab}/>
-            <ChatRoom disabled={!post?.isActive}/>
+            <Typography>{post?.description || ''}</Typography>
+            <EditorUID uid={currentUser.uid} disabled={!post?.isActive}/>
+            <ChatRoom disabled={!post?.isActive} postId={postId} postRef={postRef}/>
         </div>
     )
 }
