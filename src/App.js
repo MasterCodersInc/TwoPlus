@@ -22,6 +22,7 @@ import AddPost from "./components/AddPost";
 import userSavedCollabs from "./components/userSavedCollabs";
 import savedContent from "./components/savedContent";
 import Users from './components/Users'
+import UserLanding from "./components/UserLanding";
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
             <Route exact path="/savedcollabs" component={userSavedCollabs} />
             <Route exact path="/savedcontent" component={savedContent} />
             <Route exact path='/users' component={Users} />
+            <Route exact path="/userhome" component={UserLanding} />
           </Switch>
         </AuthProvider>
       </BrowserRouter>

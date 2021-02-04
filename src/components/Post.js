@@ -9,18 +9,21 @@ import { useTheme, withStyles } from "@material-ui/core/styles";
 import DiscussPost from "./DiscussPost";
 
 const Post = (props) => {
+  const { currentUser } = useAuth();
+  const { postId } = useParams();
+  const [post, setPost] = useState("");
+  const [enableCollab, setEnableCollab] = useState(false);
+  const buttonName = post.isActive ? "Close Post" : "Open Post";
+  const theme = useTheme();
+  const colorToToggleActive = post?.isActive
+    ? theme.palette.common.colorRed
+    : theme.palette.common.colorGreen;
+  const colorHoverToggle = post?.isActive
+    ? theme.palette.common.colorRedHover
+    : theme.palette.common.colorGreenHover;
 
-    const {currentUser} = useAuth();
-    const {postId} = useParams();
-    const [post, setPost] = useState('');
-    const [enableCollab, setEnableCollab] = useState(false)
-    const buttonName = post.isActive ? "Close Post" : "Open Post";
-    const theme = useTheme();
-    const colorToToggleActive = post?.isActive ? theme.palette.common.colorRed:theme.palette.common.colorGreen 
-    const colorHoverToggle = post?.isActive ? theme.palette.common.colorRedHover : theme.palette.common.colorGreenHover
-
-    //get post's doc reference
-    const postRef = firebase.firestore().collection('posts').doc(`${postId}`);
+  //get post's doc reference
+  const postRef = firebase.firestore().collection("posts").doc(`${postId}`);
 
   const ColorButton = withStyles((theme) => ({
     root: {
@@ -57,18 +60,19 @@ const Post = (props) => {
   if (!post) {
     return <div>Loading...</div>;
   }
-  if (post.postType === "discuss") {
+
+  if (post.postType === "discuss" || post.postType === "you") {
     return <DiscussPost post={post} />;
   }
   if (post.postType === "live") {
     return (
       <div>
-         <div>
-           <button
+        <div>
+          <button
             onClick={() => {
               firebase
                 .firestore()
-                .collection('posts')
+                .collection("posts")
                 .doc(`${postId}`)
                 .delete();
             }}
@@ -83,21 +87,28 @@ const Post = (props) => {
           alignItems="center"
         >
           <Typography variant="h5">{post?.title || ""}</Typography>
-           <div>
-              {
-                  currentUser.uid === post.userRef && 
-                  <Grid>
-                    <Button variant='contained' color='secondary' onClick={toggleEditor}>Enable Collab</Button> 
-                    <ColorButton variant='contained' onClick={toggleActive}>{buttonName}</ColorButton>
-                  </Grid>
-              }   
+          <div>
+            {currentUser.uid === post.userRef && (
+              <Grid>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={toggleEditor}
+                >
+                  Enable Collab
+                </Button>
+                <ColorButton variant="contained" onClick={toggleActive}>
+                  {buttonName}
+                </ColorButton>
+              </Grid>
+            )}
           </div>
         </Grid>
         <Typography>{post.description || ""}</Typography>
         <EditorUID uid={currentUser.uid} disabled={!post?.isActive} enableCollab={enableCollab}/>
         <ChatRoom disabled={!post?.isActive} postId={postId} postRef={postRef}/>   
       </div>
-    )
+    );
   }
 };
 

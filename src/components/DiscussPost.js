@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
+import "firebase/storage";
 
 import { TextField, Button, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -48,6 +49,7 @@ const DiscussPost = ({ post }) => {
   const [responses, setResponses] = React.useState();
   const [responsesRef, setResponsesRef] = React.useState();
   const [replyText, setReplyText] = React.useState();
+  const [postImage, setPostImage] = React.useState();
 
   useEffect(() => {
     async function fetchPostReplies() {
@@ -59,7 +61,14 @@ const DiscussPost = ({ post }) => {
           .collection("discussReplies")
       );
     }
+    async function fetchImageData() {
+      const imageRef = firebase.storage().ref().child(post.imageRef);
+      const imageUrl = await imageRef.getDownloadURL();
+      setPostImage(imageUrl);
+    }
+
     fetchPostReplies();
+    fetchImageData();
   }, []);
 
   useEffect(() => {
@@ -81,12 +90,16 @@ const DiscussPost = ({ post }) => {
     });
     setReplyText("");
   };
+
   return (
     <Grid container direction="column" justify="center" alignItems="center">
       <Grid classes={{ root: classes.initialPost }} item>
         <Typography style={{ marginTop: 5 }} variant="h2">
           {post.title}
         </Typography>
+        {postImage && (
+          <img style={{ width: 300, height: 300 }} src={postImage} />
+        )}
         <Typography variant="body2">{post.description}</Typography>
         <Typography variant="subtitle1" style={{ marginTop: "1em" }}>
           Asked by: {firestoreUser.firstName}
