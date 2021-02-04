@@ -91,12 +91,6 @@ export default function NavBar() {
                   label="Account"
                   className={classes.tab}
                 />
-                <Tab
-                  component={Link}
-                  to="/editor"
-                  label="Editor"
-                  className={classes.tab}
-                />
               </Tabs>
             ) : (
               <Tabs>
@@ -110,12 +104,6 @@ export default function NavBar() {
                   component={Link}
                   to="/signup"
                   label="Sign Up"
-                  className={classes.tab}
-                />
-                <Tab
-                  component={Link}
-                  to="/editor"
-                  label="Editor"
                   className={classes.tab}
                 />
               </Tabs>

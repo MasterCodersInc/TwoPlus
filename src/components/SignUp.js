@@ -146,7 +146,7 @@ export default function SignUp() {
             <Button
               disabled={loading}
               type="submit"
-              classes={{ root: classes.button1 }}
+              classes={{ root: classes.button2 }}
             >
               Submit
             </Button>
