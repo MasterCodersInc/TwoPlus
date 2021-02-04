@@ -13,8 +13,12 @@ const Post = (props) => {
     const {currentUser} = useAuth();
     const {postId} = useParams();
     const [post, setPost] = useState('');
+    const [enableCollab, setEnableCollab] = useState(false)
     const buttonName = post.isActive ? "Close Post" : "Open Post";
-    const colorHoverToggle = post?.isActive ? '#aa2e25' : '#357a38';
+    const theme = useTheme();
+    const colorToToggleActive = post?.isActive ? theme.palette.common.colorRed:theme.palette.common.colorGreen 
+    const colorHoverToggle = post?.isActive ? theme.palette.common.colorRedHover : theme.palette.common.colorGreenHover
+
     //get post's doc reference
     const postRef = firebase.firestore().collection('posts').doc(`${postId}`);
 
@@ -35,6 +39,11 @@ const Post = (props) => {
       const postData = postFromDb.data();
       setPost(postData);
     }
+
+    function toggleEditor(){
+        const newCollabStage = !enableCollab;
+        setEnableCollab(!enableCollab)
+    }
     
     getPostData();
   }, []);
@@ -53,7 +62,6 @@ const Post = (props) => {
   }
   if (post.postType === "live") {
     return (
-
       <div>
          <div>
            <button
@@ -67,6 +75,7 @@ const Post = (props) => {
           >
             Remove
           </button>
+        </div>
         <Grid
           container
           direction="row"
@@ -74,17 +83,19 @@ const Post = (props) => {
           alignItems="center"
         >
           <Typography variant="h5">{post?.title || ""}</Typography>
-          <Button variant="contained" color="secondary" onClick={toggleActive}>
-            Let Other Users Code
-          </Button>
-          <ColorButton variant="contained" onClick={toggleActive}>
-            {buttonName}
-          </ColorButton>
+           <div>
+              {
+                  currentUser.uid === post.userRef && 
+                  <Grid>
+                    <Button variant='contained' color='secondary' onClick={toggleEditor}>Enable Collab</Button> 
+                    <ColorButton variant='contained' onClick={toggleActive}>{buttonName}</ColorButton>
+                  </Grid>
+              }   
+          </div>
         </Grid>
         <Typography>{post.description || ""}</Typography>
         <EditorUID uid={currentUser.uid} disabled={!post?.isActive} />
-        <ChatRoom disabled={!post?.isActive} postId={postId} postRef={postRef}/>
-     
+        <ChatRoom disabled={!post?.isActive} postId={postId} postRef={postRef}/>   
       </div>
     )
   }
