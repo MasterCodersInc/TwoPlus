@@ -22,6 +22,7 @@ import AddPost from "./components/AddPost";
 import userSavedCollabs from "./components/userSavedCollabs";
 import savedContent from "./components/savedContent";
 
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -30,7 +31,6 @@ function App() {
           <NavBar />
           <Switch>
             <Route exact path="/" component={Landing} />
-            <Route exact path="/editor" component={EditorUID} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/forgotpassword" component={ForgotPassword} />
