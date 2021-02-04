@@ -9,18 +9,14 @@ import { useTheme, withStyles } from "@material-ui/core/styles";
 import DiscussPost from "./DiscussPost";
 
 const Post = (props) => {
-  const { currentUser } = useAuth();
-  const { postId } = useParams();
-  const [post, setPost] = useState("");
-  const buttonName = post.isActive ? "Close Post" : "Open Post";
-  //get post's doc reference
-  const postRef = firebase.firestore().collection("posts").doc(`${postId}`);
 
-  const theme = useTheme();
-  const colorToToggleActive = post?.isActive
-    ? theme.palette.common.colorRed
-    : theme.palette.common.colorGreen;
-  const colorHoverToggle = post?.isActive ? "#aa2e25" : "#357a38";
+    const {currentUser} = useAuth();
+    const {postId} = useParams();
+    const [post, setPost] = useState('');
+    const buttonName = post.isActive ? "Close Post" : "Open Post";
+    const colorHoverToggle = post?.isActive ? '#aa2e25' : '#357a38';
+    //get post's doc reference
+    const postRef = firebase.firestore().collection('posts').doc(`${postId}`);
 
   const ColorButton = withStyles((theme) => ({
     root: {
@@ -28,7 +24,6 @@ const Post = (props) => {
       backgroundColor: `${colorToToggleActive}`,
       "&:hover": {
         backgroundColor: `${colorHoverToggle}`,
-        // opacity: '70%'
       },
     },
   }))(Button);
@@ -40,6 +35,7 @@ const Post = (props) => {
       const postData = postFromDb.data();
       setPost(postData);
     }
+    
     getPostData();
   }, []);
 
@@ -57,7 +53,20 @@ const Post = (props) => {
   }
   if (post.postType === "live") {
     return (
+
       <div>
+         <div>
+           <button
+            onClick={() => {
+              firebase
+                .firestore()
+                .collection('posts')
+                .doc(`${postId}`)
+                .delete();
+            }}
+          >
+            Remove
+          </button>
         <Grid
           container
           direction="row"
@@ -74,9 +83,10 @@ const Post = (props) => {
         </Grid>
         <Typography>{post.description || ""}</Typography>
         <EditorUID uid={currentUser.uid} disabled={!post?.isActive} />
-        <ChatRoom disabled={!post?.isActive} />
+        <ChatRoom disabled={!post?.isActive} postId={postId} postRef={postRef}/>
+     
       </div>
-    );
+    )
   }
 };
 

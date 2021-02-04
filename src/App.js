@@ -19,6 +19,9 @@ import NavBar from "./components/NavBar";
 import EditorUID from "./components/EditorUID";
 import Post from "./components/Post";
 import AddPost from "./components/AddPost";
+import userSavedCollabs from "./components/userSavedCollabs";
+import savedContent from "./components/savedContent";
+
 
 function App() {
   return (
@@ -36,6 +39,8 @@ function App() {
             <PrivateRoute exact path="/updateprof" component={UpdateProfile} />
             <Route exact path="/posts/add" component={AddPost} />
             <Route exact path="/posts/:postId" component={Post} />
+            <Route exact path="/savedcollabs" component={userSavedCollabs} />
+            <Route exact path="/savedcontent" component={savedContent} />
           </Switch>
         </AuthProvider>
       </BrowserRouter>
