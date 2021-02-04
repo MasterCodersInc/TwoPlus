@@ -87,6 +87,12 @@ export default function NavBar() {
                 </Button>
                 <Tab
                   component={Link}
+                  to="/signup"
+                  label="Sign Up"
+                  className={classes.tab}
+                />
+                <Tab
+                  component={Link}
                   to="/profile"
                   label="Account"
                   className={classes.tab}
