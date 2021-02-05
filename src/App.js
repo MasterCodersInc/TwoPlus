@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "./components/theme";
@@ -43,7 +43,8 @@ function App() {
             <Route exact path="/posts/:postId" component={Post} />
             <Route exact path="/savedcollabs" component={userSavedCollabs} />
             <Route exact path="/savedcontent" component={savedContent} />
-            <Route exact path="/users" component={Users} />
+            <Redirect from='/users/deleted' to='/users' />
+            <Route exact path='/users' component={Users} />
             <Route exact path="/userhome" component={UserLanding} />
             <Route exact path="/guesthome" component={GuestLanding} />
           </Switch>
