@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -22,6 +22,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import CheckIcon from '@material-ui/icons/Check';
 import firebase from '../firebase';
+import {useHistory} from 'react-router-dom'
+import {useAuth} from '../contexts/AuthContext'
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -131,7 +133,20 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+  const { numSelected, selected } = props;
+  const history = useHistory();
+
+  function deleteUsers(){
+    try {
+      selected.forEach(async (docId) => {
+        const res = await firebase.firestore().collection('users').doc(docId).delete();
+        return;
+      })
+      history.push('/users/deleted')
+    } catch (error) {
+      console.log('Couldnt delete users', selected)
+    }
+  }
 
   return (
     <Toolbar
@@ -151,7 +166,7 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton aria-label="delete">
+          <IconButton aria-label="delete" onClick={deleteUsers}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -203,17 +218,18 @@ export default function Users() {
   const [dense, setDense] = React.useState(false);
   const [users, setUsers] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const {firestoreUser} = useAuth();
 
-    useEffect(() => {
-        async function getAllUsers(){
-            const usersCollection = await firebase.firestore().collection('users').get() 
-            const usersData = usersCollection.docs.map((userDoc) => {
-                return userDoc.data();
-            })
-            setUsers(usersData)
-        }
-        getAllUsers();
-    },[])
+  async function getAllUsers(){
+    const usersCollection = await firebase.firestore().collection('users').get() 
+    const usersData = usersCollection.docs.map((userDoc) => (
+      {...userDoc.data(), docId: userDoc.id}));
+    setUsers(usersData)
+  }
+
+  useEffect(() => {
+      getAllUsers();
+  },[])
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -223,19 +239,19 @@ export default function Users() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.email);
+      const newSelecteds = users.map((n) => n.docId);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, email) => {
-    const selectedIndex = selected.indexOf(email);
+  const handleClick = (event, docId) => {
+    const selectedIndex = selected.indexOf(docId);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, email);
+      newSelected = newSelected.concat(selected, docId);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -263,84 +279,91 @@ export default function Users() {
     setDense(event.target.checked);
   };
 
-  const isSelected = (email) => selected.indexOf(email) !== -1;
+  const isSelected = (docId) => selected.indexOf(docId) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, users.length - page * rowsPerPage);
 
-  return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={users.length}
-            />
-            <TableBody>
-              {stableSort(users, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.email);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+  if(!firestoreUser){
+    return <div>Loading...</div>
+  }
+  else if(firestoreUser.isAdmin){
+    return (
+      <div className={classes.root}>
+        <Paper className={classes.paper}>
+          <EnhancedTableToolbar numSelected={selected.length} selected={selected}/>
+          <TableContainer>
+            <Table
+              className={classes.table}
+              aria-labelledby="tableTitle"
+              size={dense ? 'small' : 'medium'}
+              aria-label="enhanced table"
+            >
+              <EnhancedTableHead
+                classes={classes}
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={users.length}
+              />
+              <TableBody>
+                {stableSort(users, getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.docId);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.email)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.email}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.firstName}
-                      </TableCell>
-                      <TableCell padding="none">{row.lastName}</TableCell>
-                      <TableCell padding="none">{row.email}</TableCell>
-                      <TableCell padding="none">{row.isAdmin ? <CheckIcon /> : null}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={users.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+                    return (
+                      <TableRow
+                        hover
+                        onClick={(event) => handleClick(event, row.docId)}
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.docId}
+                        selected={isItemSelected}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={isItemSelected}
+                            inputProps={{ 'aria-labelledby': labelId }}
+                          />
+                        </TableCell>
+                        <TableCell component="th" id={labelId} scope="row" padding="none">
+                          {row.firstName}
+                        </TableCell>
+                        <TableCell padding="none">{row.lastName}</TableCell>
+                        <TableCell padding="none">{row.email}</TableCell>
+                        <TableCell padding="none">{row.isAdmin ? <CheckIcon /> : null}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={users.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+        </Paper>
+        <FormControlLabel
+          control={<Switch checked={dense} onChange={handleChangeDense} />}
+          label="Dense padding"
         />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
-    </div>
-  );
+      </div>
+    );
+  } else{
+    return <div>This page is not for you.</div>
+  }
 }

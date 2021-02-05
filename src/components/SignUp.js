@@ -75,7 +75,7 @@ export default function SignUp() {
           isAdmin,
           uid: newUser.user.uid,
         });
-      history.push("/");
+      history.push("/userhome");
     } catch (error) {
       setError("Failed to create an account");
       console.log(error);

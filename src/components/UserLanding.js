@@ -35,25 +35,30 @@ export default function Landing() {
     const postsLoc = firebase
       .firestore()
       .collection("posts")
+      //  .where("postType", "==", "live")
       .orderBy("timestamp", "desc")
       .limit(5);
 
     postsLoc.get().then((postObj) => {
-      let postsArr = postObj.docs.map((doc) => ({ ...doc.data() }));
-      console.log(postsArr);
+      let postsArr = postObj.docs.map((doc) => ({
+        ...doc.data(),
+        postId: doc.id,
+      }));
       setPosts(postsArr);
     });
 
     const discussLoc = firebase
       .firestore()
       .collection("posts")
-      .where("postType", "==", "discuss")
       .orderBy("timestamp")
+      .where("postType", "==", "discuss")
       .limit(5);
 
     discussLoc.get().then((discussObj) => {
-      let discussArr = discussObj.docs.map((doc) => ({ ...doc.data() }));
-      console.log("DA", discussArr);
+      let discussArr = discussObj.docs.map((doc) => ({
+        ...doc.data(),
+        discId: doc.id,
+      }));
       setDiscuss(discussArr);
     });
   }, []);
@@ -141,7 +146,7 @@ export default function Landing() {
                   >
                     <Typography
                       component={Link}
-                      to="/posts/:postId"
+                      to={`/posts/${post.postId}`}
                       variant="body2"
                     >
                       {post.title}
@@ -177,7 +182,7 @@ export default function Landing() {
                   >
                     <Typography
                       component={Link}
-                      to="/posts/:postId"
+                      to={`/posts/${disc.discId}`}
                       variant="body2"
                     >
                       {disc.title}

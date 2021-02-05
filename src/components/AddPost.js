@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   Button,
@@ -7,8 +7,12 @@ import {
   Grid,
   FormControlLabel,
   Typography,
+  List,
+  ListItem,
+  IconButton
 } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import CloseIcon from '@material-ui/icons/Close';
 
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
@@ -33,6 +37,64 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "1.5em",
     width: "8em",
   },
+  tagList: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    margin: 0,
+    padding: 0,
+    border: 'none'
+  },
+  tagItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    align: 'center',
+    textAlign: 'center',
+    background: '#5B56E9',
+    borderRadius: '2px',
+    color: '#ffffff',
+    margin: '5px',
+    padding: '5px',
+    width: 'fit-content'
+  }, 
+  tagInput: {
+    background: 'none',
+    flexGrow: '1',
+  },
+  removeTag: {
+    alignItems: 'center',
+    background: '#333333',
+    border: 'none',
+    color: '#ffffff',
+    cursor: 'pointer',
+    height: '15px',
+    width: '15px',
+    fontSize: '12px',
+    borderRadius: '50%',
+    display: 'inline-flex',
+    justifyContent: 'center',
+    marginLeft: '200px',
+    paddingLeft: '10%',
+    transform: 'rotate(45deg)',
+  },
+  tags: {
+    align: 'center',
+    textAlign: 'center',
+    outline: 'none',
+    border: 'none',
+    width: 'fit-content',
+    background: '#ffffff',
+    maxWidth: '32%',
+    '& input': {
+      border: 'none',
+      width: '100%',
+      minWidth: '50px',
+      '&:hover': {
+        outline: 'none',
+      }
+    }
+  }
 }));
 
 const AddPost = ({ history }) => {
@@ -47,12 +109,15 @@ const AddPost = ({ history }) => {
   const [postType, setPostType] = useState("");
   const [userMedia, setUserMedia] = useState(null);
   const [imageURL, setImageURL] = useState(null);
+  const [tags, setTags] = useState([])
+
   //db access
   const postsRef = firebase.firestore().collection("posts");
   const storageRef = firebase.storage().ref();
 
   //refs
   const fileRef = React.useRef();
+  const tagInput = React.useRef();
   const submitButton = React.useRef();
 
   const imageUpload = async (imageFile) => {
@@ -67,6 +132,28 @@ const AddPost = ({ history }) => {
     submitButton.current.disabled = false;
     console.log("IMAGE??", imageURL);
   };
+
+
+  //functions
+  const removeTag = (idx) => {
+    const currentTags = tags;
+    currentTags.splice(idx, 1);
+    setTags([...currentTags])
+  } 
+
+  const addTag = (e) => {
+    const newTag = e.target.value;
+    if(newTag && e.key === 'Enter'){
+      const foundTag = tags.filter(tag => 
+        tag.toLowerCase() === newTag.toLowerCase())
+      if(foundTag.length){
+        return alert(`Tag already exists as ${foundTag[0]}`)
+      }
+      const newTags = [...tags, newTag];
+      document.getElementById('tagInput').value = '';
+      setTags([...newTags])
+    }
+  }
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -83,12 +170,13 @@ const AddPost = ({ history }) => {
         isActive: true,
         enableCollab: true,
         imageURL: imageURL,
+        tags
       })
       .then((docRef) => {
         history.push({ pathname: `/posts/${docRef.id}`, postType: postType });
       });
   };
-
+// classes={classes.removeTag}> X </button> onClick={() => removeTag(idx)}
   return (
     <div>
       <form onSubmit={onSubmitHandler}>
@@ -104,7 +192,6 @@ const AddPost = ({ history }) => {
             <Typography
               style={{
                 marginBottom: "1em",
-
                 color: theme.palette.common.colorOne,
               }}
             >
@@ -117,7 +204,48 @@ const AddPost = ({ history }) => {
               style={{ marginTop: "1em", marginBottom: "1em" }}
               onChange={(e) => setTitle(e.currentTarget.value)}
               variant="filled"
-              fullWidth
+              fullWidth/>
+          <TextField
+            label="description"
+            name="description"
+            multiline
+            rows={3}
+            value={description}
+            onChange={(e) => setDescription(e.currentTarget.value)}
+            style={{ marginTop: "1em", marginBottom: "1em" }}
+            variant="filled"
+          />
+          <Grid className={classes.tags}>
+            <List className={classes.tagList}>
+              {
+                tags.map((tag,idx) => {
+                  return (
+                    <ListItem key={idx} className={classes.tagItem}>
+                      {tag} 
+                      <IconButton
+                        type='button'
+                        name='removeTag' 
+                        onClick={() => removeTag(idx)}>
+                          <CloseIcon color='secondary' style={{ fontSize: 15}}/>
+                      </IconButton>    
+                    </ListItem>
+                  )
+                })
+              }
+              <ListItem className={classes.tagInput}>
+                <TextField id='tagInput' onKeyDown={addTag} ref={tagInput} />
+              </ListItem>
+            </List>
+          </Grid>
+          <RadioGroup
+            row={true}
+            onChange={(e) => setPostType(e.currentTarget.value)}
+          >
+            <FormControlLabel value="live" control={<Radio />} label="Live" />
+            <FormControlLabel
+              value="discuss"
+              control={<Radio />}
+              label="Discuss"
             />
             {title === "" && (
               <Typography
