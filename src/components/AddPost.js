@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   Button,
@@ -7,13 +7,16 @@ import {
   Grid,
   FormControlLabel,
   Typography,
+  List,
+  ListItem,
+  IconButton
 } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import CloseIcon from '@material-ui/icons/Close';
 
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
 import "firebase/storage";
-import { SettingsInputAntenna } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -34,18 +37,63 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "1.5em",
     width: "8em",
   },
-  tagsList: {
+  tagList: {
     display: 'flex',
+    flexDirection: 'row',
     flexWrap: 'wrap',
     margin: 0,
     padding: 0,
-    width: '100%'
+    border: 'none'
   },
   tagItem: {
-
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    align: 'center',
+    textAlign: 'center',
+    background: '#5B56E9',
+    borderRadius: '2px',
+    color: '#ffffff',
+    margin: '5px',
+    padding: '5px',
+    width: 'fit-content'
   }, 
   tagInput: {
-    
+    background: 'none',
+    flexGrow: '1',
+  },
+  removeTag: {
+    alignItems: 'center',
+    background: '#333333',
+    border: 'none',
+    color: '#ffffff',
+    cursor: 'pointer',
+    height: '15px',
+    width: '15px',
+    fontSize: '12px',
+    borderRadius: '50%',
+    display: 'inline-flex',
+    justifyContent: 'center',
+    marginLeft: '200px',
+    paddingLeft: '10%',
+    transform: 'rotate(45deg)',
+  },
+  tags: {
+    align: 'center',
+    textAlign: 'center',
+    outline: 'none',
+    border: 'none',
+    width: 'fit-content',
+    background: '#ffffff',
+    maxWidth: '32%',
+    '& input': {
+      border: 'none',
+      width: '100%',
+      minWidth: '50px',
+      '&:hover': {
+        outline: 'none',
+      }
+    }
   }
 }));
 
@@ -72,57 +120,60 @@ const AddPost = ({ history }) => {
 
   //functions
   const removeTag = (idx) => {
-    setTags(tags.splice(idx, 1))
+    const currentTags = tags;
+    currentTags.splice(idx, 1);
+    setTags([...currentTags])
   } 
 
   const addTag = (e) => {
-    const newTag = e.currentTarget.value;
-    let foundTags;
+    const newTag = e.target.value;
     if(newTag && e.key === 'Enter'){
-      const foundTag = tags.filter(tag => tag.toLowerCase() === newTag.toLowerCase())
+      const foundTag = tags.filter(tag => 
+        tag.toLowerCase() === newTag.toLowerCase())
       if(foundTag.length){
         return alert(`Tag already exists as ${foundTag[0]}`)
       }
-      setTags([...tags, newTag])
-      tagInput.current.value = null;
-    } else if (!newTag && e.key === 'Backspace'){
-      removeTag(tags[-1]) //CHANGE TO tags.length - 1
+      const newTags = [...tags, newTag];
+      tagInput.current.value = null
+      setTags([...newTags])
     }
   }
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    let photoRef;
-    let imageRefId = null;
-    if (userMedia) {
-      imageRefId = `image_${String(Math.floor(Math.random() * 100000))}_${
-        userMedia.name
-      }`;
-    }
+    if(e.currentTarget.name === 'createPost'){
+      let photoRef;
+      let imageRefId = null;
+      if (userMedia) {
+        imageRefId = `image_${String(Math.floor(Math.random() * 100000))}_${
+          userMedia.name
+        }`;
+      }
 
-    if (postType === "you") {
-      photoRef = storageRef.child(imageRefId);
-      photoRef.put(userMedia).then((snapshot) => {});
-    }
+      if (postType === "you") {
+        photoRef = storageRef.child(imageRefId);
+        photoRef.put(userMedia).then((snapshot) => {});
+      }
 
-    postsRef
-      .add({
-        userRef: currentUser.uid,
-        title: title,
-        description,
-        postType: postType,
-        editorData: "Start Coding Here!",
-        docChanges: [{ changeID: "" }],
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        isActive: true,
-        enableCollab: true,
-        imageRef: imageRefId,
-      })
-      .then((docRef) => {
-        history.push({ pathname: `/posts/${docRef.id}`, postType: postType });
-      });
+      postsRef
+        .add({
+          userRef: currentUser.uid,
+          title: title,
+          description,
+          postType: postType,
+          editorData: "Start Coding Here!",
+          docChanges: [{ changeID: "" }],
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          isActive: true,
+          enableCollab: true,
+          imageRef: imageRefId,
+        })
+        .then((docRef) => {
+          history.push({ pathname: `/posts/${docRef.id}`, postType: postType });
+        });
+    }
   };
-
+// classes={classes.removeTag}> X </button> onClick={() => removeTag(idx)}
   return (
     <div>
       <form onSubmit={onSubmitHandler}>
@@ -171,22 +222,27 @@ const AddPost = ({ history }) => {
             style={{ marginTop: "1em", marginBottom: "1em" }}
             variant="filled"
           />
-          <Grid>
-            <ul classes={classes.tagList}>
+          <Grid className={classes.tags}>
+            <List className={classes.tagList}>
               {
                 tags.map((tag,idx) => {
                   return (
-                    <li key={idx} className='tag-item'>
+                    <ListItem key={idx} className={classes.tagItem}>
                       {tag} 
-                      <button onClick={() => removeTag(idx)}> + </button> 
-                    </li>
+                      <IconButton
+                        type='button'
+                        name='removeTag' 
+                        onClick={() => removeTag(idx)}>
+                          <CloseIcon color='secondary' style={{ fontSize: 15}}/>
+                      </IconButton>    
+                    </ListItem>
                   )
                 })
               }
-              <li className='tag-input'>
+              <ListItem className={classes.tagInput}>
                 <TextField onKeyDown={addTag} ref={tagInput} />
-              </li>
-            </ul>
+              </ListItem>
+            </List>
           </Grid>
           <RadioGroup
             row={true}
@@ -245,6 +301,7 @@ const AddPost = ({ history }) => {
               (postType === "you" && !userMedia)
             }
             type="submit"
+            name='createPost'
             classes={{ root: classes.button1 }}
           >
             Submit
