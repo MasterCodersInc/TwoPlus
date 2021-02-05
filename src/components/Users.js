@@ -22,7 +22,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import CheckIcon from '@material-ui/icons/Check';
 import firebase from '../firebase';
-import {useAuth} from '../contexts/AuthContext'
+import {useHistory} from 'react-router-dom'
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -133,14 +133,15 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected, selected } = props;
+  const history = useHistory();
 
   function deleteUsers(){
     try {
       selected.forEach(async (docId) => {
-        await firebase.firestore().collection('users').doc(docId).delete();
+        const res = await firebase.firestore().collection('users').doc(docId).delete();
         return;
       })
-      numSelected = 0;
+      history.push('/users/deleted')
     } catch (error) {
       console.log('Couldnt delete users', selected)
     }
@@ -217,17 +218,16 @@ export default function Users() {
   const [users, setUsers] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-    useEffect(() => {
-        async function getAllUsers(){
-            const usersCollection = await firebase.firestore().collection('users').get() 
-            const usersData = usersCollection.docs.map((userDoc) => (
-              {...userDoc.data(), docId: userDoc.id}));
-            setUsers(usersData)
-        }
-        getAllUsers();
-    },[])
+  async function getAllUsers(){
+    const usersCollection = await firebase.firestore().collection('users').get() 
+    const usersData = usersCollection.docs.map((userDoc) => (
+      {...userDoc.data(), docId: userDoc.id}));
+    setUsers(usersData)
+  }
 
-    useEffect(()=>{setUsers(users)},[users])
+  useEffect(() => {
+      getAllUsers();
+  },[])
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
