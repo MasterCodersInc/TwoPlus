@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -22,6 +22,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import CheckIcon from '@material-ui/icons/Check';
 import firebase from '../firebase';
+import {useAuth} from '../contexts/AuthContext'
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -131,7 +132,19 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+  const { numSelected, selected } = props;
+
+  function deleteUsers(){
+    try {
+      selected.forEach(async (docId) => {
+        await firebase.firestore().collection('users').doc(docId).delete();
+        return;
+      })
+      numSelected = 0;
+    } catch (error) {
+      console.log('Couldnt delete users', selected)
+    }
+  }
 
   return (
     <Toolbar
@@ -151,7 +164,7 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton aria-label="delete">
+          <IconButton aria-label="delete" onClick={deleteUsers}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -207,13 +220,14 @@ export default function Users() {
     useEffect(() => {
         async function getAllUsers(){
             const usersCollection = await firebase.firestore().collection('users').get() 
-            const usersData = usersCollection.docs.map((userDoc) => {
-                return userDoc.data();
-            })
+            const usersData = usersCollection.docs.map((userDoc) => (
+              {...userDoc.data(), docId: userDoc.id}));
             setUsers(usersData)
         }
         getAllUsers();
     },[])
+
+    useEffect(()=>{setUsers(users)},[users])
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -223,19 +237,19 @@ export default function Users() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.email);
+      const newSelecteds = users.map((n) => n.docId);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, email) => {
-    const selectedIndex = selected.indexOf(email);
+  const handleClick = (event, docId) => {
+    const selectedIndex = selected.indexOf(docId);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, email);
+      newSelected = newSelected.concat(selected, docId);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -263,14 +277,14 @@ export default function Users() {
     setDense(event.target.checked);
   };
 
-  const isSelected = (email) => selected.indexOf(email) !== -1;
+  const isSelected = (docId) => selected.indexOf(docId) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, users.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} selected={selected}/>
         <TableContainer>
           <Table
             className={classes.table}
@@ -291,17 +305,17 @@ export default function Users() {
               {stableSort(users, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.email);
+                  const isItemSelected = isSelected(row.docId);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.email)}
+                      onClick={(event) => handleClick(event, row.docId)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.email}
+                      key={row.docId}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
