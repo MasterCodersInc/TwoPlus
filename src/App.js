@@ -23,6 +23,7 @@ import userSavedCollabs from "./components/userSavedCollabs";
 import savedContent from "./components/savedContent";
 import Users from "./components/Users";
 import UserLanding from "./components/UserLanding";
+import PublicProfile from "./components/PublicProfile";
 import GuestLanding from "./components/GuestLanding";
 
 function App() {
@@ -43,8 +44,9 @@ function App() {
             <Route exact path="/posts/:postId" component={Post} />
             <Route exact path="/savedcollabs" component={userSavedCollabs} />
             <Route exact path="/savedcontent" component={savedContent} />
+            <Route exact path="/users" component={Users} />
+            <Route exact path="/users/:userID" component={PublicProfile} />
             <Redirect from='/users/deleted' to='/users' />
-            <Route exact path='/users' component={Users} />
             <Route exact path="/userhome" component={UserLanding} />
             <Route exact path="/guesthome" component={GuestLanding} />
           </Switch>

@@ -106,6 +106,7 @@ const Post = (props) => {
             )}
           </Grid>
         </Grid>
+        <Typography>{post.description || ""}</Typography>
 
         <EditorUID
           uid={currentUser.uid}

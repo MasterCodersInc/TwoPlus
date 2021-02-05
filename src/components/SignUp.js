@@ -58,7 +58,7 @@ export default function SignUp() {
     try {
       setError("");
       setLoading(true);
-      await signup(email, password);
+      const newUser = await signup(email, password);
       firebase
         .firestore()
         .collection("users")
@@ -73,6 +73,7 @@ export default function SignUp() {
             .concat(lastName.slice(1).toLowerCase()),
           email,
           isAdmin,
+          uid: newUser.user.uid,
         });
       history.push("/userhome");
     } catch (error) {
