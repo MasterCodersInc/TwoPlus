@@ -41,14 +41,14 @@ const Post = (props) => {
       const postFromDb = await postRef.get();
       const postData = postFromDb.data();
       setPost(postData);
-      setEnableCollab(postData.enableCollab)
-    }    
+      setEnableCollab(postData.enableCollab);
+    }
     getPostData();
   }, []);
-    
-  function toggleEditor(){
+
+  function toggleEditor() {
     postRef.update({ enableCollab: !enableCollab });
-    setEnableCollab(!enableCollab)
+    setEnableCollab(!enableCollab);
   }
 
   function toggleActive() {
@@ -105,8 +105,16 @@ const Post = (props) => {
           </div>
         </Grid>
         <Typography>{post.description || ""}</Typography>
-        <EditorUID uid={currentUser.uid} disabled={!post?.isActive} enableCollab={enableCollab}/>
-        <ChatRoom disabled={!post?.isActive} postId={postId} postRef={postRef}/>   
+        <EditorUID
+          uid={currentUser.uid}
+          disabled={!post?.isActive}
+          enableCollab={enableCollab}
+        />
+        <ChatRoom
+          disabled={!post?.isActive}
+          postId={postId}
+          postRef={postRef}
+        />
       </div>
     );
   }

@@ -61,16 +61,8 @@ const DiscussPost = ({ post }) => {
           .collection("discussReplies")
       );
     }
-    async function fetchImageData() {
-      const imageRef = firebase.storage().ref().child(post.imageRef);
-      const imageUrl = await imageRef.getDownloadURL();
-      setPostImage(imageUrl);
-    }
 
     fetchPostReplies();
-    if (post.imageRef) {
-      fetchImageData();
-    }
   }, []);
 
   useEffect(() => {
@@ -99,8 +91,8 @@ const DiscussPost = ({ post }) => {
         <Typography style={{ marginTop: 5 }} variant="h2">
           {post.title}
         </Typography>
-        {postImage && (
-          <img style={{ width: 300, height: 300 }} src={postImage} />
+        {post.imageURL && (
+          <img style={{ width: 300, height: 300 }} src={post.imageURL} />
         )}
         <Typography variant="body2">{post.description}</Typography>
         <Typography variant="subtitle1" style={{ marginTop: "1em" }}>
