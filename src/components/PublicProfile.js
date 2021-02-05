@@ -54,15 +54,17 @@ export default function PublicProfile() {
 
   // in a use effect to trigger the re-render
   useEffect(() => {
-    const userDocRef = db.collection("users").doc(userID);
-
     async function getUserAndPosts() {
-      const userInfo = (await userDocRef.get()).data();
-      setUser(userInfo);
-
+      const userObjLoc = await firebase
+        .firestore()
+        .collection("users")
+        .where("uid", "==", userID);
+      let userData = await userObjLoc.get();
+      userData = userData.docs[0].data();
+      setUser(userData);
       const postRefs = db
         .collection("posts")
-        .where("userRef", "==", userInfo.uid);
+        .where("userRef", "==", userData.uid);
 
       let postsArr = await postRefs.get();
       postsArr = postsArr.docs.map((doc) => ({ ...doc.data(), docID: doc.id }));
@@ -72,7 +74,6 @@ export default function PublicProfile() {
     getUserAndPosts();
   }, []);
 
-  console.log(userPostList);
   return (
     <Grid container>
       <Grid item container direction="column">
