@@ -13,6 +13,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
 import "firebase/storage";
+import { SettingsInputAntenna } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -33,6 +34,19 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "1.5em",
     width: "8em",
   },
+  tagsList: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    margin: 0,
+    padding: 0,
+    width: '100%'
+  },
+  tagItem: {
+
+  }, 
+  tagInput: {
+    
+  }
 }));
 
 const AddPost = ({ history }) => {
@@ -46,6 +60,7 @@ const AddPost = ({ history }) => {
   const [description, setDescription] = useState("");
   const [postType, setPostType] = useState("");
   const [userMedia, setUserMedia] = useState();
+  const [tags, setTags] = useState([])
 
   //db access
   const postsRef = firebase.firestore().collection("posts");
@@ -53,6 +68,27 @@ const AddPost = ({ history }) => {
 
   //refs
   const fileRef = React.useRef();
+  const tagInput = React.useRef();
+
+  //functions
+  const removeTag = (idx) => {
+    setTags(tags.splice(idx, 1))
+  } 
+
+  const addTag = (e) => {
+    const newTag = e.currentTarget.value;
+    let foundTags;
+    if(newTag && e.key === 'Enter'){
+      const foundTag = tags.filter(tag => tag.toLowerCase() === newTag.toLowerCase())
+      if(foundTag.length){
+        return alert(`Tag already exists as ${foundTag[0]}`)
+      }
+      setTags([...tags, newTag])
+      tagInput.current.value = null;
+    } else if (!newTag && e.key === 'Backspace'){
+      removeTag(tags[-1]) //CHANGE TO tags.length - 1
+    }
+  }
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -119,7 +155,6 @@ const AddPost = ({ history }) => {
             <Typography
               style={{
                 marginBottom: "1em",
-
                 color: theme.palette.common.colorThree,
               }}
             >
@@ -136,6 +171,23 @@ const AddPost = ({ history }) => {
             style={{ marginTop: "1em", marginBottom: "1em" }}
             variant="filled"
           />
+          <Grid>
+            <ul classes={classes.tagList}>
+              {
+                tags.map((tag,idx) => {
+                  return (
+                    <li key={idx} className='tag-item'>
+                      {tag} 
+                      <button onClick={() => removeTag(idx)}> + </button> 
+                    </li>
+                  )
+                })
+              }
+              <li className='tag-input'>
+                <TextField onKeyDown={addTag} ref={tagInput} />
+              </li>
+            </ul>
+          </Grid>
           <RadioGroup
             row={true}
             onChange={(e) => setPostType(e.currentTarget.value)}
