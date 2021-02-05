@@ -49,19 +49,30 @@ export default function PublicProfile() {
   const classes = useStyles();
   const theme = useTheme();
   const [user, setUser] = useState({});
-  const [userPostList, setUserPostList] = useState();
+  const [userPostList, setUserPostList] = useState(null);
   const db = firebase.firestore();
 
   // in a use effect to trigger the re-render
   useEffect(() => {
     const userDocRef = db.collection("users").doc(userID);
+
     async function getUserAndPosts() {
       const userInfo = (await userDocRef.get()).data();
       setUser(userInfo);
+
+      const postRefs = db
+        .collection("posts")
+        .where("userRef", "==", userInfo.uid);
+
+      let postsArr = await postRefs.get();
+      postsArr = postsArr.docs.map((doc) => ({ ...doc.data(), docID: doc.id }));
+      setUserPostList(postsArr);
     }
+
     getUserAndPosts();
   }, []);
 
+  console.log(userPostList);
   return (
     <Grid container>
       <Grid item container direction="column">
@@ -87,22 +98,40 @@ export default function PublicProfile() {
                 />
               </Tabs>
               <Grid container id="postsContainer">
-                <div
-                  style={{
-                    marginLeft: "2em",
-                    backgroundColor: "#F8F8F8",
-                    boxShadow: "6px 7px 12px 1px rgba(136,157,226,0.39)",
-                    width: "75vw",
-                    padding: 10,
-                    paddingTop: 0,
-                    borderRadius: 10,
-                  }}
-                >
-                  <h1>post name</h1>
-                  <h4>post description</h4>
-                  <small>asked on date</small>
-                  <small>post type</small>
-                </div>
+                {userPostList &&
+                  userPostList.map((post) => {
+                    return (
+                      <div
+                        style={{
+                          marginLeft: "2em",
+                          backgroundColor: "#F8F8F8",
+                          boxShadow: "6px 7px 12px 1px rgba(136,157,226,0.39)",
+                          width: "60vw",
+                          padding: 10,
+                          paddingTop: 0,
+                          borderRadius: 10,
+                          marginBottom: 15,
+                        }}
+                      >
+                        <Typography
+                          component={Link}
+                          style={{ textDecoration: "none", color: "#5B56E9" }}
+                          to={`/posts/${post.docID}`}
+                          variant="h2"
+                        >
+                          {post.title}
+                        </Typography>
+                        <h4>{post.description}</h4>
+                        {post.timestamp && (
+                          <small>Asked on {post.timestamp.toString()}</small>
+                        )}
+                        <br></br>
+                        {post.postType && (
+                          <small>post type: {post.postType}</small>
+                        )}
+                      </div>
+                    );
+                  })}
               </Grid>
             </Grid>
           </Grid>
