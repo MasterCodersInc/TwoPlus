@@ -68,7 +68,9 @@ const DiscussPost = ({ post }) => {
     }
 
     fetchPostReplies();
-    fetchImageData();
+    if (post.imageRef) {
+      fetchImageData();
+    }
   }, []);
 
   useEffect(() => {
