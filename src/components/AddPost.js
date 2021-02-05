@@ -134,44 +134,43 @@ const AddPost = ({ history }) => {
         return alert(`Tag already exists as ${foundTag[0]}`)
       }
       const newTags = [...tags, newTag];
-      tagInput.current.value = null
+      document.getElementById('tagInput').value = '';
       setTags([...newTags])
     }
   }
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    if(e.currentTarget.name === 'createPost'){
-      let photoRef;
-      let imageRefId = null;
-      if (userMedia) {
-        imageRefId = `image_${String(Math.floor(Math.random() * 100000))}_${
-          userMedia.name
-        }`;
-      }
-
-      if (postType === "you") {
-        photoRef = storageRef.child(imageRefId);
-        photoRef.put(userMedia).then((snapshot) => {});
-      }
-
-      postsRef
-        .add({
-          userRef: currentUser.uid,
-          title: title,
-          description,
-          postType: postType,
-          editorData: "Start Coding Here!",
-          docChanges: [{ changeID: "" }],
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-          isActive: true,
-          enableCollab: true,
-          imageRef: imageRefId,
-        })
-        .then((docRef) => {
-          history.push({ pathname: `/posts/${docRef.id}`, postType: postType });
-        });
+    let photoRef;
+    let imageRefId = null;
+    if (userMedia) {
+      imageRefId = `image_${String(Math.floor(Math.random() * 100000))}_${
+        userMedia.name
+      }`;
     }
+
+    if (postType === "you") {
+      photoRef = storageRef.child(imageRefId);
+      photoRef.put(userMedia).then((snapshot) => {});
+    }
+
+    postsRef
+      .add({
+        userRef: currentUser.uid,
+        title: title,
+        description,
+        postType: postType,
+        editorData: "Start Coding Here!",
+        docChanges: [{ changeID: "" }],
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        isActive: true,
+        enableCollab: true,
+        imageRef: imageRefId,
+        tags
+      })
+      .then((docRef) => {
+        history.push({ pathname: `/posts/${docRef.id}`, postType: postType });
+      });
   };
 // classes={classes.removeTag}> X </button> onClick={() => removeTag(idx)}
   return (
@@ -240,7 +239,7 @@ const AddPost = ({ history }) => {
                 })
               }
               <ListItem className={classes.tagInput}>
-                <TextField onKeyDown={addTag} ref={tagInput} />
+                <TextField id='tagInput' onKeyDown={addTag} ref={tagInput} />
               </ListItem>
             </List>
           </Grid>
