@@ -171,6 +171,7 @@ const AddPost = ({ history }) => {
         enableCollab: true,
         imageURL: imageURL,
         tags,
+        plusplusCount: 0,
       })
       .then((docRef) => {
         history.push({ pathname: `/posts/${docRef.id}`, postType: postType });
