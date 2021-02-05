@@ -23,8 +23,8 @@ export default createMuiTheme({
       colorWhite: colorWhite,
       colorRed: colorRed,
       colorGreen: colorGreen,
-      colorRedHover: colorRedHover, 
-      colorGreenHover: colorGreenHover
+      colorRedHover: colorRedHover,
+      colorGreenHover: colorGreenHover,
     },
     primary: {
       main: colorOne,
@@ -55,7 +55,7 @@ export default createMuiTheme({
     body2: {
       fontSize: ".8em",
       fontWeight: 400,
-      fontFamily: "Lato",
+      fontFamily: "Montserrat",
       letterSpacing: 2,
     },
     subtitle1: {

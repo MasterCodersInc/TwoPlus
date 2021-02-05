@@ -21,9 +21,9 @@ import Post from "./components/Post";
 import AddPost from "./components/AddPost";
 import userSavedCollabs from "./components/userSavedCollabs";
 import savedContent from "./components/savedContent";
-import Users from './components/Users'
+import Users from "./components/Users";
 import UserLanding from "./components/UserLanding";
-
+import GuestLanding from "./components/GuestLanding";
 
 function App() {
   return (
@@ -46,6 +46,7 @@ function App() {
             <Redirect from='/users/deleted' to='/users' />
             <Route exact path='/users' component={Users} />
             <Route exact path="/userhome" component={UserLanding} />
+            <Route exact path="/guesthome" component={GuestLanding} />
           </Switch>
         </AuthProvider>
       </BrowserRouter>
