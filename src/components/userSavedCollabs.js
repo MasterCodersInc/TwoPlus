@@ -69,7 +69,7 @@ export default function UserProfile() {
 
     const userPosts = db.collection("posts").where("userRef", "==", `${UID}`);
     userPosts.get().then((postObj) => {
-      let postsArr = postObj.docs.map((doc) => ({ ...doc.data() }));
+      let postsArr = postObj.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
       console.log(postsArr);
       setUserPosts(postsArr);
     });
@@ -102,7 +102,9 @@ export default function UserProfile() {
         </Grid>
         <Grid item container alignItems="center" className={classes.infoCont}>
           {userPosts.map((post) => (
+            
             <Grid item container alignItems="center">
+              <Link to={`/posts/${post.id}`}>
               <Grid item>
                 <Typography>{post.title}</Typography>
               </Grid>
@@ -115,6 +117,7 @@ export default function UserProfile() {
                 alt="rectangle with shadows"
                 className={classes.shadowRectangle}
               />
+              </Link>
             </Grid>
           ))}
           {/* <Grid>{userPosts[0]?.title}</Grid> */}

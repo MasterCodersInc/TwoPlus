@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import firebase from '../firebase';
-import ChatMsg from './ChatMsg';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useState, useEffect } from "react";
+import firebase from "../firebase";
+import ChatMsg from "./ChatMsg";
+import { useAuth } from "../contexts/AuthContext";
 // this display's  the chat message.. and input field to allow user to send message
 
-const ChatRoom = ({ postId, postRef, disabled}) => {
+import Grid from "@material-ui/core/Grid";
+
+const ChatRoom = ({ postId, postRef, disabled }) => {
   const { currentUser } = useAuth();
   const db = firebase.firestore();
-  const { uid } = currentUser;
+  const uid = currentUser?.uid
 
   const [messages, setMessage] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
 
   //Order and limit data
   //By default, a query retrieves all documents that satisfy the query in ascending order by document ID. You can specify the sort order for your data using orderBy(), and you can limit the number of documents retrieved using limit().
@@ -22,8 +24,8 @@ const ChatRoom = ({ postId, postRef, disabled}) => {
     if (db) {
       // console.log('this is db', db)
       const unsubscribe = postRef
-        .collection('messages')
-        .orderBy('createdAt')
+        .collection("messages")
+        .orderBy("createdAt")
         .limit(50)
         .onSnapshot((querySnapshot) => {
           // get all documents from collection - with ids
@@ -39,7 +41,7 @@ const ChatRoom = ({ postId, postRef, disabled}) => {
       return unsubscribe;
     }
   }, [db]);
-  
+
   const handleOnChange = (e) => {
     setNewMessage(e.target.value);
   };
@@ -50,7 +52,7 @@ const ChatRoom = ({ postId, postRef, disabled}) => {
     //missing userID
     if (db) {
       // Add new message in Firestore
-      postRef.collection('messages').add({
+      postRef.collection("messages").add({
         text: newMessage,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         uid,
@@ -62,10 +64,10 @@ const ChatRoom = ({ postId, postRef, disabled}) => {
     <div>
       <ul>
         {messages.map((message) => (
-            <li key={message.id}>
-              <ChatMsg message={message} currentUserId={uid} />
-            </li>
-          ))}
+          <li key={message.id}>
+            <ChatMsg message={message} currentUserId={uid} />
+          </li>
+        ))}
       </ul>
       <div className="mb-6 mx-4">
         <form onSubmit={handleOnSubmit}>
