@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { auth } from "../firebase";
+import firebase, { auth } from "../firebase";
 
 const AuthContext = React.createContext();
 
@@ -9,6 +9,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
+  const [firestoreUser, setFirestoreUser] = useState();
   const [loading, setLoading] = useState(true);
 
   function signup(email, password) {
@@ -36,6 +37,14 @@ export function AuthProvider({ children }) {
     return currentUser.updatePassword(password);
   }
 
+  function deleteUser(user){
+    try {
+      return user.delete();
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
@@ -44,14 +53,30 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    if (currentUser) {
+      async function userFireStoreInfo() {
+        const userObjLoc = await firebase
+          .firestore()
+          .collection("users")
+          .where("email", "==", `${currentUser.email}`);
+        const userData = await userObjLoc.get();
+        userData.forEach((user) => setFirestoreUser(user.data()));
+      }
+      userFireStoreInfo();
+    }
+  }, [currentUser]);
+
   const value = {
     currentUser,
+    firestoreUser,
     signup,
     logout,
     login,
     resetPassword,
     updateEmail,
     updatePassword,
+    deleteUser,
   };
 
   return (

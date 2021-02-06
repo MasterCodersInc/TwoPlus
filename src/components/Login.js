@@ -50,7 +50,7 @@ export default function SignUp() {
       console.log("!!!!!", email, password);
       await login(email, password);
 
-      history.push("/");
+      history.push("/userhome");
     } catch (error) {
       setError("Failed to log in");
       console.log(error);

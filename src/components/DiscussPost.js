@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
+import "firebase/storage";
 
 import { TextField, Button, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -41,13 +42,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DiscussPost = ({ post }) => {
-  const { currentUser } = useAuth();
+  const { currentUser, firestoreUser } = useAuth();
   const { postId } = useParams();
   const theme = useTheme();
   const classes = useStyles();
   const [responses, setResponses] = React.useState();
   const [responsesRef, setResponsesRef] = React.useState();
   const [replyText, setReplyText] = React.useState();
+  const [postImage, setPostImage] = React.useState();
 
   useEffect(() => {
     async function fetchPostReplies() {
@@ -59,6 +61,7 @@ const DiscussPost = ({ post }) => {
           .collection("discussReplies")
       );
     }
+
     fetchPostReplies();
   }, []);
 
@@ -81,15 +84,19 @@ const DiscussPost = ({ post }) => {
     });
     setReplyText("");
   };
+
   return (
     <Grid container direction="column" justify="center" alignItems="center">
       <Grid classes={{ root: classes.initialPost }} item>
         <Typography style={{ marginTop: 5 }} variant="h2">
           {post.title}
         </Typography>
+        {post.imageURL && (
+          <img style={{ width: 300, height: 300 }} src={post.imageURL} />
+        )}
         <Typography variant="body2">{post.description}</Typography>
         <Typography variant="subtitle1" style={{ marginTop: "1em" }}>
-          Asked by: {currentUser.email}
+          Asked by: {firestoreUser.firstName}
         </Typography>
       </Grid>
       <Grid container classes={{ root: classes.responseContainer }}>

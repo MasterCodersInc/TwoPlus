@@ -48,7 +48,7 @@ export default function NavBar() {
   const theme = useTheme();
   const history = useHistory();
   const [error, setError] = useState("");
-  const { currentUser, logout } = useAuth();
+  const { firestoreUser, currentUser, logout } = useAuth();
 
   async function handleLogout() {
     setError("");
@@ -60,13 +60,18 @@ export default function NavBar() {
       setError("Failed to log out");
     }
   }
-
+  if (!firestoreUser && currentUser) {
+    return <div>Loading...</div>;
+  }
   return (
     <React.Fragment>
       <AppBar className={classes.appBar}>
         <Toolbar disableGutters className={classes.toolbar}>
           <Grid item container alignItems="center">
-            <Button component={Link} to="/">
+            <Button
+              component={Link}
+              to={currentUser ? "/userhome" : "/guesthome"}
+            >
               <img src={logo} alt="2+" style={{ width: "3em" }} />
             </Button>
             <Typography className={classes.navName}>Two Plus</Typography>
@@ -85,6 +90,22 @@ export default function NavBar() {
                 >
                   Log Out
                 </Button>
+                {firestoreUser.isAdmin && (
+                  <Tab
+                    component={Link}
+                    to="/users"
+                    label="Users"
+                    className={classes.tab}
+                  />
+                )}
+                {firestoreUser.isAdmin && (
+                  <Tab
+                    component={Link}
+                    to="/signup"
+                    label="Sign Up"
+                    className={classes.tab}
+                  />
+                )}
                 <Tab
                   component={Link}
                   to="/profile"

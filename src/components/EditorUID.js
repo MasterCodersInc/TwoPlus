@@ -2,11 +2,26 @@
 import React, { useEffect, useRef, useState } from "react";
 import AceEditor from "react-ace";
 import firebase from "../firebase";
-import {useParams} from 'react-router-dom'
-import {useAuth} from '../contexts/AuthContext' 
+import { useParams } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const firestore = firebase.firestore();
 const collabData = firestore.collection("posts");
+
+const useStyles = makeStyles((theme) => ({
+  buttonEval: {
+    color: "#fff",
+    backgroundColor: theme.palette.common.colorOne,
+  },
+}));
 
 //function to run on editor load to grab correct docID
 async function getDocRef(documentID) {
@@ -14,110 +29,148 @@ async function getDocRef(documentID) {
   return document;
 }
 
-const EditorUID = ({disabled, enableCollab}) => {
-  const {currentUser} = useAuth();
-  const [collab, setCollab] = useState(enableCollab)
+const EditorUID = ({ disabled, enableCollab }) => {
+  const classes = useStyles();
+  const theme = useTheme();
+  const { currentUser } = useAuth();
+  const [collab, setCollab] = useState(enableCollab);
   const uid = currentUser.email;
-  const {postId} = useParams();
+  const { postId } = useParams();
   const docID = postId;
-  console.log('DOC ID:', docID)
   const reactAceRef = useRef();
   const editorOutput = useRef();
-  let editor;
-  let documentInfo;
-  let documentReference;
+  let editor = useRef();
+  let documentInfo = useRef();
+  let documentReference = useRef();
   let applyingDeltas = false;
-  let ownerId;
+  let ownerId = useRef();
 
   //grab data on component did mount
   useEffect(() => {
     async function fetchData() {
-      editor = reactAceRef.current.editor;
-      documentReference = await getDocRef(docID);
-      // console.log('DOC REF:', documentReference)
-      documentInfo = await documentReference.get();
-      console.log('DOC INFO:', documentInfo.data());
-      let documentData = documentInfo.data();
-      ownerId = documentData.userRef
-      editor.setValue(documentData.editorData);
+      editor.current = reactAceRef.current.editor;
+      documentReference.current = await getDocRef(docID);
+      documentInfo.current = await documentReference.current.get();
+      let documentData = documentInfo.current.data();
+      ownerId.current = documentData.userRef;
+      editor.current.setValue(documentData.editorData);
 
       //set up editor event listener. This is mostly for newUsers entering.
-      editor.on("change", (e) => {
-        if (applyingDeltas) {
-          return;
-        }
-
-        if(collab || currentUser.uid === ownerId) {
-          console.log(collab, currentUser.uid === ownerId)
-          documentReference.update({
-            editorData: editor.getValue(),
+      editor.current.on("change", (e) => {
+        if (collab || currentUser.uid === ownerId.current) {
+          if (applyingDeltas) {
+            return;
+          }
+          console.log("Inside cDidMount\ncollab:", collab);
+          documentReference.current.update({
+            editorData: editor.current.getValue(),
             docChanges: [{ changeID: uid, timeStamp: Date.now() }],
             deltas: e,
           });
         }
       });
 
-      documentReference.onSnapshot(async () => {
-        let updatedInfo = await documentReference.get();
-        let userWhoMadeChanges = updatedInfo.data().docChanges[0].changeID;
+      documentReference.current.onSnapshot(async () => {
+        console.log("Inside Snapshot");
+        let updatedInfoRef = await documentReference.current.get();
+        let updatedInfo = updatedInfoRef.data();
+        console.log(
+          "EnableCollab from DB",
+          updatedInfo.enableCollab,
+          "state collab",
+          collab,
+          "prop collab",
+          enableCollab
+        );
+        if (updatedInfo.enableCollab !== collab) {
+          console.log(
+            "inside if statement bcuz enableCollab",
+            updatedInfo.enableCollab,
+            "!== collab",
+            collab
+          );
+          setCollab(updatedInfo.enableCollab);
+          console.log("change collab to from snapshot", collab);
+        } else {
+          let userWhoMadeChanges = updatedInfo.docChanges[0].changeID;
 
-        // console.log("WHO CHANGED: ", userWhoMadeChanges, "ME: ", uid);
+          if (userWhoMadeChanges === uid) {
+            return;
+          }
 
-        if (userWhoMadeChanges === uid) {
-          return;
+          applyingDeltas = true;
+
+          editor.current.setValue(updatedInfo.editorData);
+
+          applyingDeltas = false;
         }
-
-        applyingDeltas = true;
-
-        editor.setValue(updatedInfo.data().editorData);
-
-        applyingDeltas = false;
       });
     }
     fetchData();
   }, []);
 
+  // useEffect(() => {
+  //   console.log('Collab has changed to', collab)
+  //   reactAceRef.current.editor.on("change", (e) => {
+  //     if (applyingDeltas) {
+  //       return;
+  //     }
+  //     console.log('COLLAB', collab)
+  //       console.log(collab, currentUser.uid === ownerId.current)
+  //       documentReference.current.update({
+  //         editorData: reactAceRef.current.editor.getValue(),
+  //         docChanges: [{ changeID: uid, timeStamp: Date.now() }],
+  //         deltas: e,
+  //       });
+  //   });
+  // }, [collab])
+
   //componentDidUpdate disabled
   useEffect(() => {
-    if(disabled){
+    if (disabled) {
       reactAceRef.current.editor?.setReadOnly(true);
-    } else{
+    } else {
       reactAceRef.current.editor?.setReadOnly(false);
     }
-  },[disabled])
+  }, [disabled]);
 
-  //componentDidUpdate collab
-  useEffect(() => {
-    if(enableCollab){
-      setCollab(true);
-    } else{
-      setCollab(false);
-    }
-  },[collab])
-    
+  // //componentDidUpdate collab
+  // useEffect(() => {
+  //   console.log('ENABLE COLLAB is', enableCollab)
+  //   if(enableCollab){
+  //     setCollab(true);
+  //   } else{
+  //     setCollab(false);
+  //   }
+  //   console.log('Collab changed to', collab)
+  // })
+
   return (
-    <div>
-      {console.log('INSIDE EDITOR ENABLE COLLAB', enableCollab)}
-      <h4 style={{ marginLeft: 50 }}>{uid}</h4>
-      <div style={{ display: "flex", flexDirection: "row", marginLeft: 50 }}>
-        <AceEditor ref={reactAceRef} mode="javascript" theme="chaos" />
-        <AceEditor ref={editorOutput} mode="javascript" />
-      </div>
-      {/* evaluate code in editor */}
-      <button
-        onClick={() => {
-          try {
-            let ans = eval(editor.getValue());
-            editorOutput.current.editor.setValue(String(ans), 1);
-          } catch (e) {
-            editorOutput.current.editor.setValue(e.message, 1);
-          }
-          return;
-        }}
-      >
-        Eval Code
-      </button>
-    </div>
+    <>
+      <Grid container>
+        {/* <Grid item container> */}
+        {/* <h4 style={{ marginLeft: 50 }}>{uid}</h4> */}
+        <div style={{ display: "flex", flexDirection: "row", marginLeft: 50 }}>
+          <AceEditor ref={reactAceRef} mode="javascript" theme="chaos" />
+          <AceEditor ref={editorOutput} mode="javascript" />
+        </div>
+        {/* evaluate code in editor */}
+        <button
+          classes={{ root: classes.buttonEval }}
+          onClick={() => {
+            try {
+              let ans = eval(editor.getValue());
+              editorOutput.current.editor.setValue(String(ans), 1);
+            } catch (e) {
+              editorOutput.current.editor.setValue(e.message, 1);
+            }
+            return;
+          }}
+        >
+          Eval Code
+        </button>
+      </Grid>
+    </>
   );
 };
 

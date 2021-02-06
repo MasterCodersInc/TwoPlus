@@ -10,6 +10,8 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -38,11 +40,13 @@ export default function SignUp() {
   const history = useHistory();
 
   const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const { signup, currentUser } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { signup, currentUser, firestoreUser } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -54,13 +58,24 @@ export default function SignUp() {
     try {
       setError("");
       setLoading(true);
-      console.log("!!!!!", email, password);
-      await signup(email, password);
+      const newUser = await signup(email, password);
       firebase
         .firestore()
         .collection("users")
-        .add({ firstName, lastName, email });
-      history.push("/");
+        .add({
+          firstName: firstName
+            .slice(0, 1)
+            .toUpperCase()
+            .concat(firstName.slice(1).toLowerCase()),
+          lastName: lastName
+            .slice(0, 1)
+            .toUpperCase()
+            .concat(lastName.slice(1).toLowerCase()),
+          email,
+          isAdmin,
+          uid: newUser.user.uid,
+        });
+      history.push("/userhome");
     } catch (error) {
       setError("Failed to create an account");
       console.log(error);
@@ -124,6 +139,14 @@ export default function SignUp() {
               variant="filled"
             ></TextField>
             <TextField
+              name="userName"
+              placeholder="enter your userName here"
+              label="User Name"
+              onChange={(e) => setUserName(e.currentTarget.value)}
+              fullWidth
+              variant="filled"
+            ></TextField>
+            <TextField
               name="password"
               type="password"
               placeholder="enter your password here"
@@ -142,7 +165,22 @@ export default function SignUp() {
               fullWidth
               variant="filled"
             ></TextField>
-
+            {firestoreUser && firestoreUser.isAdmin && (
+              <Grid>
+                <FormControlLabel
+                  value="isAdmin"
+                  control={
+                    <Checkbox
+                      onChange={(e) => setIsAdmin(e.currentTarget.checked)}
+                    />
+                  }
+                  label="Assign as Admin"
+                  labelPlacement="end"
+                  fullWidth
+                  variant="filled"
+                />
+              </Grid>
+            )}
             <Button
               disabled={loading}
               type="submit"
