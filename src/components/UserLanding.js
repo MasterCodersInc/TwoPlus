@@ -50,7 +50,7 @@ export default function Landing() {
     const discussLoc = firebase
       .firestore()
       .collection("posts")
-      .orderBy("timestamp")
+      .orderBy("timestamp", "desc")
       .where("postType", "==", "discuss")
       .limit(5);
 
@@ -151,8 +151,26 @@ export default function Landing() {
                     >
                       {post.title}
                     </Typography>
-                    <Grid item>
-                      <Typography variant="body2">#hashtags</Typography>
+                    <Grid item container direction="row">
+                      {post.tags.map((tag) => {
+                        return (
+                          <Typography
+                            variant="body2"
+                            style={{
+                              color: "white",
+                              width: "fit-content",
+                              backgroundColor: theme.palette.common.colorOne,
+                              marginRight: 4,
+                              marginTop: 4,
+                              marginBottom: 4,
+                              padding: 2,
+                              borderRadius: 2,
+                            }}
+                          >
+                            #{tag}
+                          </Typography>
+                        );
+                      })}
                     </Grid>
                   </Grid>
                   <Grid item style={{ marginLeft: "2em" }}>
@@ -187,8 +205,26 @@ export default function Landing() {
                     >
                       {disc.title}
                     </Typography>
-                    <Grid item>
-                      <Typography variant="body2">#hashtags</Typography>
+                    <Grid item container direction="row">
+                      {disc.tags?.map((tag) => {
+                        return (
+                          <Typography
+                            variant="body2"
+                            style={{
+                              color: "white",
+                              width: "fit-content",
+                              backgroundColor: theme.palette.common.colorOne,
+                              marginRight: 4,
+                              marginTop: 4,
+                              marginBottom: 4,
+                              padding: 2,
+                              borderRadius: 2,
+                            }}
+                          >
+                            #{tag}
+                          </Typography>
+                        );
+                      })}
                     </Grid>
                   </Grid>
                   <Grid item style={{ marginLeft: "2em" }}>
