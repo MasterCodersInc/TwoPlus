@@ -74,6 +74,7 @@ export default function SignUp() {
           email,
           isAdmin,
           uid: newUser.user.uid,
+          userName,
         });
       history.push("/userhome");
     } catch (error) {
