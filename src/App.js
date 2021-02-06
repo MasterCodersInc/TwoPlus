@@ -5,6 +5,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import theme from "./components/theme";
 
 import firebase from "./firebase";
+
 import ChatRoom from "./components/ChatRoom";
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -16,7 +17,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import ForgotPassword from "./components/ForgotPassword";
 import UpdateProfile from "./components/UpdateProfile";
 import NavBar from "./components/NavBar";
-import EditorUID from "./components/EditorUID";
+// import EditorUID from "./components/EditorUID";
 import Post from "./components/Post";
 import AddPost from "./components/AddPost";
 import userSavedCollabs from "./components/userSavedCollabs";
@@ -25,6 +26,7 @@ import Users from "./components/Users";
 import UserLanding from "./components/UserLanding";
 import PublicProfile from "./components/PublicProfile";
 import GuestLanding from "./components/GuestLanding";
+
 
 function App() {
   return (
