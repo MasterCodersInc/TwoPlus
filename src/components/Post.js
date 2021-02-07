@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import EditorUID from "./EditorUID";
 import { useAuth } from "../contexts/AuthContext";
 import ChatRoom from "./ChatRoom";
@@ -88,6 +88,16 @@ const Post = (props) => {
             >
               {post.description || ""}
             </Typography>
+            <Grid
+              container
+              direction="row" >
+              {
+                post.tags.map(tag => 
+                  (<Link style={{ marginRight: "1em" }}>
+                    #{tag}
+                  </Link>))
+              }
+            </Grid>
           </Grid>
           <Grid item container>
             {currentUser.uid === post.userRef && (

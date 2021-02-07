@@ -114,6 +114,7 @@ const AddPost = ({ history }) => {
   //db access
   const postsRef = firebase.firestore().collection("posts");
   const storageRef = firebase.storage().ref();
+  const tagsRef = firebase.firestore().collection("tags");
 
   //refs
   const fileRef = React.useRef();
@@ -172,11 +173,26 @@ const AddPost = ({ history }) => {
         imageURL: imageURL,
         tags,
       })
-      .then((docRef) => {
-        history.push({ pathname: `/posts/${docRef.id}`, postType: postType });
+      .then((postDocRef) => {
+        tags.forEach((tag) => {
+          tag = tag.toLowerCase();
+          tagsRef.where("name","==",`${tag}`).get().then((tagsCol) => {
+            if(!tagsCol.docs.length){
+              tagsRef.add({name: `${tag}`, count: 1})
+            } else{
+              tagsCol.docs.forEach((tagDoc) => {
+                const tagDocRef = tagsRef.doc(tagDoc.id)
+                tagDocRef.update({
+                  count: firebase.firestore.FieldValue.increment(1)
+                })
+              })
+            }
+          });
+        })
+        history.push({ pathname: `/posts/${postDocRef.id}`, postType: postType });
       });
   };
-  // classes={classes.removeTag}> X </button> onClick={() => removeTag(idx)}
+
   return (
     <div>
       <form onSubmit={onSubmitHandler}>
