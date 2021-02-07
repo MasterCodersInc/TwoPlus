@@ -100,7 +100,7 @@ const Post = (props) => {
             </Grid>
           </Grid>
           <Grid item container>
-            {currentUser.uid === post.userRef && (
+            { currentUser && currentUser.uid === post.userRef && (
               <Grid>
                 <Button
                   variant="contained"
@@ -119,7 +119,7 @@ const Post = (props) => {
         <Typography>{post.description || ""}</Typography>
 
         <EditorUID
-          uid={currentUser.uid}
+          uid={currentUser?.uid}
           disabled={!post?.isActive}
           enableCollab={enableCollab}
         />

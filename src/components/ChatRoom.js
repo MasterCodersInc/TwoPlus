@@ -7,7 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 const ChatRoom = ({ postId, postRef, disabled}) => {
   const { currentUser } = useAuth();
   const db = firebase.firestore();
-  const { uid } = currentUser;
+  const uid = currentUser?.uid
 
   const [messages, setMessage] = useState([]);
   const [newMessage, setNewMessage] = useState('');
