@@ -143,10 +143,10 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
   const classes = useStyles();
   const { currentUser } = useAuth();
   const db = firebase.firestore();
-  const { uid } = currentUser;
+  const uid = currentUser?.uid
 
   const [messages, setMessage] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
 
   console.log('this is new message', newMessage);
   console.log('this is post ref', postRef);
@@ -156,8 +156,8 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
     if (db) {
       // console.log('this is db', db)
       const unsubscribe = postRef
-        .collection('messages')
-        .orderBy('createdAt')
+        .collection("messages")
+        .orderBy("createdAt")
         .limit(50)
         .onSnapshot((querySnapshot) => {
           // get all documents from collection - with ids
@@ -185,7 +185,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
     //missing userID
     if (db) {
       // Add new message in Firestore
-      postRef.collection('messages').add({
+      postRef.collection("messages").add({
         text: newMessage,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         uid,
@@ -194,7 +194,6 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
   };
 
   return (
-    <div>
       <Grid container>
         <Grid item xs={12}>
           <Typography variant="h5" className="header-message">
@@ -256,20 +255,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
             </ListItem>
           </List>
         </Grid>
-        {/*  <ul>
-//         {messages.map((message) => (
-//             <li key={message.id}>
-//               <ChatMsg message={message} currentUserId={uid} />
-//             </li>
-//           ))}
-//       </ul>
-
-//
-{formatDate(new Date(message.createdAt * 1000))}
-  secondary={`${formatDate(new Date(message.createdAt.seconds * 1000))}`}
-
-*/}
-
+    
         <Grid item xs={9}>
           <List className={classes.messageArea}>
             {messages.map((message) => (
@@ -329,7 +315,6 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
           </Grid>
         </Grid>
       </Grid>
-    </div>
   );
 };
 
