@@ -102,13 +102,13 @@ const Post = (props) => {
           <Grid item container>
             { currentUser && currentUser.uid === post.userRef && (
               <Grid>
-                <Button
+                {/* <Button
                   variant="contained"
                   color="secondary"
                   onClick={toggleEditor}
                 >
                   Enable Collab
-                </Button>
+                </Button> */}
                 <Button variant="contained" onClick={toggleActive}>
                   {buttonName}
                 </Button>

@@ -144,6 +144,7 @@ const AddPost = ({ history }) => {
   const addTag = (e) => {
     const newTag = e.target.value;
     if (newTag && e.key === "Enter") {
+      e.preventDefault();
       const foundTag = tags.filter(
         (tag) => tag.toLowerCase() === newTag.toLowerCase()
       );
