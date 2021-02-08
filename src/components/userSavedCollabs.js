@@ -11,7 +11,8 @@ import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
 
 import rect from "../assets/userACCrec.svg";
-
+import UserFollowers from "../components/UserFollowers"
+import UserFollowing from "../components/UserFollowing"
 const useStyles = makeStyles((theme) => ({
   shadowRectangle: {
     position: "absolute",
@@ -99,6 +100,24 @@ export default function UserProfile() {
               className={classes.tab}
             />
           </Tabs>
+
+          <Button
+          component={Link}
+          to="/savedcontent"
+          type="submit"
+          classes={{ root: classes.button1 }}
+        >
+          followers
+        </Button>
+        <Button
+        component={Link}
+        to="/savedcontent"
+        type="submit"
+        classes={{ root: classes.button1 }}
+
+      >
+        following
+      </Button>
         </Grid>
         <Grid item container alignItems="center" className={classes.infoCont}>
           {userPosts.map((post) => (
