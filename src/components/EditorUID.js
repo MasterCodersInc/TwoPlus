@@ -7,11 +7,7 @@ import { useAuth } from "../contexts/AuthContext";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const firestore = firebase.firestore();
 const collabData = firestore.collection("posts");
@@ -102,8 +98,9 @@ const EditorUID = ({ disabled, enableCollab }) => {
           <AceEditor ref={editorOutput} mode="javascript" />
         </div>
         {/* evaluate code in editor */}
-        <button
+        <Button
           classes={{ root: classes.buttonEval }}
+          style={{ root: { fontFamily: "Montserrat" } }}
           onClick={() => {
             try {
               let ans = eval(reactAceRef.current.editor.getValue());
@@ -114,8 +111,8 @@ const EditorUID = ({ disabled, enableCollab }) => {
             return;
           }}
         >
-          Eval Code
-        </button>
+          EVAL CODE
+        </Button>
       </Grid>
     </>
   );
