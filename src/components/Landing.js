@@ -19,4 +19,7 @@ export default function Landing() {
   } else {
     history.push("/guesthome");
   }
+  return(
+    <div></div>
+  )
 }
