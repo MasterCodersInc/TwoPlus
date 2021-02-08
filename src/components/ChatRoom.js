@@ -9,7 +9,7 @@ import Grid from "@material-ui/core/Grid";
 const ChatRoom = ({ postId, postRef, disabled }) => {
   const { currentUser } = useAuth();
   const db = firebase.firestore();
-  const { uid } = currentUser;
+  const uid = currentUser?.uid
 
   const [messages, setMessage] = useState([]);
   const [newMessage, setNewMessage] = useState("");
