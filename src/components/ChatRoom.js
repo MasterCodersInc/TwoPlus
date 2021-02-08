@@ -269,6 +269,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
   secondary={`${formatDate(new Date(message.createdAt.seconds * 1000))}`}
 
 */}
+
         <Grid item xs={9}>
           <List className={classes.messageArea}>
             {messages.map((message) => (
