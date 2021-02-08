@@ -78,6 +78,7 @@ const EditorUID = ({ disabled, enableCollab }) => {
 
         applyingDeltas = true;
         editor.current.setValue(updatedInfo.editorData);
+        editor.current.clearSelection();
         applyingDeltas = false;
       });
     }
@@ -105,7 +106,7 @@ const EditorUID = ({ disabled, enableCollab }) => {
           classes={{ root: classes.buttonEval }}
           onClick={() => {
             try {
-              let ans = eval(editor.getValue());
+              let ans = eval(reactAceRef.current.editor.getValue());
               editorOutput.current.editor.setValue(String(ans), 1);
             } catch (e) {
               editorOutput.current.editor.setValue(e.message, 1);
