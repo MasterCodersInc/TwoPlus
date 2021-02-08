@@ -106,18 +106,18 @@ const Post = (props) => {
             )}
           </Grid>
         </Grid>
-        <Typography>{post.description || ""}</Typography>
-
-        <EditorUID
-          uid={currentUser.uid}
-          disabled={!post?.isActive}
-          enableCollab={enableCollab}
-        />
-        <ChatRoom
-          disabled={!post?.isActive}
-          postId={postId}
-          postRef={postRef}
-        />
+        <Grid item container>
+          <EditorUID
+            uid={currentUser.uid}
+            disabled={!post?.isActive}
+            enableCollab={enableCollab}
+          />
+          <ChatRoom
+            disabled={!post?.isActive}
+            postId={postId}
+            postRef={postRef}
+          />
+        </Grid>
       </Grid>
     );
   }
