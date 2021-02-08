@@ -26,8 +26,6 @@ import UserLanding from "./components/UserLanding";
 import PublicProfile from "./components/PublicProfile";
 import GuestLanding from "./components/GuestLanding";
 
-import UserFollowers from "./components/UserFollowers"
-import UserFollowing from "./components/UserFollowing"
 
 function App() {
   return (
