@@ -35,7 +35,7 @@ export default function Landing() {
     const postsLoc = firebase
       .firestore()
       .collection("posts")
-      //  .where("postType", "==", "live")
+      .where("postType", "==", "live")
       .orderBy("timestamp", "desc")
       .limit(5);
 
