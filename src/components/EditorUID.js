@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
   buttonEval: {
     color: "#fff",
     backgroundColor: theme.palette.common.colorOne,
+    height: "fit-content",
   },
 }));
 
