@@ -93,7 +93,7 @@ const Post = (props) => {
               direction="row" >
               {
                 post.tags.map(tag => 
-                  (<Link style={{ marginRight: "1em" }}>
+                  (<Link style={{ marginRight: "1em" }} to={`/posts/?tag=${tag}`}>
                     #{tag}
                   </Link>))
               }
