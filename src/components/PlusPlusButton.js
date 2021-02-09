@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { TextField, Button, Typography, ListItem } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useAuth } from "../contexts/AuthContext";
+import { useParams } from "react-router-dom";
+import { WhereToVote } from "@material-ui/icons";
+import firebase from "../firebase";
 
 const useStyles = makeStyles((theme) => ({
   unpressed: {
@@ -32,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 //expects a "documentRef" prop so that the upvote goes to the right place
 //expects a "documentData" prop to render number correctly
 const PlusPlusButton = ({ documentData, documentRef }) => {
+  const { postID } = useParams();
   const { currentUser, firestoreUser } = useAuth();
   const classes = useStyles();
   const theme = useTheme();
@@ -40,6 +44,20 @@ const PlusPlusButton = ({ documentData, documentRef }) => {
   const [plusplusCount, setPlusplusCount] = React.useState(
     documentData.plusplusCount
   );
+
+  useEffect(() => {
+    async function getMyUpvote() {
+      const upvoteDocs = await firebase
+        .firestore()
+        .collection("posts")
+        .doc(`${postID}`)
+        .collection("plusplusList")
+        .where("uid", "==", currentUser.uid);
+
+      console.log(upvoteDocs);
+    }
+    getMyUpvote();
+  }, []);
 
   async function upvoteHandler() {
     setButtonState(!buttonState);
