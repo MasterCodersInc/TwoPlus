@@ -5,14 +5,19 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
 
 import firebase from "../firebase";
 
 import addButt from "../assets/addButt.svg";
+import userLandingRec from "../assets/userLandingRec.svg";
+import defaultProfile from "../assets/defaultProfile.svg";
+import openPost from "../assets/openPostCircle.svg";
+import closedPost from "../assets/closedPostCircle.svg";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    backgroundColor: theme.palette.common.colorFive,
+    //     backgroundColor: theme.palette.common.colorFive,
     marginTop: "-5em",
   },
   popTopCont: {
@@ -22,6 +27,33 @@ const useStyles = makeStyles((theme) => ({
   popTopLi: {
     marginTop: ".5em",
     marginBottom: ".5em",
+  },
+  testBox: {
+    backgroundColor: "black",
+    width: "3em",
+    height: "3em",
+    boxShadow: "-5 -5 10 0 #FFFFFF",
+    //     box-shadow: [horizontal offset] [vertical offset] [blur radius] [optional spread radius] [color];
+  },
+  followButt: {
+    backgroundColor: theme.palette.common.colorThree,
+    fontFamily: "Montserrat",
+    color: "#fff",
+    height: "1.5em",
+    fontSize: ".7em",
+    marginLeft: "1em",
+    "&:hover": {
+      backgroundColor: theme.palette.common.colorFour,
+    },
+  },
+  postLink: {
+    textDecoration: "none",
+    color: "black",
+    fontWeight: 500,
+    width: "90%",
+    "&:hover": {
+      color: theme.palette.common.colorThree,
+    },
   },
 }));
 
@@ -37,7 +69,7 @@ export default function Landing() {
       .collection("posts")
       .where("postType", "==", "live")
       .orderBy("timestamp", "desc")
-      .limit(5);
+      .limit(6);
 
     postsLoc.get().then((postObj) => {
       let postsArr = postObj.docs.map((doc) => ({
@@ -52,7 +84,7 @@ export default function Landing() {
       .collection("posts")
       .orderBy("timestamp")
       .where("postType", "==", "discuss")
-      .limit(5);
+      .limit(6);
 
     discussLoc.get().then((discussObj) => {
       let discussArr = discussObj.docs.map((doc) => ({
@@ -73,6 +105,7 @@ export default function Landing() {
           className={classes.popTopCont}
           lg={2}
         >
+          <Grid item className={classes.testBox}></Grid>
           <Typography style={{ marginBottom: "1em", marginTop: "4.5em" }}>
             Popular Topics
           </Typography>
@@ -124,50 +157,93 @@ export default function Landing() {
             item
             container
             alignItems="center"
-            style={{ marginTop: "1em", marginLeft: "-1em" }}
+            style={{ marginTop: "1.5em" }}
           >
-            <Button component={Link} to="/posts/add">
+            <Typography variant="h1" style={{ fontSize: "1.5em" }}>
+              Recent Q's
+            </Typography>
+            <Button
+              component={Link}
+              to="/posts/add"
+              style={{ marginLeft: "1em" }}
+            >
               <img src={addButt} alt="add button" />
             </Button>
-
             <Typography variant="body1" style={{ marginLeft: "1em" }}>
               Post a New Question
             </Typography>
           </Grid>
+          <Grid
+            item
+            container
+            alignItems="center"
+            style={{ marginTop: "1em", marginLeft: "-1em" }}
+          ></Grid>
           <Grid item container>
-            <Typography variant="body1">Recent Live Collab Sessions</Typography>
+            <Grid item container style={{ marginBottom: "1em" }}>
+              <Typography variant="body1">
+                Can You Answer Any of These Questions?
+              </Typography>
+            </Grid>
             {posts &&
               posts.map((post, index) => (
-                <Grid key={index} item container alignItems="center">
+                <Card
+                  style={{
+                    width: "18em",
+                    margin: ".5em",
+                    paddingBottom: "1em",
+                    backgroundColor: theme.palette.common.colorFive,
+                    borderRadius: 15,
+                  }}
+                >
                   <Grid
+                    key={index}
                     item
                     direction="column"
-                    style={{ marginTop: ".5em", marginBottom: ".5em" }}
+                    container
+                    alignItems="center"
                   >
-                    <Typography
-                      component={Link}
-                      to={`/posts/${post.postId}`}
-                      variant="body2"
+                    <Grid
+                      item
+                      container
+                      alignItems="center"
+                      style={{ marginTop: "1em", marginLeft: "1em" }}
                     >
-                      {post.title}
-                    </Typography>
-                    <Grid item>
-                      <Typography variant="body2">#hashtags</Typography>
+                      <img src={defaultProfile} alt="default profile img" />
+                      <Typography style={{ marginLeft: ".5em" }}>
+                        linleexx
+                      </Typography>
+                      <Button classes={{ root: classes.followButt }}>
+                        follow
+                      </Button>
+                    </Grid>
+                    <Grid
+                      container
+                      alignItems="flex-start"
+                      style={{ width: "90%", marginTop: ".5em" }}
+                    >
+                      <img
+                        src={openPost}
+                        alt="greencircle"
+                        style={{ marginRight: ".5em" }}
+                      />
+                      <Typography
+                        component={Link}
+                        to={`/posts/${post.postId}`}
+                        variant="body2"
+                        className={classes.postLink}
+                      >
+                        {post.title}
+                      </Typography>
+                      <Grid
+                        item
+                        style={{ marginTop: ".5em", marginLeft: "1em" }}
+                      >
+                        <Typography variant="body2">#hashtags</Typography>
+                      </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item style={{ marginLeft: "2em" }}>
-                    <Typography variant="body2">Status:</Typography>
-                    <Typography variant="body2" style={{ fontWeight: 300 }}>
-                      In Collab
-                    </Typography>
-                  </Grid>
-                  <Grid item style={{ marginLeft: "2em" }}>
-                    <Typography variant="body2">Created By:</Typography>
-                    <Typography variant="body2" style={{ fontWeight: 300 }}>
-                      In Collab
-                    </Typography>
-                  </Grid>
-                </Grid>
+                </Card>
               ))}
           </Grid>
           <Grid item container style={{ marginTop: "5em" }}>

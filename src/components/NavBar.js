@@ -41,6 +41,13 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     width: "3em",
   },
+  button2: {
+    backgroundColor: theme.palette.common.colorOne,
+    color: "white",
+    height: "2em",
+    alignSelf: "center",
+    fontFamily: "Montserrat",
+  },
 }));
 
 export default function NavBar() {
