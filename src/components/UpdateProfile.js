@@ -65,7 +65,6 @@ export default function UpdateProfile() {
     if (lastName !== currentUser.lastName) {
       promises.push(firebase.firestore().collection("users").add({ lastName }));
     }
-
     Promise.all(promises)
       .then(() => {
         history.push("/");
