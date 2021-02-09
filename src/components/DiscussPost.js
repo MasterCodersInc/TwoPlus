@@ -64,12 +64,13 @@ const DiscussPost = ({ post }) => {
   const classes = useStyles();
   const [responsesRef, setResponsesRef] = React.useState();
   const [actualPostRef, setActualPostRef] = React.useState();
+  const [actualPostData, setActualPostData] = React.useState();
   const [responses, setResponses] = React.useState();
   const [replyText, setReplyText] = React.useState();
   const [postImage, setPostImage] = React.useState();
 
   useEffect(() => {
-    async function fetchPostReplies() {
+    async function fetchPostAndReplies() {
       setResponsesRef(
         firebase
           .firestore()
@@ -77,12 +78,13 @@ const DiscussPost = ({ post }) => {
           .doc(`${postId}`)
           .collection("discussReplies")
       );
-      setActualPostRef(
-        firebase.firestore().collection("posts").doc(`${postId}`)
-      );
+      const postRef = firebase.firestore().collection("posts").doc(`${postId}`);
+      setActualPostRef(postRef);
+      const postData = await postRef.get();
+      setActualPostData(postData.data());
     }
 
-    fetchPostReplies();
+    fetchPostAndReplies();
   }, []);
 
   useEffect(() => {
@@ -149,7 +151,7 @@ const DiscussPost = ({ post }) => {
           )}
           <Typography variant="body2">{post.description}</Typography>
           <Typography variant="subtitle1" style={{ marginTop: "1em" }}>
-            Asked by: {firestoreUser.firstName}
+            Asked by: {actualPostData?.userName}
           </Typography>
           <div
             style={{
