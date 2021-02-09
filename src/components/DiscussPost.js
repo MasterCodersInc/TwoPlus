@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
 import "firebase/storage";
 import PlusPlusButton from "./PlusPlusButton";
+import { Link } from "react-router-dom";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { TextField, Button, Typography, ListItem } from "@material-ui/core";
@@ -150,7 +151,12 @@ const DiscussPost = ({ post }) => {
             <img style={{ width: 300, height: 300 }} src={post.imageURL} />
           )}
           <Typography variant="body2">{post.description}</Typography>
-          <Typography variant="subtitle1" style={{ marginTop: "1em" }}>
+          <Typography
+            component={Link}
+            to={`/users/${actualPostData.userRef}`}
+            variant="subtitle1"
+            style={{ marginTop: "1em" }}
+          >
             Asked by: {actualPostData?.userName}
           </Typography>
           <div
