@@ -80,6 +80,7 @@ const DiscussPost = ({ post }) => {
       );
       const postRef = firebase.firestore().collection("posts").doc(`${postId}`);
       setActualPostRef(postRef);
+
       const postData = await postRef.get();
       setActualPostData(postData.data());
     }
@@ -128,13 +129,12 @@ const DiscussPost = ({ post }) => {
             justifyContent: "center",
           }}
         >
-          <Typography
-            style={{ textAlign: "center", marginBottom: 5 }}
-            variant="h2"
-          >
-            45
-          </Typography>
-          <PlusPlusButton document={actualPostRef} />
+          {actualPostData && (
+            <PlusPlusButton
+              documentRef={actualPostRef}
+              documentData={actualPostData}
+            />
+          )}
         </div>
         <Grid
           style={{

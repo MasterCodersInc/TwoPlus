@@ -1,6 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { TextField, Button, Typography, ListItem } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   unpressed: {
@@ -28,30 +29,44 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-//expects a "document" prop so that the upvote goes to the right place
-const PlusPlusButton = (props) => {
+//expects a "documentRef" prop so that the upvote goes to the right place
+//expects a "documentData" prop to render number correctly
+const PlusPlusButton = ({ documentData, documentRef }) => {
+  const { currentUser, firestoreUser } = useAuth();
   const classes = useStyles();
   const theme = useTheme();
   const plusPlusRef = React.useRef();
   const [buttonState, setButtonState] = React.useState(true);
+  const [plusplusCount, setPlusplusCount] = React.useState(
+    documentData.plusplusCount
+  );
 
-  function upvoteHandler(document) {
+  async function upvoteHandler() {
     setButtonState(!buttonState);
-    document.update({ plusplusCount: document.data().plusplusCount + 1 });
+    setPlusplusCount(plusplusCount + 1);
+    await documentRef.collection("plusplusList").add({
+      userRef: currentUser.uid,
+      userName: firestoreUser.userName,
+      timestamp: Date.now(),
+    });
+    await documentRef.update({ plusplusCount: plusplusCount + 1 });
   }
 
   return (
-    <Button
-      ref={plusPlusRef}
-      onClick={() => {
-        upvoteHandler(props.document);
-      }}
-      classes={
-        buttonState ? { root: classes.unpressed } : { root: classes.pressed }
-      }
-    >
-      ++
-    </Button>
+    <div>
+      <Typography style={{ textAlign: "center", marginBottom: 5 }} variant="h2">
+        {plusplusCount}
+      </Typography>
+      <Button
+        ref={plusPlusRef}
+        onClick={upvoteHandler}
+        classes={
+          buttonState ? { root: classes.unpressed } : { root: classes.pressed }
+        }
+      >
+        ++
+      </Button>
+    </div>
   );
 };
 
