@@ -100,6 +100,7 @@ const DiscussPost = ({ post }) => {
     responsesRef.add({
       content: replyText,
       userRef: currentUser.uid,
+      userName: firestoreUser.userName,
       timestamp: Date.now(),
     });
     setReplyText("");
@@ -169,6 +170,7 @@ const DiscussPost = ({ post }) => {
           </div>
         </Grid>
       </div>
+
       <Grid container classes={{ root: classes.responseContainer }}>
         {responses && (
           <div>
@@ -176,10 +178,13 @@ const DiscussPost = ({ post }) => {
               return (
                 <Grid classes={{ root: classes.responses }}>
                   <Typography
-                    variant="body2"
+                    variant="body1"
                     style={{ marginTop: ".6em", marginBottom: ".6em" }}
                   >
                     {response.doc.content}
+                  </Typography>
+                  <Typography variant="body2">
+                    Author:{response.doc.userName}
                   </Typography>
                 </Grid>
               );
