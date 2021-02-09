@@ -26,7 +26,7 @@ import Users from "./components/Users";
 import UserLanding from "./components/UserLanding";
 import PublicProfile from "./components/PublicProfile";
 import GuestLanding from "./components/GuestLanding";
-import PostsWithTag from './components/PostsWithTag';
+import Posts from './components/Posts';
 
 
 function App() {
@@ -44,7 +44,7 @@ function App() {
             <PrivateRoute exact path="/profile" component={UserProfile} />
             <PrivateRoute exact path="/updateprof" component={UpdateProfile} />
             <Route exact path="/posts/add" component={AddPost} />
-            <Route exact path="/posts/?tag=:tagName" component={PostsWithTag} />
+            <Route exact path="/posts" component={Posts} />
             <Route exact path="/posts/:postId" component={Post} />
             <Route exact path="/savedcollabs" component={userSavedCollabs} />
             <Route exact path="/savedcontent" component={savedContent} />
