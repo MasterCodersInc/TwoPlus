@@ -5,6 +5,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import theme from "./components/theme";
 
 import firebase from "./firebase";
+
 import ChatRoom from "./components/ChatRoom";
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -16,7 +17,6 @@ import PrivateRoute from "./components/PrivateRoute";
 import ForgotPassword from "./components/ForgotPassword";
 import UpdateProfile from "./components/UpdateProfile";
 import NavBar from "./components/NavBar";
-import EditorUID from "./components/EditorUID";
 import Post from "./components/Post";
 import AddPost from "./components/AddPost";
 import userSavedCollabs from "./components/userSavedCollabs";
@@ -25,10 +25,10 @@ import Users from "./components/Users";
 import UserLanding from "./components/UserLanding";
 import PublicProfile from "./components/PublicProfile";
 import GuestLanding from "./components/GuestLanding";
-
 import UserFollowers from "./components/UserFollowers"
 import UserFollowing from "./components/UserFollowing"
 import AllUsersIn2Plus from './components/AllUsersIn2+'
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -52,7 +52,7 @@ function App() {
             <Route exact path="/savedcontent" component={savedContent} />
             <Route exact path="/users" component={Users} />
             <Route exact path="/users/:userID" component={PublicProfile} />
-            <Redirect from='/users/deleted' to='/users' />
+            <Redirect from="/users/deleted" to="/users" />
             <Route exact path="/userhome" component={UserLanding} />
             <Route exact path="/guesthome" component={GuestLanding} />
          
