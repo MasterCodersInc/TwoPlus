@@ -57,8 +57,8 @@ const useStyles = makeStyles((theme) => ({
     margin: "5px",
     padding: "5px",
     width: "fit-content",
-    fontFamily: 'Montserrat',
-    fontWeight: '500'
+    fontFamily: "Montserrat",
+    fontWeight: "500",
   },
   tagInput: {
     background: "none",
@@ -163,7 +163,9 @@ const AddPost = ({ history }) => {
     const postDocRef = await postsRef.add({
       userRef: currentUser.uid,
       userName: firestoreUser.userName,
-      userPhotoURL: firestoreUser.profilePhotoURL,
+      userPhotoURL: firebase
+        .firestore()
+        .doc(`users/${firestoreUser.userDocRef}`),
       title: title,
       description,
       postType: postType,
