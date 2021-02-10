@@ -14,7 +14,7 @@ import userLandingRec from "../assets/userLandingRec.svg";
 import defaultProfile from "../assets/defaultProfile.svg";
 import openPost from "../assets/openPostCircle.svg";
 import closedPost from "../assets/closedPostCircle.svg";
-import { SettingsApplicationsSharp } from "@material-ui/icons";
+import DeletePost from './DeletePost'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -240,7 +240,7 @@ export default function Landing() {
                     >
                       <img src={defaultProfile} alt="default profile img" />
                       <Typography style={{ marginLeft: ".5em" }}>
-                        linleexx
+                        {post.userName}
                       </Typography>
                       <Button classes={{ root: classes.followButt }}>
                         follow
@@ -273,8 +273,6 @@ export default function Landing() {
                         return (
                           <Grid
                             item
-                            noWrap
-                            zeroMinWidth
                           >
                           <Typography
                             variant="body2"
@@ -364,6 +362,7 @@ export default function Landing() {
                     <Typography variant="body2" style={{ fontWeight: 300 }}>
                       UID
                     </Typography>
+                    <DeletePost />
                   </Grid>
                 </Grid>
               ))}
