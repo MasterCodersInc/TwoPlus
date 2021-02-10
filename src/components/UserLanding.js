@@ -65,6 +65,15 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.common.colorThree,
     },
   },
+  postLink3: {
+    textDecoration: "none",
+    color: theme.palette.common.colorOne,
+    fontWeight: 600,
+    width: "90%",
+    "&:hover": {
+      color: 'black',
+    },
+  },
 }));
 
 export default function Landing() {
@@ -146,7 +155,7 @@ export default function Landing() {
                 <div>
                   <Typography 
                     variant="body2" 
-                    className={classes.popTopLi, classes.postLink2}
+                    className={classes.popTopLi, classes.postLink3}
                     component={Link}
                     to={`/posts?tag=${tag.name}`}>
                       #{tag.name}
@@ -267,17 +276,11 @@ export default function Landing() {
                       <Grid
                         container
                         style={{ marginTop: ".5em", marginLeft: "1em" }}
-<<<<<<< HEAD
-                        direction="row"
-                      >
-                        {post.tags.slice(0,3).map((tag) => {
-=======
                       ></Grid>
                     </Grid>
 
                     <Grid item container direction="row">
-                      {post.tags.map((tag) => {
->>>>>>> main
+                      {post.tags.slice(0,3).map((tag) => {
                         return (
                           <Grid
                             item
@@ -306,7 +309,6 @@ export default function Landing() {
                       })}
                       </Grid>
                     </Grid>
-                  </Grid>
                 </Card>
               ))}
           </Grid>
@@ -373,7 +375,7 @@ export default function Landing() {
                     <Typography variant="body2" style={{ fontWeight: 300 }}>
                       {disc.userName}
                     </Typography>
-                    <DeletePost postId={disc.discId}/>
+                    <DeletePost postId={disc.discId} fontSize='small'/>
                   </Grid>
                 </Grid>
               ))}

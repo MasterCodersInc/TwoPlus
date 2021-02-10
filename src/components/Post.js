@@ -8,10 +8,6 @@ import { Typography, Button, Grid } from "@material-ui/core";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import DiscussPost from "./DiscussPost";
 import DeletePost from './DeletePost'
-import {
-  FormatAlignLeftSharp,
-  PlayCircleFilledWhite,
-} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   button1: {
@@ -110,7 +106,9 @@ const Post = (props) => {
           </Grid>
           <Grid item container>
             {currentUser && currentUser.uid === post.userRef && (
-              <Grid>
+              <Grid
+                item 
+                container>
                 {/* <Button
                   variant="contained"
                   color="secondary"
@@ -125,7 +123,7 @@ const Post = (props) => {
                 >
                   {buttonName}
                 </Button>
-                <DeletePost postId={post.postId} />
+                <DeletePost postId={post.postId} fontSize='medium'/>
               </Grid>
             )}
           </Grid>
