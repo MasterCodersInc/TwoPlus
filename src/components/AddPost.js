@@ -174,6 +174,7 @@ const AddPost = ({ history }) => {
         imageURL: imageURL,
         tags,
         plusplusCount: 0,
+        plusplusList: [],
       })
       .then((postDocRef) => {
         tags.forEach((tag) => {

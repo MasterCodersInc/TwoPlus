@@ -24,19 +24,15 @@ const useStyles = makeStyles((theme) => ({
   },
   initialPost: {
     background: theme.palette.common.colorTwo,
-
     padding: ".6em",
+    marginBottom: "1em",
   },
   replyField: {
     background: theme.palette.common.white,
-    width: "75vw",
+    width: "75%",
     paddingTop: "1em",
   },
-  responseContainer: {
-    background: theme.palette.common.white,
-    width: "75%",
-    marginTop: "1em",
-  },
+
   responses: {
     background: theme.palette.common.colorFive,
     marginTop: "1em",
@@ -181,27 +177,37 @@ const DiscussPost = ({ post }) => {
         </Grid>
       </div>
 
-      <Grid container classes={{ root: classes.responseContainer }}>
-        {responses && (
-          <div>
-            {responses.map((response) => {
-              return (
-                <Grid classes={{ root: classes.responses }}>
-                  <Typography
-                    variant="body1"
-                    style={{ marginTop: ".6em", marginBottom: ".6em" }}
-                  >
-                    {response.doc.content}
-                  </Typography>
-                  <Typography variant="body2">
-                    Author:{response.doc.userName}
-                  </Typography>
-                </Grid>
-              );
-            })}
-          </div>
-        )}
-      </Grid>
+      {responses && (
+        <Grid item alignContent="center">
+          {responses.map((response) => {
+            return (
+              <Grid
+                item
+                style={{
+                  backgroundColor: "#F8F8F8",
+                  boxShadow: "6px 4px 5px -2px rgba(136,157,226,0.25)",
+                  width: "60vw",
+                  padding: 10,
+                  paddingTop: 0,
+                  borderRadius: 10,
+                  marginBottom: 15,
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  style={{ paddingTop: ".2em", marginBottom: ".2em" }}
+                >
+                  {response.doc.content}
+                </Typography>
+                <Typography variant="body2">
+                  Author:{response.doc.userName}
+                </Typography>
+              </Grid>
+            );
+          })}
+        </Grid>
+      )}
+
       <Grid container classes={{ root: classes.replyField }}>
         <TextField
           fullWidth
