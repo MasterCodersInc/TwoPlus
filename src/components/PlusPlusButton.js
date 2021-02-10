@@ -37,37 +37,40 @@ const useStyles = makeStyles((theme) => ({
 const PlusPlusButton = ({ documentData, documentRef }) => {
   const { postID } = useParams();
   const { currentUser, firestoreUser } = useAuth();
+
   const classes = useStyles();
   const theme = useTheme();
+
   const plusPlusRef = React.useRef();
+
   const [buttonState, setButtonState] = React.useState(true);
   const [plusplusCount, setPlusplusCount] = React.useState(
     documentData.plusplusCount
   );
 
-  useEffect(() => {
-    async function getMyUpvote() {
-      const upvoteDocs = await firebase
-        .firestore()
-        .collection("posts")
-        .doc(`${postID}`)
-        .collection("plusplusList")
-        .where("uid", "==", currentUser.uid);
+  const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
+  const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
 
-      console.log(upvoteDocs);
+  useEffect(() => {
+    if (documentData.plusplusList.includes(currentUser.uid)) {
+      setButtonState(false);
     }
-    getMyUpvote();
   }, []);
 
   async function upvoteHandler() {
-    setButtonState(!buttonState);
-    setPlusplusCount(plusplusCount + 1);
-    await documentRef.collection("plusplusList").add({
-      userRef: currentUser.uid,
-      userName: firestoreUser.userName,
-      timestamp: Date.now(),
-    });
-    await documentRef.update({ plusplusCount: plusplusCount + 1 });
+    if (!buttonState) {
+      setPlusplusCount(plusplusCount - 1);
+      setButtonState(true);
+      await documentRef.update({ plusplusList: arrayRemove(currentUser.uid) });
+      await documentRef.update({ plusplusCount: plusplusCount - 1 });
+    }
+    if (buttonState) {
+      setPlusplusCount(plusplusCount + 1);
+      setButtonState(false);
+
+      await documentRef.update({ plusplusList: arrayUnion(firestoreUser.uid) });
+      await documentRef.update({ plusplusCount: plusplusCount + 1 });
+    }
   }
 
   return (

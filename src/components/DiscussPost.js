@@ -151,14 +151,16 @@ const DiscussPost = ({ post }) => {
             <img style={{ width: 300, height: 300 }} src={post.imageURL} />
           )}
           <Typography variant="body2">{post.description}</Typography>
-          <Typography
-            component={Link}
-            to={`/users/${actualPostData.userRef}`}
-            variant="subtitle1"
-            style={{ marginTop: "1em" }}
-          >
-            Asked by: {actualPostData?.userName}
-          </Typography>
+          {actualPostData && (
+            <Typography
+              component={Link}
+              to={`/users/${actualPostData.userRef}`}
+              variant="subtitle1"
+              style={{ marginTop: "1em" }}
+            >
+              Asked by: {actualPostData?.userName}
+            </Typography>
+          )}
           <div
             style={{
               display: "flex",
