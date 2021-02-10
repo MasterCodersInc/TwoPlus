@@ -7,14 +7,11 @@ import firebase from "../firebase";
 import { Typography, Button, Grid } from "@material-ui/core";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import DiscussPost from "./DiscussPost";
-<<<<<<< HEAD
 import DeletePost from './DeletePost'
-=======
 import {
   FormatAlignLeftSharp,
   PlayCircleFilledWhite,
 } from "@material-ui/icons";
->>>>>>> main
 
 const useStyles = makeStyles((theme) => ({
   button1: {
