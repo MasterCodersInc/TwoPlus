@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "Montserrat",
     fontWeight: "500",
     color: theme.palette.common.colorTwo,
+    "&:hover": {
+      backgroundColor: theme.palette.common.colorFive,
+    },
   },
   infoCont: {
     marginTop: "8em",
@@ -49,19 +52,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PublicProfile() {
   const history = useHistory();
-  const { userID } = useParams();
+  const { profileUID } = useParams();
   const classes = useStyles();
   const theme = useTheme();
   const [user, setUser] = useState({});
-  const [userPostList, setUserPostList] = useState(null);
-  const db = firebase.firestore();
-
-  //---
-
   const { currentUser } = useAuth();
-  const [isFollowing, setIsFollowing] = useState(false);
+
+  const db = firebase.firestore();
   const followersRef = db.collection("followers");
   const followingRef = db.collection("following");
+
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [userPostList, setUserPostList] = useState(null);
   const [userFollowers, setUserFollowers] = useState([]);
   const [userFollowing, setUserFollowing] = useState([]);
 
@@ -70,7 +72,7 @@ export default function PublicProfile() {
       const userObjLoc = await firebase
         .firestore()
         .collection("users")
-        .where("uid", "==", userID);
+        .where("uid", "==", profileUID);
       let userData = await userObjLoc.get();
       userData = userData.docs[0].data();
       setUser(userData);
@@ -96,58 +98,53 @@ export default function PublicProfile() {
   //   } else {
   //     console.log('u hav an account');
   //   }
-  //   // console.log('this is whats in data', data[0].id, data[0].id.map((el) => el === userID))
+  //   // console.log('this is whats in data', data[0].id, data[0].id.map((el) => el === profileUID))
   // };
   // createNewUsersFollowweAndFollowingCollection();
 
   useEffect(() => {
     const getUserFollowingsFunc = async () => {
       const getUserFollowings = await followingRef
-        .doc(userID)
+        .doc(profileUID)
         .collection("userFollowing")
         .onSnapshot((queryFollowingSnapShot) => {
           const userFollowingData = queryFollowingSnapShot.docs.map((doc) => ({
             ...doc.data(),
           }));
-          console.log(
-            "what user following",
-            userFollowingData[0].userFollowing
-          );
+
           setUserFollowing(userFollowingData[0].userFollowing);
         });
     };
     getUserFollowingsFunc();
   }, []);
+
   useEffect(() => {
     const getUserFollowersFunc = async () => {
       const getUserFollowers = await followersRef
-        .doc(userID)
+        .doc(profileUID)
         .collection("userFollowers")
         .onSnapshot((queryFollowingSnapShot) => {
           const userFollowersData = queryFollowingSnapShot.docs.map((doc) => ({
             ...doc.data(),
           }));
-          console.log(
-            "what user followers",
-            userFollowersData[0].userFollowers
-          );
+
           setUserFollowers(userFollowersData[0].userFollowers);
         });
     };
     getUserFollowersFunc();
   }, []);
 
-  // ===>
   const followUser = async (e) => {
     const updateFollowingData = await followingRef
       .doc(currentUser.uid)
       .collection("userFollowing")
       .doc(currentUser.uid)
       .update({
-        userFollowing: firebase.firestore.FieldValue.arrayUnion(userID), // I used update to avoid to prevent it from adding same user twice
+        userFollowing: firebase.firestore.FieldValue.arrayUnion(profileUID), // I used update to avoid to prevent it from adding same user twice
       });
+
     const updateFollowedUserFollowingData = await followersRef
-      .doc(currentUser.uid)
+      .doc(profileUID)
       .collection("userFollowers")
       .doc(currentUser.uid)
       .update({
@@ -167,7 +164,7 @@ export default function PublicProfile() {
       .collection("userFollowing")
       .doc(currentUser.uid)
       .update({
-        userFollowing: firebase.firestore.FieldValue.arrayRemove(userID),
+        userFollowing: firebase.firestore.FieldValue.arrayRemove(profileUID),
       });
 
     // const getData = followingRef
@@ -177,7 +174,7 @@ export default function PublicProfile() {
     //     const userFollowingData = queryFollowingSnapShot.docs.map((doc) => ({
     //       ...doc.data(),
     //     }));
-    //     if (userFollowingData[0].id.forEach((el) => el === userID)) {
+    //     if (userFollowingData[0].id.forEach((el) => el === profileUID)) {
     //       setIsFollowing(false);
 
     //       // setUserFollowing([userFollowingData]);
@@ -194,13 +191,13 @@ export default function PublicProfile() {
       return;
     }
 
-    if (!isFollowing && currentUser.uid !== userID) {
+    if (!isFollowing && currentUser.uid !== profileUID) {
       followUser();
       setIsFollowing(true);
-    } else if (isFollowing && currentUser.uid !== userID) {
+    } else if (isFollowing && currentUser.uid !== profileUID) {
       handleUnfollowUser();
       setIsFollowing(false);
-    } else if (currentUser.uid === userID) {
+    } else if (currentUser.uid === profileUID) {
       clickToUserProfilePage();
     }
   };
@@ -229,11 +226,8 @@ export default function PublicProfile() {
                   className={classes.tab}
                 />
                 <Button onClick={followAndUnfollowClickHandler}>
-                  {currentUser?.uid === userID
-                    ? "edit"
-                    : isFollowing === false
-                    ? "Follow"
-                    : "Unfollow"}
+                  {profileUID !== currentUser.uid &&
+                    (!isFollowing ? "Follow" : "Unfollow")}
                 </Button>
                 <Button
                   component={Link}

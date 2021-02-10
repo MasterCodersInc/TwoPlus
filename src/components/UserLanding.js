@@ -195,88 +195,103 @@ export default function Landing() {
               </Button>
             </Grid>
             {posts &&
-              posts.map((post, index) => (
-                <Card
-                  style={{
-                    width: "18em",
-                    margin: ".5em",
-                    paddingBottom: "1em",
-                    backgroundColor: theme.palette.common.colorFive,
-                    borderRadius: 15,
-                  }}
-                >
-                  <Grid
-                    key={index}
-                    item
-                    direction="column"
-                    container
-                    alignItems="center"
+              posts.map((post, index) => {
+                return (
+                  <Card
+                    style={{
+                      width: "18em",
+                      margin: ".5em",
+                      paddingBottom: "1em",
+                      backgroundColor: theme.palette.common.colorFive,
+                      borderRadius: 15,
+                    }}
                   >
                     <Grid
+                      key={index}
                       item
+                      direction="column"
                       container
                       alignItems="center"
-                      style={{ marginTop: "1em", marginLeft: "1em" }}
                     >
-                      <img src={defaultProfile} alt="default profile img" />
-                      <Typography style={{ marginLeft: ".5em" }}>
-                        {post.userName}
-                      </Typography>
-                      <Button classes={{ root: classes.followButt }}>
-                        follow
-                      </Button>
-                    </Grid>
-                    <Grid
-                      container
-                      alignItems="flex-start"
-                      style={{ width: "90%", marginTop: ".5em" }}
-                    >
-                      <img
-                        src={openPost}
-                        alt="greencircle"
-                        style={{ marginRight: ".5em" }}
-                      />
-                      <Typography
-                        component={Link}
-                        to={`/posts/${post.postId}`}
-                        variant="body2"
-                        className={classes.postLink}
-                      >
-                        {post.title}
-                      </Typography>
                       <Grid
                         item
-                        style={{ marginTop: ".5em", marginLeft: "1em" }}
-                      ></Grid>
-                    </Grid>
+                        container
+                        alignItems="center"
+                        style={{ marginTop: "1em", marginLeft: "1em" }}
+                      >
+                        <img
+                          src={post.userPhotoURL || defaultProfile}
+                          style={{
+                            width: 40,
+                            height: 40,
+                            objectFit: "cover",
+                            borderRadius: 5,
+                          }}
+                          alt="default profile img"
+                        />
+                        <Typography
+                          component={Link}
+                          to={`users/${post.userRef}`}
+                          style={{ marginLeft: ".5em", textDecoration: "none" }}
+                        >
+                          {post.userName}
+                        </Typography>
+                        <Button classes={{ root: classes.followButt }}>
+                          follow
+                        </Button>
+                      </Grid>
+                      <Grid
+                        container
+                        alignItems="flex-start"
+                        style={{ width: "90%", marginTop: ".5em" }}
+                      >
+                        <img
+                          src={openPost}
+                          alt="greencircle"
+                          style={{ marginRight: ".5em" }}
+                        />
+                        <Typography
+                          component={Link}
+                          to={`/posts/${post.postId}`}
+                          variant="body2"
+                          className={classes.postLink}
+                        >
+                          {post.title}
+                        </Typography>
+                        <Grid
+                          item
+                          style={{ marginTop: ".5em", marginLeft: "1em" }}
+                        ></Grid>
+                      </Grid>
 
-                    <Grid item container direction="row">
-                      {post.tags.map((tag) => {
-                        return (
-                          <Typography
-                            component={Link}
-                            to={`/posts/?tag=${tag}`}
-                            className={classes.postLink}
-                            variant="body2"
-                            style={{
-                              color: "white",
-                              width: "fit-content",
-                              backgroundColor: theme.palette.common.colorOne,
-                              marginRight: 4,
-                              marginTop: 4,
-                              marginBottom: 4,
-                              padding: 2,
-                              borderRadius: 2,
-                            }}
-                          >
-                            #{tag}
-                          </Typography>
-                        );
-                      })}
+                      <Grid item container direction="row">
+                        {post.tags.map((tag) => {
+                          return (
+                            <Typography
+                              component={Link}
+                              to={`/posts/?tag=${tag}`}
+                              className={classes.postLink}
+                              variant="body2"
+                              style={{
+                                color: "white",
+                                width: "fit-content",
+                                backgroundColor: theme.palette.common.colorOne,
+                                marginRight: 4,
+                                marginTop: 4,
+                                marginBottom: 4,
+                                padding: 2,
+                                borderRadius: 2,
+                              }}
+                            >
+                              #{tag}
+                            </Typography>
+                          );
+                        })}
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Card>
-              ))}
+                  </Card>
+                );
+              })}
           </Grid>
           <Grid item container style={{ marginTop: "5em" }}>
             <Typography
