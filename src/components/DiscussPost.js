@@ -108,15 +108,15 @@ const DiscussPost = ({ post }) => {
 
   return (
     <Grid
+      id="pageContainer"
       container
       direction="column"
       justify="center"
       alignItems="center"
-      style={{ stroke: "3px solid" }}
     >
       <div
-        style={{ display: "flex", flexDirection: "row" }}
-        classes={{ root: classes.initialPost }}
+        id="postAndPlus"
+        style={{ display: "flex", flexDirection: "row", width: "75%" }}
       >
         <div
           style={{
@@ -124,6 +124,7 @@ const DiscussPost = ({ post }) => {
             flexDirection: "column",
             marginRight: 10,
             justifyContent: "center",
+            backgroundColor: "white",
           }}
         >
           {actualPostData && (
@@ -133,12 +134,15 @@ const DiscussPost = ({ post }) => {
             />
           )}
         </div>
-        <Grid
+
+        <div
           style={{
             backgroundColor: theme.palette.common.colorTwo,
             padding: 10,
+            marginBottom: 10,
+            width: "100%",
+            borderRadius: 5,
           }}
-          item
         >
           <Typography style={{ marginTop: 5, marginBottom: 2 }} variant="h2">
             {post.title}
@@ -147,6 +151,15 @@ const DiscussPost = ({ post }) => {
             <img style={{ width: 300, height: 300 }} src={post.imageURL} />
           )}
           <Typography variant="body2">{post.description}</Typography>
+          <div style={{ display: "flex" }}>
+            {post.tags.map((tag, idx) => {
+              return (
+                <ListItem key={idx} className={classes.tagItem}>
+                  {tag}
+                </ListItem>
+              );
+            })}
+          </div>
           {actualPostData && (
             <Typography
               component={Link}
@@ -157,26 +170,8 @@ const DiscussPost = ({ post }) => {
               Asked by: {actualPostData?.userName}
             </Typography>
           )}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <div style={{ display: "flex" }}>
-              {post.tags.map((tag, idx) => {
-                return (
-                  <ListItem key={idx} className={classes.tagItem}>
-                    {tag}
-                  </ListItem>
-                );
-              })}
-            </div>
-          </div>
-        </Grid>
+        </div>
       </div>
-
       {responses && (
         <Grid item alignContent="center">
           {responses.map((response) => {
@@ -186,11 +181,12 @@ const DiscussPost = ({ post }) => {
                 style={{
                   backgroundColor: "#F8F8F8",
                   boxShadow: "6px 4px 5px -2px rgba(136,157,226,0.25)",
-                  width: "60vw",
+                  width: "75vw",
                   padding: 10,
                   paddingTop: 0,
-                  borderRadius: 10,
+                  borderRadius: 5,
                   marginBottom: 15,
+                  marginTop: 15,
                 }}
               >
                 <Typography
