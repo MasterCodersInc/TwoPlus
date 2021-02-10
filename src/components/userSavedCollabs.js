@@ -117,43 +117,49 @@ export default function UserProfile() {
             />
             <Tab
               component={Link}
-              to="/savedcontent"
+              to="/userFollowers"
               label="followers"
               className={classes.tab}
             />
             <Tab
               component={Link}
-              to="/savedcontent"
+              to="/userFollowings"
               label="following"
               className={classes.tab}
             />
           </Tabs>
         </Grid>
         <Grid item container alignItems="center" className={classes.infoCont}>
-          {userPosts.map((post) => (
-            <Card className={classes.card}>
-              <Grid container direction="row" alignContent="flex-start">
-                <Grid item container lg={5} style={{ marginLeft: "1em" }}>
-                  <Link to={`/posts/${post.id}`} className={classes.postLink}>
-                    <Typography>{post.title}</Typography>
-                  </Link>
+          {!userPosts.length ? (
+            <Typography style={{ marginLeft: "2.3em" }} variant="body1">
+              You don't have any posts yet, you should try asking a question!
+            </Typography>
+          ) : (
+            userPosts.map((post) => (
+              <Card className={classes.card}>
+                <Grid container direction="row" alignContent="flex-start">
+                  <Grid item container lg={5} style={{ marginLeft: "1em" }}>
+                    <Link to={`/posts/${post.id}`} className={classes.postLink}>
+                      <Typography>{post.title}</Typography>
+                    </Link>
+                  </Grid>
+                  <Grid
+                    item
+                    container
+                    direction="column"
+                    style={{
+                      width: "50%",
+                      color: theme.palette.common.colorTwo,
+                    }}
+                    lg
+                  >
+                    <Typography variant="body2">Created By</Typography>
+                    <Typography variant="body2">{user.firstName}</Typography>
+                  </Grid>
                 </Grid>
-                <Grid
-                  item
-                  container
-                  direction="column"
-                  style={{
-                    width: "50%",
-                    color: theme.palette.common.colorTwo,
-                  }}
-                  lg
-                >
-                  <Typography variant="body2">Created By</Typography>
-                  <Typography variant="body2">{user.firstName}</Typography>
-                </Grid>
-              </Grid>
-            </Card>
-          ))}
+              </Card>
+            ))
+          )}
           {/* <Grid>{userPosts[0]?.title}</Grid> */}
         </Grid>
       </Grid>

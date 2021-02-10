@@ -88,6 +88,18 @@ export default function UserProfile() {
               className={classes.tab}
             />
             <Tab label="++Content" className={classes.tab} />
+            <Tab
+              component={Link}
+              to="/userFollowers"
+              label="followers"
+              className={classes.tab}
+            />
+            <Tab
+              component={Link}
+              to="/userFollowings"
+              label="following"
+              className={classes.tab}
+            />
           </Tabs>
         </Grid>
         <Grid item container alignItems="center" className={classes.infoCont}>

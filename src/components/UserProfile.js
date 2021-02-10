@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   infoCont: {
-    marginTop: "8em",
+    marginTop: "6em",
     marginLeft: "2.3em",
   },
   infoText: {
@@ -54,27 +54,45 @@ const useStyles = makeStyles((theme) => ({
 export default function UserProfile() {
   const classes = useStyles();
   const theme = useTheme();
-  const [user, setUser] = useState({});
+  const [newProfilePhoto, setNewProfilePhoto] = useState();
   const { currentUser, firestoreUser } = useAuth();
-  const db = firebase.firestore();
-  const email = currentUser.email;
+  const storageRef = firebase.storage().ref();
+  const fileRef = React.useRef();
+  const imgRef = React.useRef();
+  const [userRef, setUserRef] = useState();
 
-  // in a use effect to trigger the re-render
   useEffect(() => {
-    const userObjLoc = db.collection("users").where("email", "==", `${email}`);
-    // a pointer/reference of the data that we want
-    userObjLoc.get().then((objData) => {
-      // giving back an array of data objs that matches
-      objData.forEach((doc) => setUser(doc.data()));
-    });
+    if (firestoreUser) {
+      setNewProfilePhoto(firestoreUser.profilePhotoURL);
+    }
+    async function getUserRef() {
+      let searchVals = await firebase
+        .firestore()
+        .collection("users")
+        .where("email", "==", `${currentUser.email}`);
+      let returnedVals = await searchVals.get();
+      setUserRef(returnedVals.docs[0]);
+    }
+    getUserRef();
   }, []);
+
+  const imageUpload = async (imageFile) => {
+    let imageRefId = `profile_pic${String(
+      Math.floor(Math.random() * 100000)
+    )}_${imageFile.name}`;
+    let photoRef = await storageRef.child(imageRefId);
+    await photoRef.put(imageFile);
+    let imageURL = await photoRef.getDownloadURL();
+    // await userRef.update({ profilePhotoURL: imageURL });
+    setNewProfilePhoto(imageURL);
+  };
 
   return (
     <Grid container>
       <Grid item container direction="column">
         <Grid item>
           <Typography variant="h1" style={{ marginLeft: "2.3em" }}>
-            Welcome {user && user.firstName}
+            Welcome {firestoreUser && firestoreUser.firstName}
           </Typography>
         </Grid>
         <Grid item container className={classes.tabs}>
@@ -94,72 +112,82 @@ export default function UserProfile() {
             />
             <Tab
               component={Link}
-              to="/savedcontent"
-              label="++Content"
-              className={classes.tab}
-            />
-            <Tab
-              component={Link}
-              to="/savedcontent"
+              to="/userFollowers"
               label="followers"
               className={classes.tab}
             />
             <Tab
               component={Link}
-              to="/savedcontent"
+              to="/userFollowings"
               label="following"
               className={classes.tab}
             />
           </Tabs>
         </Grid>
-        <Grid item container alignItems="center" className={classes.infoCont}>
-          <Grid item className={classes.infoText}>
+        {firestoreUser && (
+          <Grid item container alignItems="center" className={classes.infoCont}>
+            <Grid item className={classes.infoText}>
+              <img
+                ref={imgRef}
+                src={newProfilePhoto}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.cursor = "pointer";
+                  e.currentTarget.src =
+                    "https://firebasestorage.googleapis.com/v0/b/plus-2-9ae1d.appspot.com/o/profile-hover.png?alt=media&token=2b2c7847-4e87-4b56-904a-073613c13310";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.src = newProfilePhoto;
+                }}
+                onClick={() => {
+                  fileRef.current.click();
+                }}
+                style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: 10,
+                  objectFit: "cover",
+                }}
+              />
+              <input
+                ref={fileRef}
+                type="file"
+                hidden={true}
+                onChange={(e) => {
+                  imageUpload(e.target.files[0]);
+                }}
+              />
+            </Grid>
+            <Grid item className={classes.infoText}>
+              <Typography variant="body1">First Name</Typography>
+              <Typography variant="body2">{firestoreUser.firstName}</Typography>
+            </Grid>
+            <Grid item className={classes.infoText}>
+              <Typography variant="body1">Last Name</Typography>
+              <Typography variant="body2">{firestoreUser.lastName}</Typography>
+            </Grid>
+            <Grid item className={classes.infoText}>
+              <Typography variant="body1">Email</Typography>
+              <Typography variant="body2">{firestoreUser.email}</Typography>
+            </Grid>
+            <Grid item className={classes.infoText}>
+              <Typography variant="body1">Username</Typography>
+              <Typography variant="body2">{firestoreUser.userName}</Typography>
+            </Grid>
+            <Button
+              variant="filled"
+              component={Link}
+              to="updateprof"
+              classes={{ root: classes.editButton }}
+            >
+              Edit
+            </Button>
             <img
-              onMouseEnter={(e) => {
-                e.currentTarget.style.cursor = "pointer";
-                e.currentTarget.src =
-                  "https://firebasestorage.googleapis.com/v0/b/plus-2-9ae1d.appspot.com/o/profile-hover.png?alt=media&token=2b2c7847-4e87-4b56-904a-073613c13310";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.src = firestoreUser.profilePhotoURL;
-              }}
-              onClick={() => {
-                console.log("hi");
-              }}
-              style={{ width: 100, height: 100 }}
-              src={firestoreUser && firestoreUser.profilePhotoURL}
+              src={rect}
+              alt="rectangle with shadows"
+              className={classes.shadowRectangle}
             />
           </Grid>
-          <Grid item className={classes.infoText}>
-            <Typography variant="body1">First Name</Typography>
-            <Typography variant="body2">{user.firstName}</Typography>
-          </Grid>
-          <Grid item className={classes.infoText}>
-            <Typography variant="body1">Last Name</Typography>
-            <Typography variant="body2">{user.lastName}</Typography>
-          </Grid>
-          <Grid item className={classes.infoText}>
-            <Typography variant="body1">Email</Typography>
-            <Typography variant="body2">{user.email}</Typography>
-          </Grid>
-          <Grid item className={classes.infoText}>
-            <Typography variant="body1">Username</Typography>
-            <Typography variant="body2">{user.userName}</Typography>
-          </Grid>
-          <Button
-            variant="filled"
-            component={Link}
-            to="updateprof"
-            classes={{ root: classes.editButton }}
-          >
-            Edit
-          </Button>
-          <img
-            src={rect}
-            alt="rectangle with shadows"
-            className={classes.shadowRectangle}
-          />
-        </Grid>
+        )}
       </Grid>
     </Grid>
   );
