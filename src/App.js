@@ -17,7 +17,6 @@ import PrivateRoute from "./components/PrivateRoute";
 import ForgotPassword from "./components/ForgotPassword";
 import UpdateProfile from "./components/UpdateProfile";
 import NavBar from "./components/NavBar";
-// import EditorUID from "./components/EditorUID";
 import Post from "./components/Post";
 import AddPost from "./components/AddPost";
 import userSavedCollabs from "./components/userSavedCollabs";
@@ -26,7 +25,9 @@ import Users from "./components/Users";
 import UserLanding from "./components/UserLanding";
 import PublicProfile from "./components/PublicProfile";
 import GuestLanding from "./components/GuestLanding";
-
+import UserFollowers from "./components/UserFollowers"
+import UserFollowing from "./components/UserFollowing"
+import AllUsersIn2Plus from './components/AllUsersIn2+'
 
 function App() {
   return (
@@ -42,6 +43,9 @@ function App() {
             <Route exact path="/chat" component={ChatRoom} />
             <PrivateRoute exact path="/profile" component={UserProfile} />
             <PrivateRoute exact path="/updateprof" component={UpdateProfile} />
+            <PrivateRoute exact path="/2PlusFam" component={AllUsersIn2Plus} />
+            <PrivateRoute exact path="/userFollowings" component={UserFollowing} />
+            <PrivateRoute exact path="/userFollowers" component={UserFollowers} />
             <Route exact path="/posts/add" component={AddPost} />
             <Route exact path="/posts/:postId" component={Post} />
             <Route exact path="/savedcollabs" component={userSavedCollabs} />
@@ -51,6 +55,7 @@ function App() {
             <Redirect from="/users/deleted" to="/users" />
             <Route exact path="/userhome" component={UserLanding} />
             <Route exact path="/guesthome" component={GuestLanding} />
+         
           </Switch>
         </AuthProvider>
       </BrowserRouter>

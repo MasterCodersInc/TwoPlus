@@ -1,30 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import firebase from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
+import { useParams, useHistory } from 'react-router-dom';
+
+{/* <Route exact path="/users/:userID" component={PublicProfile} /> */}
 const UserFollowing = () => {
   const db = firebase.firestore();
   const { currentUser } = useAuth();
-  const [allUsers, setAllUsers] = useState([]);
-  useEffect(() => {
-    const getUsers = async () => {
-      const response = await db.collection('users').get();
-      const userData = response.docs.map((user) => {
-        return user.data();
+  const followersRef = db.collection('followers');
+  const followingRef = db.collection('following');
+  const [userFollowers, setUserFollowers] = useState([]);
+  const [userFollowing, setUserFollowing] = useState([]);
+useEffect(() => {
+  const getUserFollowingsFunc = async () => {
+    const getUserFollowings = await followingRef
+      .doc(currentUser.uid)
+      .collection('userFollowing')
+      .onSnapshot((queryFollowingSnapShot) => {
+        const userFollowingData = queryFollowingSnapShot.docs.map((doc) => ({
+          ...doc.data(),
+        }));
+        console.log(
+          'what user following',
+          userFollowingData[0].userFollowing
+        );
+        setUserFollowing(userFollowingData[0].userFollowing);
       });
-      setAllUsers(userData);
-    };
-    getUsers();
-  }, []);
+  };
+  getUserFollowingsFunc();
+}, [])
+
   const clickToUserProfilePage = (e) => {
     alert('users profile page');
   };
-  console.log('this is currentUser email', currentUser.email);
   return (
     <div>
-      {allUsers.map((user) => {
+      {userFollowing.map((item) => {
+        console.log('whats user')
         return (
           <ul>
-            <li onClick={clickToUserProfilePage}>{user.email} </li>
+            <li onClick={clickToUserProfilePage}>{`${item}`}</li>
           </ul>
         );
       })}

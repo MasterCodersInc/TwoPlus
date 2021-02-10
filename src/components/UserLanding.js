@@ -91,7 +91,7 @@ export default function Landing() {
     const discussLoc = firebase
       .firestore()
       .collection("posts")
-      .orderBy("timestamp")
+      .orderBy("timestamp", "desc")
       .where("postType", "==", "discuss")
       .limit(6);
 
@@ -218,6 +218,7 @@ export default function Landing() {
                       alignItems="center"
                       style={{ marginTop: "1em", marginLeft: "1em" }}
                     >
+
                       <img src={defaultProfile} alt="default profile img" />
                       <Typography style={{ marginLeft: ".5em" }}>
                         linleexx
@@ -250,6 +251,30 @@ export default function Landing() {
                       >
                         <Typography variant="body2">#hashtags</Typography>
                       </Grid>
+
+                      {post.title}
+                    </Typography>
+                    <Grid item container direction="row">
+                      {post.tags.map((tag) => {
+                        return (
+                          <Typography
+                            variant="body2"
+                            style={{
+                              color: "white",
+                              width: "fit-content",
+                              backgroundColor: theme.palette.common.colorOne,
+                              marginRight: 4,
+                              marginTop: 4,
+                              marginBottom: 4,
+                              padding: 2,
+                              borderRadius: 2,
+                            }}
+                          >
+                            #{tag}
+                          </Typography>
+                        );
+                      })}
+
                     </Grid>
                   </Grid>
                 </Card>
@@ -282,8 +307,26 @@ export default function Landing() {
                     >
                       {disc.title}
                     </Typography>
-                    <Grid item>
-                      <Typography variant="body2">#hashtags</Typography>
+                    <Grid item container direction="row">
+                      {disc.tags?.map((tag) => {
+                        return (
+                          <Typography
+                            variant="body2"
+                            style={{
+                              color: "white",
+                              width: "fit-content",
+                              backgroundColor: theme.palette.common.colorOne,
+                              marginRight: 4,
+                              marginTop: 4,
+                              marginBottom: 4,
+                              padding: 2,
+                              borderRadius: 2,
+                            }}
+                          >
+                            #{tag}
+                          </Typography>
+                        );
+                      })}
                     </Grid>
                   </Grid>
 

@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import firebase from "../firebase";
-
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import firebase from '../firebase';
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -14,21 +13,22 @@ import Card from "@material-ui/core/Card";
 import rect from "../assets/userACCrec.svg";
 import UserFollowers from "../components/UserFollowers";
 import UserFollowing from "../components/UserFollowing";
+
 const useStyles = makeStyles((theme) => ({
   shadowRectangle: {
-    position: "absolute",
+    position: 'absolute',
     zIndex: -1,
   },
   tabs: {
-    marginLeft: "2.5em",
-    marginTop: "3em",
+    marginLeft: '2.5em',
+    marginTop: '3em',
   },
   tab: {
-    textTransform: "none",
-    fontFamily: "Montserrat",
-    fontWeight: "500",
+    textTransform: 'none',
+    fontFamily: 'Montserrat',
+    fontWeight: '500',
     color: theme.palette.common.colorTwo,
-    "&:hover": {
+    '&:hover': {
       backgroundColor: theme.palette.common.colorFive,
     },
   },
@@ -38,14 +38,14 @@ const useStyles = makeStyles((theme) => ({
   },
   infoText: {
     //     marginTop: "2em",
-    marginLeft: "5em",
+    marginLeft: '5em',
   },
   editButton: {
-    color: "#fff",
+    color: '#fff',
     backgroundColor: theme.palette.common.colorOne,
-    fontFamily: "Montserrat",
-    width: "5em",
-    marginLeft: "15em",
+    fontFamily: 'Montserrat',
+    width: '5em',
+    marginLeft: '15em',
   },
   postLink: {
     textDecoration: "none",
@@ -76,7 +76,7 @@ export default function UserProfile() {
 
   // in a use effect to trigger the re-render
   useEffect(() => {
-    const userObjLoc = db.collection("users").where("email", "==", `${email}`);
+    const userObjLoc = db.collection('users').where('email', '==', `${email}`);
 
     // a pointer/reference of the data that we want
     userObjLoc.get().then((objData) => {
@@ -84,7 +84,7 @@ export default function UserProfile() {
       objData.forEach((doc) => setUser(doc.data()));
     });
 
-    const userPosts = db.collection("posts").where("userRef", "==", `${UID}`);
+    const userPosts = db.collection('posts').where('userRef', '==', `${UID}`);
     userPosts.get().then((postObj) => {
       let postsArr = postObj.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
       console.log(postsArr);
@@ -98,6 +98,7 @@ export default function UserProfile() {
         <Grid item>
           <Typography variant="h1" style={{ marginLeft: "2.3em" }}>
             Welcome, {user && user.firstName}
+
           </Typography>
         </Grid>
         <Grid item container className={classes.tabs}>

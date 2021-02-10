@@ -1,36 +1,36 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from '../contexts/AuthContext';
 
-import firebase from "../firebase";
+import firebase from '../firebase';
 
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles((theme) => ({
   form: {
-    align: "center",
-    textAlign: "center",
+    align: 'center',
+    textAlign: 'center',
   },
   button1: {
-    color: "#fff",
+    color: '#fff',
     backgroundColor: theme.palette.common.colorOne,
-    marginTop: "2em",
-    fontFamily: "Montserrat",
-    width: "8em",
+    marginTop: '2em',
+    fontFamily: 'Montserrat',
+    width: '8em',
   },
   button2: {
-    color: "#fff",
+    color: '#fff',
     backgroundColor: theme.palette.common.colorTwo,
-    fontFamily: "Montserrat",
-    marginTop: "2em",
-    width: "8em",
+    fontFamily: 'Montserrat',
+    marginTop: '2em',
+    width: '8em',
   },
 }));
 
@@ -39,29 +39,29 @@ export default function SignUp() {
   const theme = useTheme();
   const history = useHistory();
 
-  const [email, setEmail] = useState("");
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConf, setPasswordConf] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConf, setPasswordConf] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   const { signup, currentUser, firestoreUser } = useAuth();
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     if (password !== passwordConf) {
-      return setError("Passwords do not match");
+      return setError('Passwords do not match');
     }
     try {
-      setError("");
+      setError('');
       setLoading(true);
       const newUser = await signup(email, password);
       firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .add({
           firstName: firstName
             .slice(0, 1)
@@ -76,9 +76,27 @@ export default function SignUp() {
           uid: newUser.user.uid,
           userName,
         });
-      history.push("/userhome");
+      await firebase
+        .firestore()
+        .collection('following')
+        .doc(newUser.user.uid)
+        .collection('userFollowing')
+        .doc(newUser.user.uid)
+        .set({
+          userFollowing: [],
+        });
+      await firebase
+        .firestore()
+        .collection('followers')
+        .doc(newUser.user.uid)
+        .collection('userFollowers')
+        .doc(newUser.user.uid)
+        .set({
+          userFollowers: [],
+        });
+      history.push('/userhome');
     } catch (error) {
-      setError("Failed to create an account");
+      setError('Failed to create an account');
       console.log(error);
     }
     setLoading(false);
@@ -90,8 +108,8 @@ export default function SignUp() {
         <Typography
           variant="h1"
           style={{
-            marginBottom: "1em",
-            marginTop: "2em",
+            marginBottom: '1em',
+            marginTop: '2em',
             color: theme.palette.common.colorOne,
           }}
         >
@@ -106,7 +124,7 @@ export default function SignUp() {
         direction="column"
         justify="center"
         alignItems="center"
-        style={{ minWidth: "40%" }}
+        style={{ minWidth: '40%' }}
       >
         <Grid
           item
@@ -114,7 +132,7 @@ export default function SignUp() {
           direction="column"
           alignItems="center"
           justify="center"
-          style={{ minWidth: "50%" }}
+          style={{ minWidth: '50%' }}
         >
           <form onSubmit={handleSubmit} className={classes.form}>
             <TextField
@@ -155,7 +173,7 @@ export default function SignUp() {
               onChange={(e) => setPassword(e.currentTarget.value)}
               fullWidth
               variant="filled"
-              style={{ marginTop: "1em", marginBottom: "1em" }}
+              style={{ marginTop: '1em', marginBottom: '1em' }}
             ></TextField>
             <TextField
               name="passwordConf"
