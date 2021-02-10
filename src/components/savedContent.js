@@ -84,7 +84,7 @@ export default function UserProfile() {
             <Tab
               component={Link}
               to="/savedcollabs"
-              label="Saved Collabs"
+              label="My Posts"
               className={classes.tab}
             />
             <Tab label="++Content" className={classes.tab} />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
+import "firebase/storage";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -43,7 +44,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.colorOne,
     fontFamily: "Montserrat",
     width: "5em",
-    marginLeft: "15em",
+    marginLeft: "10em",
+  },
+  uploadPhoto: {
+    backgroundColor: "grey",
   },
 }));
 
@@ -51,7 +55,7 @@ export default function UserProfile() {
   const classes = useStyles();
   const theme = useTheme();
   const [user, setUser] = useState({});
-  const { currentUser } = useAuth();
+  const { currentUser, firestoreUser } = useAuth();
   const db = firebase.firestore();
   const email = currentUser.email;
 
@@ -64,9 +68,7 @@ export default function UserProfile() {
       objData.forEach((doc) => setUser(doc.data()));
     });
   }, []);
-  
-// console.log('this is user', user.uid)
-// console.log('this is users uid', currentUser.uid)
+
   return (
     <Grid container>
       <Grid item container direction="column">
@@ -81,7 +83,7 @@ export default function UserProfile() {
             <Tab
               component={Link}
               to="/savedcollabs"
-              label="Saved Collabs"
+              label="My Posts"
               className={classes.tab}
             />
             <Tab
@@ -91,7 +93,6 @@ export default function UserProfile() {
               className={classes.tab}
             />
             <Tab
-
               component={Link}
               to="/savedcontent"
               label="++Content"
@@ -109,16 +110,26 @@ export default function UserProfile() {
               label="following"
               className={classes.tab}
             />
-             <Tab
-            component={Link}
-            to="/2PlusFam"
-            label="2PlusFam"
-            className={classes.tab}
-            />  
-          />
           </Tabs>
         </Grid>
         <Grid item container alignItems="center" className={classes.infoCont}>
+          <Grid item className={classes.infoText}>
+            <img
+              onMouseEnter={(e) => {
+                e.currentTarget.style.cursor = "pointer";
+                e.currentTarget.src =
+                  "https://firebasestorage.googleapis.com/v0/b/plus-2-9ae1d.appspot.com/o/profile-hover.png?alt=media&token=2b2c7847-4e87-4b56-904a-073613c13310";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.src = firestoreUser.profilePhotoURL;
+              }}
+              onClick={() => {
+                console.log("hi");
+              }}
+              style={{ width: 100, height: 100 }}
+              src={firestoreUser && firestoreUser.profilePhotoURL}
+            />
+          </Grid>
           <Grid item className={classes.infoText}>
             <Typography variant="body1">First Name</Typography>
             <Typography variant="body2">{user.firstName}</Typography>

@@ -220,7 +220,7 @@ export default function Landing() {
                     >
                       <img src={defaultProfile} alt="default profile img" />
                       <Typography style={{ marginLeft: ".5em" }}>
-                        linleexx
+                        {post.userName}
                       </Typography>
                       <Button classes={{ root: classes.followButt }}>
                         follow
@@ -339,7 +339,7 @@ export default function Landing() {
                       Created By:
                     </Typography>
                     <Typography variant="body2" style={{ fontWeight: 300 }}>
-                      UID
+                      {disc.userName}
                     </Typography>
                   </Grid>
                 </Grid>
