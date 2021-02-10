@@ -57,13 +57,25 @@ const Posts = (props) => {
     //hooks
     const history = useHistory();
     useEffect(() => {
-        
         if(tag){
             getPostsByTag(tag)
+        } else{
+            getPosts();
         }
     },[])
 
     //functions
+    async function getPosts() {
+        try {
+            const postsColl = await postsRef.get();
+            const posts = await postsColl.docs.map(postDoc => {
+                return {...postDoc.data(), postId: postDoc.id}
+            })
+            setPosts(posts)
+        } catch (error) {
+            console.log('Unable to retrieve posts', error)
+        }
+    }
     async function getPostsByTag (tag) {
         try {
             const postsColl = await postsRef.where("tags", "array-contains", `${tag}`).get();
@@ -90,6 +102,7 @@ const Posts = (props) => {
 
     return(
         <Grid className={classes.searchPage}>
+            {console.log(posts)}
             <Typography 
                 className={classes.pageHeader} 
                 variant='h2'>
