@@ -218,7 +218,6 @@ export default function Landing() {
                       alignItems="center"
                       style={{ marginTop: "1em", marginLeft: "1em" }}
                     >
-
                       <img src={defaultProfile} alt="default profile img" />
                       <Typography style={{ marginLeft: ".5em" }}>
                         linleexx
@@ -251,9 +250,8 @@ export default function Landing() {
                       >
                         <Typography variant="body2">#hashtags</Typography>
                       </Grid>
+                    </Grid>
 
-                      {post.title}
-                    </Typography>
                     <Grid item container direction="row">
                       {post.tags.map((tag) => {
                         return (
@@ -274,7 +272,6 @@ export default function Landing() {
                           </Typography>
                         );
                       })}
-
                     </Grid>
                   </Grid>
                 </Card>
