@@ -25,10 +25,10 @@ import Users from "./components/Users";
 import UserLanding from "./components/UserLanding";
 import PublicProfile from "./components/PublicProfile";
 import GuestLanding from "./components/GuestLanding";
-import Posts from './components/Posts';
-import UserFollowers from "./components/UserFollowers"
-import UserFollowing from "./components/UserFollowing"
-import AllUsersIn2Plus from './components/AllUsersIn2+'
+import Posts from "./components/Posts";
+import UserFollowers from "./components/UserFollowers";
+import UserFollowing from "./components/UserFollowing";
+import AllUsersIn2Plus from "./components/AllUsersIn2+";
 
 function App() {
   return (
@@ -45,19 +45,26 @@ function App() {
             <PrivateRoute exact path="/profile" component={UserProfile} />
             <PrivateRoute exact path="/updateprof" component={UpdateProfile} />
             <PrivateRoute exact path="/2PlusFam" component={AllUsersIn2Plus} />
-            <PrivateRoute exact path="/userFollowings" component={UserFollowing} />
-            <PrivateRoute exact path="/userFollowers" component={UserFollowers} />
+            <PrivateRoute
+              exact
+              path="/userFollowings"
+              component={UserFollowing}
+            />
+            <PrivateRoute
+              exact
+              path="/userFollowers"
+              component={UserFollowers}
+            />
             <Route exact path="/posts/add" component={AddPost} />
             <Route exact path="/posts" component={Posts} />
             <Route exact path="/posts/:postId" component={Post} />
             <Route exact path="/savedcollabs" component={userSavedCollabs} />
             <Route exact path="/savedcontent" component={savedContent} />
             <Route exact path="/users" component={Users} />
-            <Route exact path="/users/:userID" component={PublicProfile} />
+            <Route exact path="/users/:profileUID" component={PublicProfile} />
             <Redirect from="/users/deleted" to="/users" />
             <Route exact path="/userhome" component={UserLanding} />
             <Route exact path="/guesthome" component={GuestLanding} />
-         
           </Switch>
         </AuthProvider>
       </BrowserRouter>
