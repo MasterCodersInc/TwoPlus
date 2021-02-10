@@ -9,11 +9,10 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import logoSpin from '../assets/logo-spin.gif'
+import logoSpin from "../assets/logo-spin.gif";
 import logo from "../assets/logo.png";
-import Lottie from 'react-lottie';
-import animationData from '../lotties/animation_kkyxn6gq.json';
-
+import Lottie from "react-lottie";
+import animationData from "../lotties/animation_kkyxn6gq.json";
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -43,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
     width: "3em",
   },
   loading: {
-    height: '100%'
-  }
+    height: "100%",
+  },
   button2: {
     backgroundColor: theme.palette.common.colorOne,
     color: "white",
@@ -77,20 +76,16 @@ export default function NavBar() {
     autoplay: true,
     animationData: animationData,
     rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice"
-    }
+      preserveAspectRatio: "xMidYMid slice",
+    },
   };
 
   if (!firestoreUser && currentUser) {
-      return (
-        <div>
-          <Lottie 
-          options={defaultOptions}
-            height={400}
-            width={400}
-          />
-        </div>
-      )
+    return (
+      <div>
+        <Lottie options={defaultOptions} height={400} width={400} />
+      </div>
+    );
   }
   return (
     <React.Fragment>
