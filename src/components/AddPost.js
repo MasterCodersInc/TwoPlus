@@ -101,7 +101,7 @@ const AddPost = ({ history }) => {
   //hooks
   const classes = useStyles();
   const theme = useTheme();
-  const { currentUser } = useAuth();
+  const { currentUser, firestoreUser } = useAuth();
 
   //state
   const [title, setTitle] = useState("");
@@ -131,7 +131,6 @@ const AddPost = ({ history }) => {
     let imageURL = await photoRef.getDownloadURL();
     setImageURL(imageURL);
     submitButton.current.disabled = false;
-    console.log("IMAGE??", imageURL);
   };
 
   //functions
@@ -163,6 +162,7 @@ const AddPost = ({ history }) => {
     postsRef
       .add({
         userRef: currentUser.uid,
+        userName: firestoreUser.userName,
         title: title,
         description,
         postType: postType,
@@ -173,24 +173,32 @@ const AddPost = ({ history }) => {
         enableCollab: true,
         imageURL: imageURL,
         tags,
+        plusplusCount: 0,
+        plusplusList: [],
       })
       .then((postDocRef) => {
         tags.forEach((tag) => {
           tag = tag.toLowerCase();
-          tagsRef.where("name","==",`${tag}`).get().then((tagsCol) => {
-            if(!tagsCol.docs.length){
-              tagsRef.add({name: `${tag}`, count: 1})
-            } else{
-              tagsCol.docs.forEach((tagDoc) => {
-                const tagDocRef = tagsRef.doc(tagDoc.id)
-                tagDocRef.update({
-                  count: firebase.firestore.FieldValue.increment(1)
-                })
-              })
-            }
-          });
-        })
-        history.push({ pathname: `/posts/${postDocRef.id}`, postType: postType });
+          tagsRef
+            .where("name", "==", `${tag}`)
+            .get()
+            .then((tagsCol) => {
+              if (!tagsCol.docs.length) {
+                tagsRef.add({ name: `${tag}`, count: 1 });
+              } else {
+                tagsCol.docs.forEach((tagDoc) => {
+                  const tagDocRef = tagsRef.doc(tagDoc.id);
+                  tagDocRef.update({
+                    count: firebase.firestore.FieldValue.increment(1),
+                  });
+                });
+              }
+            });
+        });
+        history.push({
+          pathname: `/posts/${postDocRef.id}`,
+          postType: postType,
+        });
       });
   };
 
