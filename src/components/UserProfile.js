@@ -91,11 +91,30 @@ export default function UserProfile() {
               className={classes.tab}
             />
             <Tab
+
+              component={Link}
+              to="/savedcontent"
+              label="++Content"
+              className={classes.tab}
+            />
+            <Tab
+              component={Link}
+              to="/savedcontent"
+              label="followers"
+              className={classes.tab}
+            />
+            <Tab
+              component={Link}
+              to="/savedcontent"
+              label="following"
+              className={classes.tab}
+            />
+             <Tab
             component={Link}
             to="/2PlusFam"
             label="2PlusFam"
             className={classes.tab}
-           
+            />  
           />
           </Tabs>
         </Grid>
