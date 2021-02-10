@@ -5,6 +5,7 @@ import firebase from "../firebase";
 import "firebase/storage";
 import PlusPlusButton from "./PlusPlusButton";
 import { Link } from "react-router-dom";
+import * as timeago from "timeago.js";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { TextField, Button, Typography, ListItem } from "@material-ui/core";
@@ -154,7 +155,12 @@ const DiscussPost = ({ post }) => {
           <div style={{ display: "flex" }}>
             {post.tags.map((tag, idx) => {
               return (
-                <ListItem key={idx} className={classes.tagItem}>
+                <ListItem
+                  component={Link}
+                  to={`/posts/?tag=${tag}`}
+                  key={idx}
+                  className={classes.tagItem}
+                >
                   {tag}
                 </ListItem>
               );
@@ -167,7 +173,8 @@ const DiscussPost = ({ post }) => {
               variant="subtitle1"
               style={{ marginTop: "1em" }}
             >
-              Asked by: {actualPostData?.userName}
+              Asked by: {actualPostData?.userName},{" "}
+              {timeago.format(actualPostData.timestamp.seconds * 1000)}
             </Typography>
           )}
         </div>

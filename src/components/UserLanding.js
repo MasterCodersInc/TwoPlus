@@ -267,14 +267,25 @@ export default function Landing() {
                       <Grid
                         container
                         style={{ marginTop: ".5em", marginLeft: "1em" }}
+<<<<<<< HEAD
                         direction="row"
                       >
                         {post.tags.slice(0,3).map((tag) => {
+=======
+                      ></Grid>
+                    </Grid>
+
+                    <Grid item container direction="row">
+                      {post.tags.map((tag) => {
+>>>>>>> main
                         return (
                           <Grid
                             item
                           >
                           <Typography
+                            component={Link}
+                            to={`/posts/?tag=${tag}`}
+                            className={classes.postLink}
                             variant="body2"
                             noWrap
                             style={{
@@ -360,7 +371,7 @@ export default function Landing() {
                       Created By:
                     </Typography>
                     <Typography variant="body2" style={{ fontWeight: 300 }}>
-                      UID
+                      {disc.userName}
                     </Typography>
                     <DeletePost postId={disc.discId}/>
                   </Grid>

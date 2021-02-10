@@ -14,9 +14,8 @@ const collabData = firestore.collection("posts");
 
 const useStyles = makeStyles((theme) => ({
   buttonEval: {
-    color: "#fff",
-    backgroundColor: theme.palette.common.colorOne,
-    height: "fit-content",
+    ...theme.button.normal,
+    marginTop: "2em",
   },
 }));
 
@@ -94,27 +93,36 @@ const EditorUID = ({ disabled, enableCollab }) => {
 
   return (
     <>
-      <Grid container>
-        <div style={{ display: "flex", flexDirection: "row", marginLeft: 50 }}>
-          <AceEditor ref={reactAceRef} mode="javascript" theme="chaos" />
-          <AceEditor ref={editorOutput} mode="javascript" />
-        </div>
-        {/* evaluate code in editor */}
-        <Button
-          classes={{ root: classes.buttonEval }}
-          style={{ root: { fontFamily: "Montserrat" } }}
-          onClick={() => {
-            try {
-              let ans = eval(reactAceRef.current.editor.getValue());
-              editorOutput.current.editor.setValue(String(ans), 1);
-            } catch (e) {
-              editorOutput.current.editor.setValue(e.message, 1);
-            }
-            return;
+      <Grid container direction="column" style={{ marginTop: "2em" }}>
+        <Grid
+          item
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            marginLeft: 50,
+            width: "90%",
           }}
         >
-          EVAL CODE
-        </Button>
+          <AceEditor ref={reactAceRef} mode="javascript" theme="chaos" />
+          <AceEditor ref={editorOutput} mode="javascript" />
+        </Grid>
+        {/* evaluate code in editor */}
+        <Grid item>
+          <Button
+            classes={{ root: classes.buttonEval }}
+            onClick={() => {
+              try {
+                let ans = eval(reactAceRef.current.editor.getValue());
+                editorOutput.current.editor.setValue(String(ans), 1);
+              } catch (e) {
+                editorOutput.current.editor.setValue(e.message, 1);
+              }
+              return;
+            }}
+          >
+            EVAL CODE
+          </Button>
+        </Grid>
       </Grid>
     </>
   );

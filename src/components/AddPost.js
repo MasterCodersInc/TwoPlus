@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   TextField,
   Button,
@@ -109,7 +109,6 @@ const AddPost = ({ history }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [postType, setPostType] = useState("");
-  const [userMedia, setUserMedia] = useState(null);
   const [imageURL, setImageURL] = useState(null);
   const [tags, setTags] = useState([]);
 
@@ -162,35 +161,34 @@ const AddPost = ({ history }) => {
     e.preventDefault();
 
     const postDocRef = await postsRef.add({
-        userRef: currentUser.uid,
-        userName: firestoreUser.userName,
-        title: title,
-        description,
-        postType: postType,
-        editorData: "Start Coding Here!",
-        docChanges: [{ changeID: "" }],
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        isActive: true,
-        enableCollab: true,
-        imageURL: imageURL,
-        tags,
-        plusplusCount: 0,
-        plusplusList: [],
-      })
-
+      userRef: currentUser.uid,
+      userName: firestoreUser.userName,
+      title: title,
+      description,
+      postType: postType,
+      editorData: "Start Coding Here!",
+      docChanges: [{ changeID: "" }],
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      isActive: true,
+      enableCollab: true,
+      imageURL: imageURL,
+      tags,
+      plusplusCount: 0,
+      plusplusList: [],
+    });
 
     tags.forEach(async (tag) => {
       tag = tag.toLowerCase();
-      const tagsCol = await tagsRef.where("name","==",`${tag}`).get();
-      if(!tagsCol.docs.length){
-        await tagsRef.add({name: `${tag}`, count: 1})
-      } else{
+      const tagsCol = await tagsRef.where("name", "==", `${tag}`).get();
+      if (!tagsCol.docs.length) {
+        await tagsRef.add({ name: `${tag}`, count: 1 });
+      } else {
         tagsCol.docs.forEach(async (tagDoc) => {
-          const tagDocRef = tagsRef.doc(tagDoc.id)
+          const tagDocRef = tagsRef.doc(tagDoc.id);
           await tagDocRef.update({
-            count: firebase.firestore.FieldValue.increment(1)
-          })
-        })
+            count: firebase.firestore.FieldValue.increment(1),
+          });
+        });
       }
     });
 
@@ -305,7 +303,7 @@ const AddPost = ({ history }) => {
                     fileRef.current.click();
                   }}
                 >
-                  Upload a pic of your sick rig!
+                  Upload a photo to be displayed with your post...
                 </Button>
                 <input
                   ref={fileRef}
@@ -313,7 +311,6 @@ const AddPost = ({ history }) => {
                   hidden={true}
                   onChange={(e) => {
                     imageUpload(e.target.files[0]);
-                    setUserMedia(e.target.files[0]);
                   }}
                 />
                 {imageURL && (

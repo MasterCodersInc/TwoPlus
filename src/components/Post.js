@@ -7,12 +7,25 @@ import firebase from "../firebase";
 import { Typography, Button, Grid } from "@material-ui/core";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import DiscussPost from "./DiscussPost";
+<<<<<<< HEAD
 import DeletePost from './DeletePost'
+=======
+import {
+  FormatAlignLeftSharp,
+  PlayCircleFilledWhite,
+} from "@material-ui/icons";
+>>>>>>> main
 
 const useStyles = makeStyles((theme) => ({
   button1: {
     color: "white",
     backgroundColor: theme.palette.common.colorTwo,
+  },
+  link: {
+    ...theme.link.normal,
+  },
+  buttonN: {
+    ...theme.button.normal,
   },
 }));
 
@@ -86,19 +99,20 @@ const Post = (props) => {
             >
               {post.description || ""}
             </Typography>
-            <Grid
-              container
-              direction="row" >
-              {
-                post.tags.map(tag => 
-                  (<Link style={{ marginRight: "1em" }} to={`/posts?tag=${tag}`}>
-                    #{tag}
-                  </Link>))
-              }
+            <Grid container direction="row">
+              {post.tags.map((tag) => (
+                <Link
+                  className={classes.link}
+                  style={{ marginRight: "1em" }}
+                  to={`/posts?tag=${tag}`}
+                >
+                  #{tag}
+                </Link>
+              ))}
             </Grid>
           </Grid>
           <Grid item container>
-            { currentUser && currentUser.uid === post.userRef && (
+            {currentUser && currentUser.uid === post.userRef && (
               <Grid>
                 {/* <Button
                   variant="contained"
@@ -107,7 +121,11 @@ const Post = (props) => {
                 >
                   Enable Collab
                 </Button> */}
-                <Button variant="contained" onClick={toggleActive}>
+                <Button
+                  variant="contained"
+                  classes={{ root: classes.buttonN }}
+                  onClick={toggleActive}
+                >
                   {buttonName}
                 </Button>
                 <DeletePost postId={post.postId} />
@@ -116,17 +134,22 @@ const Post = (props) => {
           </Grid>
         </Grid>
 
-        <Grid item container>
-          <EditorUID
-            uid={currentUser?.uid}
-            disabled={!post?.isActive}
-            enableCollab={enableCollab}
-          />
-          <ChatRoom
-            disabled={!post?.isActive}
-            postId={postId}
-            postRef={postRef}
-          />
+        <Grid item container lg>
+          <Grid item>
+            <EditorUID
+              uid={currentUser?.uid}
+              disabled={!post?.isActive}
+              enableCollab={enableCollab}
+            />
+          </Grid>
+          <Grid item lg style={{ maxWidth: "25em", marginLeft: "-2em" }}>
+            <ChatRoom
+              disabled={!post?.isActive}
+              postId={postId}
+              postRef={postRef}
+              lg
+            />
+          </Grid>
         </Grid>
       </Grid>
     );
