@@ -55,6 +55,15 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.common.colorThree,
     },
   },
+  postLink2: {
+    textDecoration: "none",
+    color: "black",
+    fontWeight: 500,
+    width: "90%",
+    "&:hover": {
+      color: theme.palette.common.colorThree,
+    },
+  },
 }));
 
 export default function Landing() {
@@ -162,16 +171,6 @@ export default function Landing() {
             <Typography variant="h1" style={{ fontSize: "1.5em" }}>
               Recent Q's
             </Typography>
-            <Button
-              component={Link}
-              to="/posts/add"
-              style={{ marginLeft: "1em" }}
-            >
-              <img src={addButt} alt="add button" />
-            </Button>
-            <Typography variant="body1" style={{ marginLeft: "1em" }}>
-              Post a New Question
-            </Typography>
           </Grid>
           <Grid
             item
@@ -180,10 +179,20 @@ export default function Landing() {
             style={{ marginTop: "1em", marginLeft: "-1em" }}
           ></Grid>
           <Grid item container>
-            <Grid item container style={{ marginBottom: "1em" }}>
-              <Typography variant="body1">
-                Can You Answer Any of These Questions?
-              </Typography>
+            <Grid
+              item
+              container
+              alignItems="center"
+              style={{ marginBottom: "1em" }}
+            >
+              <Typography variant="body1">Post a New Question</Typography>
+              <Button
+                component={Link}
+                to="/posts/add"
+                style={{ marginLeft: "1em" }}
+              >
+                <img src={addButt} alt="add button" />
+              </Button>
             </Grid>
             {posts &&
               posts.map((post, index) => (
@@ -247,19 +256,29 @@ export default function Landing() {
               ))}
           </Grid>
           <Grid item container style={{ marginTop: "5em" }}>
-            <Typography variant="body1">Recent Discussions</Typography>
+            <Typography
+              variant="h1"
+              style={{ fontSize: "1.5em", marginBottom: "1em" }}
+            >
+              Recent Discussions
+            </Typography>
             {disccuss &&
               disccuss.map((disc, index) => (
                 <Grid key={index} item container alignItems="center">
                   <Grid
                     item
                     direction="column"
-                    style={{ marginTop: ".5em", marginBottom: ".5em" }}
+                    style={{
+                      marginTop: ".5em",
+                      marginBottom: ".5em",
+                      width: "20em",
+                    }}
                   >
                     <Typography
                       component={Link}
                       to={`/posts/${disc.discId}`}
                       variant="body2"
+                      className={classes.postLink2}
                     >
                       {disc.title}
                     </Typography>
@@ -267,16 +286,19 @@ export default function Landing() {
                       <Typography variant="body2">#hashtags</Typography>
                     </Grid>
                   </Grid>
-                  <Grid item style={{ marginLeft: "2em" }}>
-                    <Typography variant="body2">Status:</Typography>
-                    <Typography variant="body2" style={{ fontWeight: 300 }}>
-                      In Collab
+
+                  <Grid item style={{ marginLeft: "2em", width: "10em" }}>
+                    <Typography
+                      variant="body2"
+                      style={{
+                        color: theme.palette.common.colorTwo,
+                        fontSize: ".8em",
+                      }}
+                    >
+                      Created By:
                     </Typography>
-                  </Grid>
-                  <Grid item style={{ marginLeft: "2em" }}>
-                    <Typography variant="body2">Created By:</Typography>
                     <Typography variant="body2" style={{ fontWeight: 300 }}>
-                      In Collab
+                      UID
                     </Typography>
                   </Grid>
                 </Grid>
