@@ -37,11 +37,11 @@ export function AuthProvider({ children }) {
     return currentUser.updatePassword(password);
   }
 
-  function deleteUser(user){
+  function deleteUser(user) {
     try {
       return user.delete();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
@@ -61,7 +61,9 @@ export function AuthProvider({ children }) {
           .collection("users")
           .where("email", "==", `${currentUser.email}`);
         const userData = await userObjLoc.get();
-        userData.forEach((user) => setFirestoreUser(user.data()));
+        userData.forEach((user) =>
+          setFirestoreUser({ ...user.data(), userDocRef: user.id })
+        );
       }
       userFireStoreInfo();
     }
