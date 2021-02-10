@@ -64,7 +64,9 @@ export default function UserProfile() {
       objData.forEach((doc) => setUser(doc.data()));
     });
   }, []);
-
+  
+// console.log('this is user', user.uid)
+// console.log('this is users uid', currentUser.uid)
   return (
     <Grid container>
       <Grid item container direction="column">
@@ -88,6 +90,32 @@ export default function UserProfile() {
               label="++Content"
               className={classes.tab}
             />
+            <Tab
+
+              component={Link}
+              to="/savedcontent"
+              label="++Content"
+              className={classes.tab}
+            />
+            <Tab
+              component={Link}
+              to="/savedcontent"
+              label="followers"
+              className={classes.tab}
+            />
+            <Tab
+              component={Link}
+              to="/savedcontent"
+              label="following"
+              className={classes.tab}
+            />
+             <Tab
+            component={Link}
+            to="/2PlusFam"
+            label="2PlusFam"
+            className={classes.tab}
+            />  
+          />
           </Tabs>
         </Grid>
         <Grid item container alignItems="center" className={classes.infoCont}>
