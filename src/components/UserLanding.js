@@ -253,7 +253,7 @@ export default function Landing() {
                     >
                       <img
                         src={post.isActive ? openPost : closedPost}
-                        alt="greencircle"
+                        alt={post.isActive ? 'greencircle':'redcircle'}
                         style={{ marginRight: ".5em" }}
                       />
                       <Typography
@@ -362,7 +362,7 @@ export default function Landing() {
                     <Typography variant="body2" style={{ fontWeight: 300 }}>
                       UID
                     </Typography>
-                    <DeletePost />
+                    <DeletePost postId={disc.discId}/>
                   </Grid>
                 </Grid>
               ))}

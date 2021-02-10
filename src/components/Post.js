@@ -7,14 +7,12 @@ import firebase from "../firebase";
 import { Typography, Button, Grid } from "@material-ui/core";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import DiscussPost from "./DiscussPost";
+import DeletePost from './DeletePost'
 
 const useStyles = makeStyles((theme) => ({
   button1: {
     color: "white",
     backgroundColor: theme.palette.common.colorTwo,
-    "&:hover": {
-      //  backgroundColor: `${colorHoverToggle}`,
-    },
   },
 }));
 
@@ -41,7 +39,7 @@ const Post = (props) => {
     async function getPostData() {
       const postFromDb = await postRef.get();
       const postData = postFromDb.data();
-      setPost(postData);
+      setPost({...postData, postId: postFromDb.id});
       setEnableCollab(postData.enableCollab);
     }
     getPostData();
@@ -112,6 +110,7 @@ const Post = (props) => {
                 <Button variant="contained" onClick={toggleActive}>
                   {buttonName}
                 </Button>
+                <DeletePost postId={post.postId} />
               </Grid>
             )}
           </Grid>
