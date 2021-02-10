@@ -63,6 +63,7 @@ function App() {
             <Route exact path="/users" component={Users} />
             <Route exact path="/users/:profileUID" component={PublicProfile} />
             <Redirect from="/users/deleted" to="/users" />
+            <Redirect from="/userhome/deleted" to="/userhome" />
             <Route exact path="/userhome" component={UserLanding} />
             <Route exact path="/guesthome" component={GuestLanding} />
           </Switch>

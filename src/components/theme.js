@@ -70,6 +70,9 @@ export default createMuiTheme({
       backgroundColor: colorOne,
       color: "#fff",
       fontFamily: "Montserrat",
+      '&:hover': {
+        color: 'black'
+      }
     },
   },
   link: {

@@ -14,6 +14,7 @@ import userLandingRec from "../assets/userLandingRec.svg";
 import defaultProfile from "../assets/defaultProfile.svg";
 import openPost from "../assets/openPostCircle.svg";
 import closedPost from "../assets/closedPostCircle.svg";
+import DeletePost from './DeletePost'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -64,13 +65,23 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.common.colorThree,
     },
   },
+  postLink3: {
+    textDecoration: "none",
+    color: theme.palette.common.colorOne,
+    fontWeight: 600,
+    width: "90%",
+    "&:hover": {
+      color: 'black',
+    },
+  },
 }));
 
 export default function Landing() {
   const classes = useStyles();
   const theme = useTheme();
-  const [posts, setPosts] = useState();
-  const [disccuss, setDiscuss] = useState();
+  const [posts, setPosts] = useState([]);
+  const [disccuss, setDiscuss] = useState([]);
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
     const postsLoc = firebase
@@ -102,6 +113,19 @@ export default function Landing() {
       }));
       setDiscuss(discussArr);
     });
+
+    const tagsLoc = firebase
+      .firestore()
+      .collection('tags')
+      .orderBy("count", "desc")
+      .limit(6);
+
+    tagsLoc.get().then((tagsObj) => {
+      let tagsArr = tagsObj.docs.map((doc) => ({
+        ...doc.data()
+      }));
+      setTags(tagsArr);
+    })
   }, []);
 
   return (
@@ -118,24 +142,29 @@ export default function Landing() {
           <Typography style={{ marginBottom: "1em", marginTop: "4.5em" }}>
             Popular Topics
           </Typography>
-          <Typography variant="body2" className={classes.popTopLi}>
-            #HTML
-          </Typography>
-          <Typography variant="body2" className={classes.popTopLi}>
-            #Javascript
-          </Typography>
-          <Typography variant="body2" className={classes.popTopLi}>
-            #CSS
-          </Typography>
-          <Typography variant="body2" className={classes.popTopLi}>
-            #Python
-          </Typography>
-          <Typography variant="body2" className={classes.popTopLi}>
-            #Firebase
-          </Typography>
-          <Typography variant="body2" className={classes.popTopLi}>
-            #React
-          </Typography>
+          {
+            tags.map((tag,idx) => (
+              <div style={{display:'flex', alignItems:'center'}}>
+                <div>
+                  <Typography 
+                    variant="body2" 
+                    className={classes.popTopLi}>
+                      {idx}. &nbsp; 
+                  </Typography>
+                </div>
+                <div>
+                  <Typography 
+                    variant="body2" 
+                    className={classes.popTopLi, classes.postLink3}
+                    component={Link}
+                    to={`/posts?tag=${tag.name}`}>
+                      #{tag.name}
+                  </Typography>
+                </div>
+              </div>
+            ))
+          }
+          
           <Typography style={{ marginBottom: "1em", marginTop: "4.5em" }}>
             Followed People
           </Typography>
@@ -246,10 +275,10 @@ export default function Landing() {
                         style={{ width: "90%", marginTop: ".5em" }}
                       >
                         <img
-                          src={openPost}
-                          alt="greencircle"
-                          style={{ marginRight: ".5em" }}
-                        />
+                        src={post.isActive ? openPost : closedPost}
+                        alt={post.isActive ? 'greencircle':'redcircle'}
+                        style={{ marginRight: ".5em" }}
+                      />
                         <Typography
                           component={Link}
                           to={`/posts/${post.postId}`}
@@ -264,29 +293,34 @@ export default function Landing() {
                         ></Grid>
                       </Grid>
 
-                      <Grid item container direction="row">
-                        {post.tags.map((tag) => {
-                          return (
-                            <Typography
-                              component={Link}
-                              to={`/posts/?tag=${tag}`}
-                              className={classes.postLink}
-                              variant="body2"
-                              style={{
-                                color: "white",
-                                width: "fit-content",
-                                backgroundColor: theme.palette.common.colorOne,
-                                marginRight: 4,
-                                marginTop: 4,
-                                marginBottom: 4,
-                                padding: 2,
-                                borderRadius: 2,
-                              }}
-                            >
-                              #{tag}
-                            </Typography>
-                          );
-                        })}
+                       <Grid item container direction="row">
+                      {post.tags.slice(0,3).map((tag) => {
+                        return (
+                          <Grid
+                            item
+                          >
+                          <Typography
+                            component={Link}
+                            to={`/posts/?tag=${tag}`}
+                            className={classes.postLink}
+                            variant="body2"
+                            noWrap
+                            style={{
+                              color: "white",
+                              width: "fit-content",
+                              backgroundColor: theme.palette.common.colorOne,
+                              marginRight: 4,
+                              marginTop: 4,
+                              marginBottom: 4,
+                              padding: 2,
+                              borderRadius: 2,
+                            }}
+                          >
+                            #{tag}
+                          </Typography>
+                          </Grid>
+                        );
+                      })}
                       </Grid>
                     </Grid>
                   </Card>
@@ -356,6 +390,7 @@ export default function Landing() {
                     <Typography variant="body2" style={{ fontWeight: 300 }}>
                       {disc.userName}
                     </Typography>
+                    <DeletePost postId={disc.discId} fontSize='small'/>
                   </Grid>
                 </Grid>
               ))}

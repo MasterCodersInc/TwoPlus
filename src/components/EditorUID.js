@@ -66,6 +66,7 @@ const EditorUID = ({ disabled, enableCollab }) => {
       documentReference.current.onSnapshot(async () => {
         let updatedInfoRef = await documentReference.current.get();
         let updatedInfo = updatedInfoRef.data();
+        if(!updatedInfo) return;
         let userWhoMadeChanges = updatedInfo.docChanges[0].changeID;
 
         if (userWhoMadeChanges === uid) {

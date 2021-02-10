@@ -50,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
     height: "2em",
     alignSelf: "center",
     fontFamily: "Montserrat",
+    '&:hover': {
+      color: 'black'
+    }
   },
 }));
 

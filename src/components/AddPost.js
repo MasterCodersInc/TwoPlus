@@ -57,6 +57,8 @@ const useStyles = makeStyles((theme) => ({
     margin: "5px",
     padding: "5px",
     width: "fit-content",
+    fontFamily: 'Montserrat',
+    fontWeight: '500'
   },
   tagInput: {
     background: "none",
