@@ -156,11 +156,10 @@ const AddPost = ({ history }) => {
     }
   };
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
 
-    postsRef
-      .add({
+    const postDocRef = await postsRef.add({
         userRef: currentUser.uid,
         userName: firestoreUser.userName,
         title: title,
@@ -176,30 +175,24 @@ const AddPost = ({ history }) => {
         plusplusCount: 0,
         plusplusList: [],
       })
-      .then((postDocRef) => {
-        tags.forEach((tag) => {
-          tag = tag.toLowerCase();
-          tagsRef
-            .where("name", "==", `${tag}`)
-            .get()
-            .then((tagsCol) => {
-              if (!tagsCol.docs.length) {
-                tagsRef.add({ name: `${tag}`, count: 1 });
-              } else {
-                tagsCol.docs.forEach((tagDoc) => {
-                  const tagDocRef = tagsRef.doc(tagDoc.id);
-                  tagDocRef.update({
-                    count: firebase.firestore.FieldValue.increment(1),
-                  });
-                });
-              }
-            });
-        });
-        history.push({
-          pathname: `/posts/${postDocRef.id}`,
-          postType: postType,
-        });
-      });
+
+
+    tags.forEach(async (tag) => {
+      tag = tag.toLowerCase();
+      const tagsCol = await tagsRef.where("name","==",`${tag}`).get();
+      if(!tagsCol.docs.length){
+        await tagsRef.add({name: `${tag}`, count: 1})
+      } else{
+        tagsCol.docs.forEach(async (tagDoc) => {
+          const tagDocRef = tagsRef.doc(tagDoc.id)
+          await tagDocRef.update({
+            count: firebase.firestore.FieldValue.increment(1)
+          })
+        })
+      }
+    });
+
+    history.push({ pathname: `/posts/${postDocRef.id}`, postType: postType });
   };
 
   return (
