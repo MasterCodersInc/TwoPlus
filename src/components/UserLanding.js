@@ -220,7 +220,7 @@ export default function Landing() {
                     >
                       <img src={defaultProfile} alt="default profile img" />
                       <Typography style={{ marginLeft: ".5em" }}>
-                        linleexx
+                        {post.userName}
                       </Typography>
                       <Button classes={{ root: classes.followButt }}>
                         follow
@@ -247,15 +247,16 @@ export default function Landing() {
                       <Grid
                         item
                         style={{ marginTop: ".5em", marginLeft: "1em" }}
-                      >
-                        <Typography variant="body2">#hashtags</Typography>
-                      </Grid>
+                      ></Grid>
                     </Grid>
 
                     <Grid item container direction="row">
                       {post.tags.map((tag) => {
                         return (
                           <Typography
+                            component={Link}
+                            to={`/posts/?tag=${tag}`}
+                            className={classes.postLink}
                             variant="body2"
                             style={{
                               color: "white",
@@ -338,7 +339,7 @@ export default function Landing() {
                       Created By:
                     </Typography>
                     <Typography variant="body2" style={{ fontWeight: 300 }}>
-                      UID
+                      {disc.userName}
                     </Typography>
                   </Grid>
                 </Grid>
