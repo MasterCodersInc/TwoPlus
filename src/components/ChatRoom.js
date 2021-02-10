@@ -90,7 +90,7 @@ import React, { useState, useEffect } from "react";
 import firebase from "../firebase";
 // import ChatMsg from './ChatMsg';
 import { useAuth } from "../contexts/AuthContext";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -122,7 +122,7 @@ const useStyles = makeStyles({
     borderRight: "1px solid #e0e0e0",
   },
   messageArea: {
-    height: "70vh",
+    height: "50vh",
     overflowY: "auto",
   },
 });
@@ -141,6 +141,7 @@ const formatDate = (date) => {
 
 const ChatRoom = ({ postId, postRef, disabled }) => {
   const classes = useStyles();
+  const theme = useTheme();
   const { currentUser } = useAuth();
   const db = firebase.firestore();
   const uid = currentUser?.uid;
@@ -196,14 +197,15 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
   return (
     <div>
       <Grid container>
-        <Grid item xs={12}>
-          <Typography variant="h5" className="header-message">
+        <Grid item>
+          <Typography variant="h2" className="header-message">
             Chat
           </Typography>
         </Grid>
       </Grid>
       <Grid container component={Paper} className={classes.chatSection}>
-        <Grid item xs={3} className={classes.borderRight500}>
+        {/* // DISCUSSED THAT WE DONT REALLY NEED THE USER LIVE INFORMATION */}
+        {/* <Grid item xs={3} className={classes.borderRight500}>
           <List>
             <ListItem button key="RemySharp">
               <ListItemIcon>
@@ -255,9 +257,9 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
               <ListItemText primary="Cindy Baker">Cindy Baker</ListItemText>
             </ListItem>
           </List>
-        </Grid>
+        </Grid> */}
 
-        <Grid item xs={9}>
+        <Grid item style={{ width: "100%" }}>
           <List className={classes.messageArea}>
             {messages.map((message) =>
               message.uid === uid ? (
