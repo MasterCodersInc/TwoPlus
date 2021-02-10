@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-
 import { useAuth } from "../contexts/AuthContext";
-
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Grid from "@material-ui/core/Grid";
@@ -11,8 +9,11 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-
+import logoSpin from '../assets/logo-spin.gif'
 import logo from "../assets/logo.png";
+import Lottie from 'react-lottie';
+import animationData from '../lotties/animation_kkyxn6gq.json';
+
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -41,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     width: "3em",
   },
+  loading: {
+    height: '100%'
+  }
 }));
 
 export default function NavBar() {
@@ -60,8 +64,26 @@ export default function NavBar() {
       setError("Failed to log out");
     }
   }
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice"
+    }
+  };
+
   if (!firestoreUser && currentUser) {
-    return <div>Loading...</div>;
+      return (
+        <div>
+          <Lottie 
+          options={defaultOptions}
+            height={400}
+            width={400}
+          />
+        </div>
+      )
   }
   return (
     <React.Fragment>
