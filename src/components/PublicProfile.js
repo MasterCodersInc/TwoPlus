@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -12,6 +12,9 @@ import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
 
 import rect from "../assets/userACCrec.svg";
+import UserFollowing from "./UserFollowing";
+import UserFollowers from "./UserFollowers";
+import { id } from "date-fns/locale";
 
 const useStyles = makeStyles((theme) => ({
   shadowRectangle: {
@@ -45,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PublicProfile() {
+  const history = useHistory();
   const { userID } = useParams();
   const classes = useStyles();
   const theme = useTheme();
@@ -52,7 +56,15 @@ export default function PublicProfile() {
   const [userPostList, setUserPostList] = useState(null);
   const db = firebase.firestore();
 
-  // in a use effect to trigger the re-render
+  //---
+
+  const { currentUser } = useAuth();
+  const [isFollowing, setIsFollowing] = useState(false);
+  const followersRef = db.collection("followers");
+  const followingRef = db.collection("following");
+  const [userFollowers, setUserFollowers] = useState([]);
+  const [userFollowing, setUserFollowing] = useState([]);
+
   useEffect(() => {
     async function getUserAndPosts() {
       const userObjLoc = await firebase
@@ -70,9 +82,128 @@ export default function PublicProfile() {
       postsArr = postsArr.docs.map((doc) => ({ ...doc.data(), docID: doc.id }));
       setUserPostList(postsArr);
     }
-
     getUserAndPosts();
   }, []);
+
+  // const createNewUsersFollowweAndFollowingCollection = async () => {
+  //   if (
+  //     currentUser.uid &&
+  //     userFollowing.length === 0 &&
+  //     currentUser.uid &&
+  //     userFollowers.length === 0
+  //   ) {
+
+  //   } else {
+  //     console.log('u hav an account');
+  //   }
+  //   // console.log('this is whats in data', data[0].id, data[0].id.map((el) => el === userID))
+  // };
+  // createNewUsersFollowweAndFollowingCollection();
+
+  useEffect(() => {
+    const getUserFollowingsFunc = async () => {
+      const getUserFollowings = await followingRef
+        .doc(userID)
+        .collection("userFollowing")
+        .onSnapshot((queryFollowingSnapShot) => {
+          const userFollowingData = queryFollowingSnapShot.docs.map((doc) => ({
+            ...doc.data(),
+          }));
+          console.log(
+            "what user following",
+            userFollowingData[0].userFollowing
+          );
+          setUserFollowing(userFollowingData[0].userFollowing);
+        });
+    };
+    getUserFollowingsFunc();
+  }, []);
+  useEffect(() => {
+    const getUserFollowersFunc = async () => {
+      const getUserFollowers = await followersRef
+        .doc(userID)
+        .collection("userFollowers")
+        .onSnapshot((queryFollowingSnapShot) => {
+          const userFollowersData = queryFollowingSnapShot.docs.map((doc) => ({
+            ...doc.data(),
+          }));
+          console.log(
+            "what user followers",
+            userFollowersData[0].userFollowers
+          );
+          setUserFollowers(userFollowersData[0].userFollowers);
+        });
+    };
+    getUserFollowersFunc();
+  }, []);
+
+  // ===>
+  const followUser = async (e) => {
+    const updateFollowingData = await followingRef
+      .doc(currentUser.uid)
+      .collection("userFollowing")
+      .doc(currentUser.uid)
+      .update({
+        userFollowing: firebase.firestore.FieldValue.arrayUnion(userID), // I used update to avoid to prevent it from adding same user twice
+      });
+    const updateFollowedUserFollowingData = await followersRef
+      .doc(currentUser.uid)
+      .collection("userFollowers")
+      .doc(currentUser.uid)
+      .update({
+        userFollowers: firebase.firestore.FieldValue.arrayUnion(
+          currentUser.uid
+        ),
+      });
+  };
+
+  const clickToUserProfilePage = (e) => {
+    history.push(`/users/${currentUser.uid}`);
+  };
+
+  const handleUnfollowUser = async (e) => {
+    await followingRef
+      .doc(currentUser.uid)
+      .collection("userFollowing")
+      .doc(currentUser.uid)
+      .update({
+        userFollowing: firebase.firestore.FieldValue.arrayRemove(userID),
+      });
+
+    // const getData = followingRef
+    //   .doc(currentUser.uid)
+    //   .collection('userFollowing')
+    //   .onSnapshot((queryFollowingSnapShot) => {
+    //     const userFollowingData = queryFollowingSnapShot.docs.map((doc) => ({
+    //       ...doc.data(),
+    //     }));
+    //     if (userFollowingData[0].id.forEach((el) => el === userID)) {
+    //       setIsFollowing(false);
+
+    //       // setUserFollowing([userFollowingData]);
+    //     } else {
+    //       console.log(
+    //         "this user doesn't seem to be found in your followers list"
+    //       );
+    //     }
+    //   });
+  };
+
+  const followAndUnfollowClickHandler = (e) => {
+    if (!currentUser) {
+      return;
+    }
+
+    if (!isFollowing && currentUser.uid !== userID) {
+      followUser();
+      setIsFollowing(true);
+    } else if (isFollowing && currentUser.uid !== userID) {
+      handleUnfollowUser();
+      setIsFollowing(false);
+    } else if (currentUser.uid === userID) {
+      clickToUserProfilePage();
+    }
+  };
 
   return (
     <Grid container>
@@ -97,6 +228,31 @@ export default function PublicProfile() {
                   label={user.firstName + "'s posts"}
                   className={classes.tab}
                 />
+                <Button onClick={followAndUnfollowClickHandler}>
+                  {currentUser?.uid === userID
+                    ? "edit"
+                    : isFollowing === false
+                    ? "Follow"
+                    : "Unfollow"}
+                </Button>
+                <Button
+                  component={Link}
+                  to="/userFollowers"
+                  onClick={() => {
+                    <UserFollowers />;
+                  }}
+                >
+                  {`Followers ${userFollowers.length}`}
+                </Button>
+                <Button
+                  component={Link}
+                  to="/userFollowings"
+                  onClick={() => {
+                    <UserFollowing />;
+                  }}
+                >
+                  {`Following ${userFollowing.length}`}
+                </Button>
               </Tabs>
               <Grid container id="postsContainer">
                 {userPostList &&

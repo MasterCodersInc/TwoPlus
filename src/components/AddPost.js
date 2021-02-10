@@ -131,7 +131,6 @@ const AddPost = ({ history }) => {
     let imageURL = await photoRef.getDownloadURL();
     setImageURL(imageURL);
     submitButton.current.disabled = false;
-    console.log("IMAGE??", imageURL);
   };
 
   //functions
@@ -173,7 +172,10 @@ const AddPost = ({ history }) => {
         enableCollab: true,
         imageURL: imageURL,
         tags,
+        plusplusCount: 0,
+        plusplusList: [],
       })
+
 
     tags.forEach(async (tag) => {
       tag = tag.toLowerCase();
