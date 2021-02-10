@@ -59,31 +59,23 @@ export default function UserProfile() {
   const storageRef = firebase.storage().ref();
   const fileRef = React.useRef();
   const imgRef = React.useRef();
-  const [userRef, setUserRef] = useState();
-
-  useEffect(() => {
-    if (firestoreUser) {
-      setNewProfilePhoto(firestoreUser.profilePhotoURL);
-    }
-    async function getUserRef() {
-      let searchVals = await firebase
-        .firestore()
-        .collection("users")
-        .where("email", "==", `${currentUser.email}`);
-      let returnedVals = await searchVals.get();
-      setUserRef(returnedVals.docs[0]);
-    }
-    getUserRef();
-  }, []);
 
   const imageUpload = async (imageFile) => {
     let imageRefId = `profile_pic${String(
       Math.floor(Math.random() * 100000)
     )}_${imageFile.name}`;
+
     let photoRef = await storageRef.child(imageRefId);
     await photoRef.put(imageFile);
     let imageURL = await photoRef.getDownloadURL();
-    // await userRef.update({ profilePhotoURL: imageURL });
+
+    const userRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(firestoreUser.userDocRef);
+
+    await userRef.update({ profilePhotoURL: imageURL });
+
     setNewProfilePhoto(imageURL);
   };
 
@@ -129,7 +121,7 @@ export default function UserProfile() {
             <Grid item className={classes.infoText}>
               <img
                 ref={imgRef}
-                src={newProfilePhoto}
+                src={newProfilePhoto || firestoreUser.profilePhotoURL}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.cursor = "pointer";
                   e.currentTarget.src =

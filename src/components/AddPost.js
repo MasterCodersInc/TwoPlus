@@ -163,6 +163,7 @@ const AddPost = ({ history }) => {
     const postDocRef = await postsRef.add({
       userRef: currentUser.uid,
       userName: firestoreUser.userName,
+      userPhotoURL: firestoreUser.profilePhotoURL,
       title: title,
       description,
       postType: postType,

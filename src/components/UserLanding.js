@@ -224,62 +224,76 @@ export default function Landing() {
               </Button>
             </Grid>
             {posts &&
-              posts.map((post, index) => (
-                <Card
-                  style={{
-                    width: "18em",
-                    margin: ".5em",
-                    paddingBottom: "1em",
-                    backgroundColor: theme.palette.common.colorFive,
-                    borderRadius: 15,
-                  }}
-                >
-                  <Grid
-                    key={index}
-                    item
-                    direction="column"
-                    container
-                    alignItems="center"
+              posts.map((post, index) => {
+                return (
+                  <Card
+                    style={{
+                      width: "18em",
+                      margin: ".5em",
+                      paddingBottom: "1em",
+                      backgroundColor: theme.palette.common.colorFive,
+                      borderRadius: 15,
+                    }}
                   >
                     <Grid
+                      key={index}
                       item
+                      direction="column"
                       container
                       alignItems="center"
-                      style={{ marginTop: "1em", marginLeft: "1em" }}
                     >
-                      <img src={defaultProfile} alt="default profile img" />
-                      <Typography style={{ marginLeft: ".5em" }}>
-                        {post.userName}
-                      </Typography>
-                      <Button classes={{ root: classes.followButt }}>
-                        follow
-                      </Button>
-                    </Grid>
-                    <Grid
-                      container
-                      alignItems="flex-start"
-                      style={{ width: "90%", marginTop: ".5em" }}
-                    >
-                      <img
+                      <Grid
+                        item
+                        container
+                        alignItems="center"
+                        style={{ marginTop: "1em", marginLeft: "1em" }}
+                      >
+                        <img
+                          src={post.userPhotoURL || defaultProfile}
+                          style={{
+                            width: 40,
+                            height: 40,
+                            objectFit: "cover",
+                            borderRadius: 5,
+                          }}
+                          alt="default profile img"
+                        />
+                        <Typography
+                          component={Link}
+                          to={`users/${post.userRef}`}
+                          style={{ marginLeft: ".5em", textDecoration: "none" }}
+                        >
+                          {post.userName}
+                        </Typography>
+                        <Button classes={{ root: classes.followButt }}>
+                          follow
+                        </Button>
+                      </Grid>
+                      <Grid
+                        container
+                        alignItems="flex-start"
+                        style={{ width: "90%", marginTop: ".5em" }}
+                      >
+                        <img
                         src={post.isActive ? openPost : closedPost}
                         alt={post.isActive ? 'greencircle':'redcircle'}
                         style={{ marginRight: ".5em" }}
                       />
-                      <Typography
-                        component={Link}
-                        to={`/posts/${post.postId}`}
-                        variant="body2"
-                        className={classes.postLink}
-                      >
-                        {post.title}
-                      </Typography>
-                      <Grid
-                        container
-                        style={{ marginTop: ".5em", marginLeft: "1em" }}
-                      ></Grid>
-                    </Grid>
+                        <Typography
+                          component={Link}
+                          to={`/posts/${post.postId}`}
+                          variant="body2"
+                          className={classes.postLink}
+                        >
+                          {post.title}
+                        </Typography>
+                        <Grid
+                          item
+                          style={{ marginTop: ".5em", marginLeft: "1em" }}
+                        ></Grid>
+                      </Grid>
 
-                    <Grid item container direction="row">
+                       <Grid item container direction="row">
                       {post.tags.slice(0,3).map((tag) => {
                         return (
                           <Grid
@@ -309,8 +323,9 @@ export default function Landing() {
                       })}
                       </Grid>
                     </Grid>
-                </Card>
-              ))}
+                  </Card>
+                );
+              })}
           </Grid>
           <Grid item container style={{ marginTop: "5em" }}>
             <Typography
