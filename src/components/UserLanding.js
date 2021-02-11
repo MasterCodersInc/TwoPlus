@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import PlusPlusButton from "./PlusPlusButton";
+import Footer from "./Footer";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -169,7 +170,6 @@ export default function Landing() {
           className={classes.popTopCont}
           lg={2}
         >
-          <Grid item className={classes.testBox}></Grid>
           <Typography style={{ marginBottom: "1em", marginTop: "4.5em" }}>
             Popular Topics
           </Typography>
@@ -274,13 +274,19 @@ export default function Landing() {
                       <Grid
                         container
                         alignItems="flex-start"
-                        style={{ width: "90%", marginTop: ".5em", maxHeight:'10em' }}
+                        style={{
+                          width: "90%",
+                          marginTop: ".5em",
+                          maxHeight: "10em",
+                          minHeight: "4em",
+                        }}
                       >
                         <img
                           src={openPost}
                           alt="greencircle"
                           style={{ marginRight: ".5em", marginTop: ".9em" }}
                         />
+                        {/* ================================================================================================== */}
                         <Typography
                           component={Link}
                           to={`/posts/${post.postId}`}
