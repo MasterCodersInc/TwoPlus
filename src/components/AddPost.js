@@ -166,6 +166,7 @@ const AddPost = ({ history }) => {
       userPhotoURL: firebase
         .firestore()
         .doc(`users/${firestoreUser.userDocRef}`),
+
       title: title,
       description,
       postType: postType,
