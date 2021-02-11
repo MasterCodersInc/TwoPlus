@@ -136,7 +136,7 @@ export default function PublicProfile() {
           <Typography variant="h1" style={{ marginBottom: ".25em" }}>
             {publicUser.firstName} {publicUser.lastName}
           </Typography>
-          {profileUID !== currentUser.uid && (
+          {profileUID !== currentUser?.uid && (
             <Button
               classes={{ root: classes.followButton }}
               onClick={followAndUnfollowClickHandler}
