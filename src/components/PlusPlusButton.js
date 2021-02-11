@@ -3,7 +3,7 @@ import { TextField, Button, Typography, ListItem } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useAuth } from "../contexts/AuthContext";
 import { useParams } from "react-router-dom";
-import { WhereToVote } from "@material-ui/icons";
+import { PolicyRounded, WhereToVote } from "@material-ui/icons";
 import firebase from "../firebase";
 
 import Grid from "@material-ui/core/Grid";
@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 1000,
     fontSize: "1em",
     padding: 0,
-    //     height: "fit-content",
     width: "2em",
     minWidth: 0,
   },
@@ -52,17 +51,16 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 50,
     color: "white",
     fontWeight: 1000,
-    fontSize: "1.5em",
+    fontSize: "1em",
     padding: 0,
     boxShadow: "inset 0 0 10px #000000",
-    height: "fit-content",
+    width: "2em",
+    minWidth: 0,
   },
 }));
 
 //expects a "documentRef" prop so that the upvote goes to the right place
-//expects a "documentData" prop to render number correctly
-const PlusPlusButton = ({ documentData, documentRef, size }) => {
-  const { postID } = useParams();
+const PlusPlusButton = ({ documentRef, size }) => {
   const { currentUser, firestoreUser } = useAuth();
 
   const classes = useStyles();
@@ -71,35 +69,51 @@ const PlusPlusButton = ({ documentData, documentRef, size }) => {
   const plusPlusRef = React.useRef();
 
   const [buttonState, setButtonState] = React.useState(true);
-  const [plusplusCount, setPlusplusCount] = React.useState(
-    documentData.plusplusCount
-  );
+  const [plusplusCount, setPlusplusCount] = React.useState(0);
+  const [postRef, setPostRef] = React.useState();
+  const [postData, setPostData] = React.useState();
 
   const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
   const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
 
   useEffect(() => {
-    if (!documentData.plusplusList) {
-      return;
+    async function getPost() {
+      let postRef = await firebase
+        .firestore()
+        .collection("posts")
+        .doc(documentRef);
+      setPostRef(postRef);
+      const postInfo = await postRef.get();
+      setPostData(postInfo.data());
     }
-    if (documentData.plusplusList.includes(currentUser.uid)) {
-      setButtonState(false);
-    }
+    getPost();
   }, []);
+
+  useEffect(() => {
+    if (postData) {
+      setPlusplusCount(postData.plusplusCount);
+      if (!postData.plusplusList) {
+        return;
+      }
+      if (postData.plusplusList.includes(currentUser.uid)) {
+        setButtonState(false);
+      }
+    }
+  }, [postData]);
 
   async function upvoteHandler() {
     if (!buttonState) {
       setPlusplusCount(plusplusCount - 1);
       setButtonState(true);
-      await documentRef.update({ plusplusList: arrayRemove(currentUser.uid) });
-      await documentRef.update({ plusplusCount: plusplusCount - 1 });
+      await postRef.update({ plusplusList: arrayRemove(currentUser.uid) });
+      await postRef.update({ plusplusCount: plusplusCount - 1 });
     }
     if (buttonState) {
       setPlusplusCount(plusplusCount + 1);
       setButtonState(false);
 
-      await documentRef.update({ plusplusList: arrayUnion(firestoreUser.uid) });
-      await documentRef.update({ plusplusCount: plusplusCount + 1 });
+      await postRef.update({ plusplusList: arrayUnion(firestoreUser.uid) });
+      await postRef.update({ plusplusCount: plusplusCount + 1 });
     }
   }
   if (size === "small") {
@@ -112,7 +126,7 @@ const PlusPlusButton = ({ documentData, documentRef, size }) => {
         style={{ marginTop: "1em", width: "82%" }}
       >
         <Typography
-          style={{ textAlign: "center", marginRight: ".5em", fontSize: "1em" }}
+          style={{ textAlign: "center", marginRight: "5px", fontSize: "1em" }}
           variant="body2"
         >
           {plusplusCount}

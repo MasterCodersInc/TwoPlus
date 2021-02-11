@@ -158,6 +158,7 @@ export default function Landing() {
     });
   }, []);
 
+  console.log(posts);
   return (
     <Grid container direction="column" className={classes.container}>
       <Grid item container style={{ marginTop: "5em" }}>
@@ -359,7 +360,7 @@ export default function Landing() {
                       </Grid>
 
                       <PlusPlusButton
-                        documentData={post}
+                        documentRef={post.postId}
                         size="small"
                         style={{ marginRight: "3em" }}
                       />
@@ -368,22 +369,27 @@ export default function Landing() {
                 );
               })}
           </Grid>
-          <Grid item container style={{ marginTop: "5em" }}>
-            <Typography
-              variant="h1"
-              style={{ fontSize: "1.5em", marginBottom: "1em" }}
-            >
+          <Grid item container style={{ marginTop: "3em" }}>
+            <Typography variant="h1" style={{ fontSize: "1.5em" }}>
               Recent Discussions
             </Typography>
             {disccuss &&
               disccuss.map((disc, index) => (
                 <Grid key={index} item container alignItems="center">
                   <Grid
+                    direction="row"
+                    item
+                    container
+                    style={{ marginRight: ".7em", width: "6em" }}
+                  >
+                    <PlusPlusButton documentRef={disc.discId} size="small" />
+                  </Grid>
+                  <Grid
                     item
                     direction="column"
+                    justify="flex-end"
                     style={{
                       marginTop: ".5em",
-                      marginBottom: ".5em",
                       width: "20em",
                     }}
                   >
