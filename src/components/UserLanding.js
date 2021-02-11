@@ -214,33 +214,6 @@ export default function Landing() {
                       alignItems="center"
                     >
                       <Grid
-                        item
-                        container
-                        alignItems="center"
-                        style={{ marginTop: "1em", marginLeft: "1em" }}
-                      >
-                        <img
-                          src={post.userPhotoURL || defaultProfile}
-                          style={{
-                            width: 40,
-                            height: 40,
-                            objectFit: "cover",
-                            borderRadius: 5,
-                          }}
-                          alt="default profile img"
-                        />
-                        <Typography
-                          component={Link}
-                          to={`users/${post.userRef}`}
-                          style={{ marginLeft: ".5em", textDecoration: "none" }}
-                        >
-                          {post.userName}
-                        </Typography>
-                        <Button classes={{ root: classes.followButt }}>
-                          follow
-                        </Button>
-                      </Grid>
-                      <Grid
                         container
                         alignItems="flex-start"
                         style={{ width: "90%", marginTop: ".5em" }}
@@ -262,6 +235,34 @@ export default function Landing() {
                           item
                           style={{ marginTop: ".5em", marginLeft: "1em" }}
                         ></Grid>
+                      </Grid>
+                      <Grid
+                        item
+                        container
+                        alignItems="center"
+                        style={{ marginTop: "1em", marginLeft: "1em" }}
+                      >
+                        <img
+                          src={post.userPhotoURL || defaultProfile}
+                          style={{
+                            width: 40,
+                            height: 40,
+                            objectFit: "cover",
+                            borderRadius: 5,
+                          }}
+                          alt="default profile img"
+                        />
+                        <Typography
+                          component={Link}
+                          to={`users/${post.userRef}`}
+                          variant="body2"
+                          style={{ marginLeft: ".5em", textDecoration: "none" }}
+                        >
+                          {post.userName}
+                        </Typography>
+                        <Button classes={{ root: classes.followButt }}>
+                          follow
+                        </Button>
                       </Grid>
 
                       <Grid item container direction="row">
