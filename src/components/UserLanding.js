@@ -390,7 +390,6 @@ export default function Landing() {
                     <Typography variant="body2" style={{ fontWeight: 300 }}>
                       {disc.userName}
                     </Typography>
-                    <DeletePost postId={disc.discId} fontSize='small'/>
                   </Grid>
                 </Grid>
               ))}

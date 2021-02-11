@@ -57,7 +57,7 @@ const DeletePost = ({postId, fontSize}) => {
                 aria-label='delete' 
                 className={classes.deleteIcon} 
                 onClick={deletePost}>
-                    <DeleteOutlineIcon fontSize='small' />
+                    <DeleteOutlineIcon fontSize='small'/>
             </IconButton>
         )
     }

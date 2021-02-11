@@ -8,8 +8,13 @@ import logoSpin from "../assets/logo-spin.gif";
 
 const useStyles = makeStyles((theme) => ({
   searchPage: {
-    padding: "2%",
-    margin: "2%",
+    paddingTop: '1%',
+    paddingLeft: "2%",
+    paddingBottom: "2%",
+    paddingRight: "2%",
+    marginLeft: "2%",
+    marginRight: "2%",
+    marginBottom: "2%",
   },
   pageHeader: {
     margin: "2%",
@@ -103,7 +108,7 @@ const Posts = (props) => {
 
     return (
         <Grid className={classes.searchPage}>
-        <Typography className={classes.pageHeader} variant="h2">
+        <Typography className={classes.pageHeader} variant="h1">
             Search Results: {tag}
         </Typography>
         {posts.map((post) => (

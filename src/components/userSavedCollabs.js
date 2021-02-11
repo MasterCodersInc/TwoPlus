@@ -9,6 +9,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
+import DeletePost from './DeletePost';
 
 import rect from "../assets/userACCrec.svg";
 import UserFollowers from "../components/UserFollowers";
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   infoCont: {
     marginTop: "2em",
     marginLeft: "2.3em",
+    // maxWidth: '50%'
   },
   infoText: {
     //     marginTop: "2em",
@@ -138,10 +140,11 @@ export default function UserProfile() {
             userPosts.map((post) => (
               <Card className={classes.card}>
                 <Grid container direction="row" alignContent="flex-start">
-                  <Grid item container lg={5} style={{ marginLeft: "1em" }}>
+                  <Grid item container lg={5} direction="column" style={{ marginLeft: "1em"}}>
                     <Link to={`/posts/${post.id}`} className={classes.postLink}>
                       <Typography>{post.title}</Typography>
                     </Link>
+                    <Typography>{post.description}</Typography>
                   </Grid>
                   <Grid
                     item
@@ -156,6 +159,7 @@ export default function UserProfile() {
                     <Typography variant="body2">Created By</Typography>
                     <Typography variant="body2">{user.firstName}</Typography>
                   </Grid>
+                  <DeletePost fontSize='small' postId={post.id} />
                 </Grid>
               </Card>
             ))
