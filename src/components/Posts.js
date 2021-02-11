@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
   postInfo: {
     backgroundColor: "#ECEDF0",
     padding: "2%",
+    "&:hover": {
+      backgroundColor: theme.palette.common.colorThree,
+    },
   },
   postLink: {
     textDecoration: "none",
