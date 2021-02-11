@@ -57,8 +57,13 @@ export default function PublicProfile() {
   const { profileUID } = useParams();
   const classes = useStyles();
   const theme = useTheme();
-  const [user, setUser] = useState({});
+  const [publicUser, setPublicUser] = useState({});
+
   const { currentUser, firestoreUser } = useAuth();
+  let myUserRef = firebase
+    .firestore()
+    .collection("users")
+    .doc(firestoreUser.userDocRef);
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [userPostList, setUserPostList] = useState(null);
@@ -74,7 +79,11 @@ export default function PublicProfile() {
         .where("uid", "==", profileUID);
       let userData = await userObjLoc.get();
       let publicUser = userData.docs[0];
-      setUser({ ...publicUser.data(), docID: publicUser.id });
+      setPublicUser({ ...publicUser.data(), docID: publicUser.id });
+
+      if (publicUser.data().followers.includes(currentUser.uid)) {
+        setIsFollowing(true);
+      }
 
       const postRefs = firebase
         .firestore()
@@ -89,31 +98,52 @@ export default function PublicProfile() {
   }, []);
 
   const followUser = async (e) => {
-    await firestoreUser.update({ following: arrayUnion(user.uid) });
-    await user.docID.update({ followers: arrayUnion(firestoreUser.uid) });
+    await myUserRef.update({ following: arrayUnion(publicUser.uid) });
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(publicUser.docID)
+      .update({ followers: arrayUnion(firestoreUser.uid) });
+    setIsFollowing(!isFollowing);
   };
 
   const unfollowUser = async (e) => {
-    await firestoreUser.update({ following: arrayRemove(user.uid) });
-    await user.docID.update({ followers: arrayRemove(firestoreUser.uid) });
+    await myUserRef.update({ following: arrayRemove(publicUser.uid) });
+
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(publicUser.docID)
+      .update({
+        followers: arrayRemove(firestoreUser.uid),
+      });
+    setIsFollowing(!isFollowing);
   };
 
-  const followAndUnfollowClickHandler = (e) => {};
+  const followAndUnfollowClickHandler = (e) => {
+    if (isFollowing) {
+      unfollowUser();
+    }
+    if (!isFollowing) {
+      followUser();
+    }
+  };
 
   return (
     <Grid container>
       <Grid item container direction="column">
         <Grid item container direction="row" style={{ marginLeft: "5em" }}>
           <Typography variant="h1" style={{ marginBottom: ".25em" }}>
-            {user.firstName} {user.lastName}
+            {publicUser.firstName} {publicUser.lastName}
           </Typography>
-          <Button
-            classes={{ root: classes.followButton }}
-            onClick={followAndUnfollowClickHandler}
-          >
-            {profileUID !== currentUser.uid &&
-              (!isFollowing ? "Follow" : "Unfollow")}
-          </Button>
+          {profileUID !== currentUser.uid && (
+            <Button
+              classes={{ root: classes.followButton }}
+              onClick={followAndUnfollowClickHandler}
+            >
+              {!isFollowing ? "Follow" : "Unfollow"}
+            </Button>
+          )}
         </Grid>
         <Grid container direction="row" style={{ marginLeft: "5em" }}>
           <Grid item>
@@ -125,7 +155,7 @@ export default function PublicProfile() {
                 border: "2px solid #F8F8F8",
                 objectFit: "cover",
               }}
-              src={user.profilePhotoURL}
+              src={publicUser.profilePhotoURL}
             />
           </Grid>
           <Grid
@@ -134,10 +164,14 @@ export default function PublicProfile() {
             direction="column"
             style={{ width: "fit-content" }}
           >
-            <Grid item direction="row" style={{ marginLeft: "1em" }}>
+            <Grid
+              item
+              direction="row"
+              style={{ marginLeft: "1em", marginBottom: "1em" }}
+            >
               <Tabs>
                 <Tab
-                  label={user.firstName + "'s posts"}
+                  label={publicUser.firstName + "'s posts"}
                   className={classes.tab}
                 />
                 <Tab

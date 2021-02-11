@@ -74,7 +74,6 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
             ...doc.data(),
             id: doc.id,
           }));
-          console.log("whats data in postRef", data);
           //then update the state
           setMessage(data);
         });
@@ -99,6 +98,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         uid,
       });
+      setNewMessage("");
     }
   };
 
