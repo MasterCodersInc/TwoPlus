@@ -75,6 +75,7 @@ export default function PublicProfile() {
       let userData = await userObjLoc.get();
       userData = userData.docs[0].data();
       setUser(userData);
+      console.log('this is user data', userData)
       const postRefs = db
         .collection('posts')
         .where('userRef', '==', userData.uid);
@@ -93,7 +94,6 @@ export default function PublicProfile() {
   //     currentUser.uid &&
   //     userFollowers.length === 0
   //   ) {
-
   //   } else {
   //     console.log('u hav an account');
   //   }
@@ -118,7 +118,7 @@ export default function PublicProfile() {
         });
     };
     getUserFollowingsFunc();
-  }, []);
+  }, [isFollowing]);
   useEffect(() => {
     const getUserFollowersFunc = async () => {
       const getUserFollowers = await followersRef
@@ -136,7 +136,7 @@ export default function PublicProfile() {
         });
     };
     getUserFollowersFunc();
-  }, []);
+  }, [isFollowing]);
 
   // ===>
   const followUser = async (e) => {

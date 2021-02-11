@@ -88,7 +88,6 @@
 
 import React, { useState, useEffect } from "react";
 import firebase from "../firebase";
-// import ChatMsg from './ChatMsg';
 import { useAuth } from "../contexts/AuthContext";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -106,7 +105,7 @@ import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import Button from "@material-ui/core/Button";
 import { formatRelative } from "date-fns";
-
+import { useParams, useHistory } from 'react-router-dom';
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -130,9 +129,7 @@ const useStyles = makeStyles({
 const formatDate = (date) => {
   let formattedDate = "";
   if (date) {
-    // Convert the date in words relative to the current date
     formattedDate = formatRelative(date, new Date());
-    // Uppercase the first letter
     formattedDate =
       formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
   }
@@ -140,6 +137,7 @@ const formatDate = (date) => {
 };
 
 const ChatRoom = ({ postId, postRef, disabled }) => {
+  const { userID } = useParams();
   const classes = useStyles();
   const { currentUser } = useAuth();
   const db = firebase.firestore();
@@ -154,13 +152,11 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
 
   useEffect(() => {
     if (db) {
-      // console.log('this is db', db)
       const unsubscribe = postRef
         .collection("messages")
         .orderBy("createdAt")
         .limit(50)
         .onSnapshot((querySnapshot) => {
-          // get all documents from collection - with ids
           const data = querySnapshot.docs.map((doc) => ({
             ...doc.data(),
             id: doc.id,
@@ -169,7 +165,6 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
           //then update the state
           setMessage(data);
         });
-
       //detach listener
       return unsubscribe;
     }
@@ -181,7 +176,6 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-
     //missing userID
     if (db) {
       // Add new message in Firestore
@@ -194,7 +188,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
   };
 
   return (
-    <div>
+<>
       <Grid container>
         <Grid item xs={12}>
           <Typography variant="h5" className="header-message">
@@ -212,11 +206,11 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
                   src="https://material-ui.com/static/images/avatar/1.jpg"
                 />
               </ListItemIcon>
-              <ListItemText primary={currentUser.email}></ListItemText>
+              <ListItemText primary={"currentUser.userName"}></ListItemText>
             </ListItem>
           </List>
           <Divider />
-          <Grid item xs={12} style={{ padding: "10px" }}>
+          <Grid item xs={10} style={{padding: "10px" }}>
             <TextField
               id="outlined-basic-email"
               label="Search"
@@ -233,7 +227,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
                   src="https://material-ui.com/static/images/avatar/1.jpg"
                 />
               </ListItemIcon>
-              <ListItemText primary="Remy Sharp">Remy Sharp</ListItemText>
+              <ListItemText primary="Remy Sharp">{currentUser.uid.userName}</ListItemText>
               <ListItemText secondary="online" align="right"></ListItemText>
             </ListItem>
             <ListItem button key="Alice">
@@ -247,16 +241,11 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
             </ListItem>
             <ListItem button key="CindyBaker">
               <ListItemIcon>
-                <Avatar
-                  alt="Cindy Baker"
-                  src="https://material-ui.com/static/images/avatar/2.jpg"
-                />
               </ListItemIcon>
               <ListItemText primary="Cindy Baker">Cindy Baker</ListItemText>
             </ListItem>
           </List>
         </Grid>
-
         <Grid item xs={9}>
           <List className={classes.messageArea}>
             {messages.map((message) =>
@@ -282,7 +271,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
               ) : (
                 <ListItem key="2">
                   <Grid container>
-                    <Grid item xs={12}>
+                    <Grid item xs={100}>
                       <ListItemText
                         align="left"
                         primary={message.text}
@@ -303,8 +292,8 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
           </List>
           <Divider />
 
-          <Grid container style={{ padding: "20px" }}>
-            <Grid item xs={11}>
+          <Grid container style={{ padding: "10px" }}>
+            <Grid item xs={30}>
               <form type="submit" onSubmit={handleOnSubmit}>
                 <TextField
                   id="outlined-basic-email"
@@ -326,7 +315,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
           </Grid>
         </Grid>
       </Grid>
-    </div>
+      </>
   );
 };
 

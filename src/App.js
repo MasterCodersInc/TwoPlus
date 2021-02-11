@@ -1,14 +1,9 @@
 import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "./components/theme";
-
-import firebase from "./firebase";
-
 import ChatRoom from "./components/ChatRoom";
 import { AuthProvider } from "./contexts/AuthContext";
-
 import SignUp from "./components/SignUp";
 import Landing from "./components/Landing";
 import Login from "./components/Login";
