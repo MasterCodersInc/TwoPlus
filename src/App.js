@@ -29,6 +29,7 @@ import Posts from "./components/Posts";
 import UserFollowers from "./components/UserFollowers";
 import UserFollowing from "./components/UserFollowing";
 import AllUsersIn2Plus from "./components/AllUsersIn2+";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
             <Route exact path="/userhome" component={UserLanding} />
             <Route exact path="/guesthome" component={GuestLanding} />
           </Switch>
+          <Footer />
         </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>
