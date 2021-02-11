@@ -14,7 +14,7 @@ import userLandingRec from "../assets/userLandingRec.svg";
 import defaultProfile from "../assets/defaultProfile.svg";
 import openPost from "../assets/openPostCircle.svg";
 import closedPost from "../assets/closedPostCircle.svg";
-import DeletePost from './DeletePost'
+import DeletePost from "./DeletePost";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
     width: "90%",
     "&:hover": {
-      color: 'black',
+      color: "black",
     },
   },
 }));
@@ -83,6 +83,18 @@ export default function Landing() {
   const [disccuss, setDiscuss] = useState([]);
   const [tags, setTags] = useState([]);
 
+  async function updatePhotos(arr) {
+    const postCopy = arr.slice();
+    for (const post of postCopy) {
+      let picRef = post.userPhotoURL;
+      if (typeof picRef !== "string" && picRef) {
+        let pic = await picRef.get();
+        post.userPhotoURL = pic.data().profilePhotoURL;
+      }
+    }
+    setPosts(postCopy);
+  }
+
   useEffect(() => {
     const postsLoc = firebase
       .firestore()
@@ -91,13 +103,18 @@ export default function Landing() {
       .orderBy("timestamp", "desc")
       .limit(6);
 
-    postsLoc.get().then((postObj) => {
-      let postsArr = postObj.docs.map((doc) => ({
-        ...doc.data(),
-        postId: doc.id,
-      }));
-      setPosts(postsArr);
-    });
+    postsLoc
+      .get()
+      .then((postObj) => {
+        let postsArr = postObj.docs.map((doc) => ({
+          ...doc.data(),
+          postId: doc.id,
+        }));
+        return postsArr;
+      })
+      .then((postsArr) => {
+        updatePhotos(postsArr);
+      });
 
     const discussLoc = firebase
       .firestore()
@@ -116,16 +133,16 @@ export default function Landing() {
 
     const tagsLoc = firebase
       .firestore()
-      .collection('tags')
+      .collection("tags")
       .orderBy("count", "desc")
       .limit(6);
 
     tagsLoc.get().then((tagsObj) => {
       let tagsArr = tagsObj.docs.map((doc) => ({
-        ...doc.data()
+        ...doc.data(),
       }));
       setTags(tagsArr);
-    })
+    });
   }, []);
 
   return (
@@ -142,29 +159,27 @@ export default function Landing() {
           <Typography style={{ marginBottom: "1em", marginTop: "4.5em" }}>
             Popular Topics
           </Typography>
-          {
-            tags.map((tag,idx) => (
-              <div style={{display:'flex', alignItems:'center'}}>
-                <div>
-                  <Typography 
-                    variant="body2" 
-                    className={classes.popTopLi}>
-                      {idx}. &nbsp; 
-                  </Typography>
-                </div>
-                <div>
-                  <Typography 
-                    variant="body2" 
-                    className={classes.popTopLi, classes.postLink3}
-                    component={Link}
-                    to={`/posts?tag=${tag.name}`}>
-                      #{tag.name}
-                  </Typography>
-                </div>
+
+          {tags.map((tag, idx) => (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <div>
+                <Typography variant="body2" className={classes.popTopLi}>
+                  {idx}. &nbsp;
+                </Typography>
               </div>
-            ))
-          }
-          
+              <div>
+                <Typography
+                  variant="body2"
+                  className={(classes.popTopLi, classes.postLink3)}
+                  component={Link}
+                  to={`/posts?tag=${tag.name}`}
+                >
+                  #{tag.name}
+                </Typography>
+              </div>
+            </div>
+          ))}
+
           <Typography style={{ marginBottom: "1em", marginTop: "4.5em" }}>
             Followed People
           </Typography>
@@ -275,10 +290,10 @@ export default function Landing() {
                         style={{ width: "90%", marginTop: ".5em" }}
                       >
                         <img
-                        src={post.isActive ? openPost : closedPost}
-                        alt={post.isActive ? 'greencircle':'redcircle'}
-                        style={{ marginRight: ".5em" }}
-                      />
+                          src={post.isActive ? openPost : closedPost}
+                          alt={post.isActive ? "greencircle" : "redcircle"}
+                          style={{ marginRight: ".5em" }}
+                        />
                         <Typography
                           component={Link}
                           to={`/posts/${post.postId}`}
@@ -293,34 +308,33 @@ export default function Landing() {
                         ></Grid>
                       </Grid>
 
-                       <Grid item container direction="row">
-                      {post.tags.slice(0,3).map((tag) => {
-                        return (
-                          <Grid
-                            item
-                          >
-                          <Typography
-                            component={Link}
-                            to={`/posts/?tag=${tag}`}
-                            className={classes.postLink}
-                            variant="body2"
-                            noWrap
-                            style={{
-                              color: "white",
-                              width: "fit-content",
-                              backgroundColor: theme.palette.common.colorOne,
-                              marginRight: 4,
-                              marginTop: 4,
-                              marginBottom: 4,
-                              padding: 2,
-                              borderRadius: 2,
-                            }}
-                          >
-                            #{tag}
-                          </Typography>
-                          </Grid>
-                        );
-                      })}
+                      <Grid item container direction="row">
+                        {post.tags.slice(0, 3).map((tag) => {
+                          return (
+                            <Grid item>
+                              <Typography
+                                component={Link}
+                                to={`/posts/?tag=${tag}`}
+                                className={classes.postLink}
+                                variant="body2"
+                                noWrap
+                                style={{
+                                  color: "white",
+                                  width: "fit-content",
+                                  backgroundColor:
+                                    theme.palette.common.colorOne,
+                                  marginRight: 4,
+                                  marginTop: 4,
+                                  marginBottom: 4,
+                                  padding: 2,
+                                  borderRadius: 2,
+                                }}
+                              >
+                                #{tag}
+                              </Typography>
+                            </Grid>
+                          );
+                        })}
                       </Grid>
                     </Grid>
                   </Card>
