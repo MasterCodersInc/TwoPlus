@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -8,11 +8,13 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import logoSpin from "../assets/logo-spin.gif";
 import logo from "../assets/logo.png";
 import Lottie from "react-lottie";
 import animationData from "../lotties/animation_kkyxn6gq.json";
+
+// import logoAni from "../assets/logoAni.json";
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -50,9 +52,9 @@ const useStyles = makeStyles((theme) => ({
     height: "2em",
     alignSelf: "center",
     fontFamily: "Montserrat",
-    '&:hover': {
-      color: 'black'
-    }
+    "&:hover": {
+      color: "black",
+    },
   },
 }));
 
@@ -61,6 +63,7 @@ export default function NavBar() {
   const theme = useTheme();
   const history = useHistory();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const { firestoreUser, currentUser, logout } = useAuth();
 
   async function handleLogout() {
@@ -83,11 +86,22 @@ export default function NavBar() {
     },
   };
 
-  if (!firestoreUser && currentUser) {
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 2000);
+  }, []);
+
+  if (loading) {
     return (
-      <div>
-        <Lottie options={defaultOptions} height={400} width={400} />
-      </div>
+      <Box style={{ height: "100vh", width: "100vw" }}>
+        <Grid
+          item
+          justify="center"
+          alignItems="center"
+          style={{ marginTop: "20%" }}
+        >
+          <Lottie options={defaultOptions} height={400} width={400} />
+        </Grid>
+      </Box>
     );
   }
   return (

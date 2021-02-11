@@ -273,7 +273,7 @@ export default function Landing() {
                       <Grid
                         container
                         alignItems="flex-start"
-                        style={{ width: "90%", marginTop: ".5em" }}
+                        style={{ width: "90%", marginTop: ".5em", maxHeight:'10em' }}
                       >
                         <img
                           src={openPost}
