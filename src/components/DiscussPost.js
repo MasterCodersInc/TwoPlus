@@ -62,10 +62,13 @@ const useStyles = makeStyles((theme) => ({
   authorLink: {
     textDecoration: "none",
     color: theme.palette.common.colorFive,
-    fontWeight: "530",
-    paddingBottom: "2em",
-    marginBottom: "2em",
-  },
+    fontWeight: '530',
+    paddingBottom: '2em',
+    marginBottom: '2em',
+    '&:hover': {
+      color: '#E5D1EF'
+    },
+  }
 }));
 
 const DiscussPost = ({ post }) => {
@@ -169,8 +172,9 @@ const DiscussPost = ({ post }) => {
             )}
           </div>
           {actualPostData && (
-            <Grid item containter direction="row">
-              <Typography>Asked by </Typography>
+            <Grid item containter direction="row" >
+              <Typography style={{maxWidth: 'max-content'}}>Asked by&nbsp; 
+
               <Typography
                 component={Link}
                 to={`/users/${actualPostData.userRef}`}
@@ -179,7 +183,8 @@ const DiscussPost = ({ post }) => {
                 className={classes.authorLink}
               >
                 {actualPostData?.userName},{" "}
-                {timeago.format(actualPostData.timestamp.seconds * 1000)}
+              </Typography>
+              {timeago.format(actualPostData.timestamp.seconds * 1000)}
               </Typography>
             </Grid>
           )}
