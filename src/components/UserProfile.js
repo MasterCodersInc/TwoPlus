@@ -92,7 +92,7 @@ export default function UserProfile() {
             <Tab label="Your Info" className={classes.tab} />
             <Tab
               component={Link}
-              to="/savedcollabs"
+              to="/myposts"
               label="My Posts"
               className={classes.tab}
             />

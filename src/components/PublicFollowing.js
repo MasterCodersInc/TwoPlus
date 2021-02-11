@@ -13,7 +13,6 @@ import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
 
 import rect from "../assets/userACCrec.svg";
-import PublicFollowers from "./PublicFollowers";
 import { id } from "date-fns/locale";
 
 const useStyles = makeStyles((theme) => ({
@@ -51,23 +50,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PublicProfile() {
+export default function PublicFollowing() {
   const history = useHistory();
   const { profileUID } = useParams();
   const classes = useStyles();
   const theme = useTheme();
-  const [publicUser, setPublicUser] = useState({});
-
   const { currentUser, firestoreUser } = useAuth();
 
+  const [publicUser, setPublicUser] = useState({});
   const [isFollowing, setIsFollowing] = useState(false);
-  const [userPostList, setUserPostList] = useState(null);
+  const [userFollowingList, setuserFollowingList] = useState(null);
 
   const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
   const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
 
   useEffect(() => {
-    async function getUserAndPosts() {
+    async function getUserAndfollowing() {
       const userObjLoc = await firebase
         .firestore()
         .collection("users")
@@ -76,20 +74,21 @@ export default function PublicProfile() {
       let publicUser = userData.docs[0];
       setPublicUser({ ...publicUser.data(), docID: publicUser.id });
 
-      if (publicUser.data().followers.includes(currentUser.uid)) {
+      if (publicUser.data().following.includes(currentUser.uid)) {
         setIsFollowing(true);
       }
-
-      const postRefs = firebase
-        .firestore()
-        .collection("posts")
-        .where("userRef", "==", publicUser.data().uid);
-
-      let postsArr = await postRefs.get();
-      postsArr = postsArr.docs.map((doc) => ({ ...doc.data(), docID: doc.id }));
-      setUserPostList(postsArr);
+      let followingList = [];
+      for (const user of publicUser.data().following) {
+        const followingRef = firebase
+          .firestore()
+          .collection("users")
+          .where("uid", "==", user);
+        const followingData = await followingRef.get();
+        followingList.push(followingData.docs[0].data());
+      }
+      setuserFollowingList(followingList);
     }
-    getUserAndPosts();
+    getUserAndfollowing();
   }, []);
 
   const followUser = async (e) => {
@@ -132,7 +131,7 @@ export default function PublicProfile() {
       followUser();
     }
   };
-
+  console.log(userFollowingList);
   return (
     <Grid container>
       <Grid item container direction="column">
@@ -177,7 +176,8 @@ export default function PublicProfile() {
                 <Tab
                   label={publicUser.firstName + "'s posts"}
                   className={classes.tab}
-                  style={{ backgroundColor: theme.palette.common.colorFive }}
+                  component={Link}
+                  to={`/users/${profileUID}/`}
                 />
                 <Tab
                   component={Link}
@@ -188,58 +188,70 @@ export default function PublicProfile() {
                   label="Followers"
                 ></Tab>
                 <Tab
-                  component={Link}
-                  onClick={() => {
-                    history.push(`/users/${profileUID}/following`);
-                  }}
+                  style={{ backgroundColor: theme.palette.common.colorFive }}
                   className={classes.tab}
                   label="Following"
                 ></Tab>
               </Tabs>
             </Grid>
             <Grid item id="postsContainer">
-              {userPostList &&
-                userPostList.map((post) => {
-                  return (
-                    <div
-                      style={{
-                        marginLeft: "2em",
-                        backgroundColor: "#F8F8F8",
-                        boxShadow: "5px 5px 9px -3px rgba(136,157,226,0.25)",
-                        width: "60vw",
-                        padding: 10,
-                        paddingTop: 10,
-                        borderRadius: 10,
-                        marginBottom: 15,
-                      }}
-                    >
-                      <Typography
-                        component={Link}
-                        style={{ textDecoration: "none", color: "#5B56E9" }}
-                        to={`/posts/${post.docID}`}
-                        variant="h2"
+              {userFollowingList &&
+                (!userFollowingList.length ? (
+                  <Typography style={{ marginLeft: "3em" }}>
+                    This user isn't following anyone.
+                  </Typography>
+                ) : (
+                  userFollowingList.map((following) => {
+                    return (
+                      <div
+                        style={{
+                          marginLeft: "2em",
+                          backgroundColor: "#F8F8F8",
+                          boxShadow: "5px 5px 9px -3px rgba(136,157,226,0.25)",
+                          width: "60vw",
+                          padding: 10,
+                          paddingTop: 10,
+                          borderRadius: 10,
+                          marginBottom: 15,
+                        }}
                       >
-                        {post.title}
-                      </Typography>
-                      <Typography variant="body2" style={{ marginTop: 4 }}>
-                        {post.description}
-                      </Typography>
-                      {post.timestamp && (
-                        <Typography
-                          variant="subtitle1"
-                          style={{ fontFamily: "Montserrat" }}
-                        >
-                          Asked {timeago.format(post.timestamp.seconds * 1000)}
-                        </Typography>
-                      )}
-                      {post.postType && (
-                        <Typography variant="subtitle1">
-                          Post type: {post.postType}
-                        </Typography>
-                      )}
-                    </div>
-                  );
-                })}
+                        <Grid container alignItems="center" direction="row">
+                          <img
+                            style={{
+                              height: 30,
+                              width: 30,
+                              borderRadius: 10,
+                              objectFit: "cover",
+                              marginRight: 5,
+                            }}
+                            src={following.profilePhotoURL}
+                          />
+                          <Typography
+                            component={Link}
+                            style={{
+                              textDecoration: "none",
+                              color: "#5B56E9",
+                              marginRight: 10,
+                            }}
+                            to={`/users/${following.uid}`}
+                            variant="h2"
+                          >
+                            {following.userName}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            style={{ marginRight: 10 }}
+                          >
+                            following:{following.following.length}
+                          </Typography>
+                          <Typography variant="body2">
+                            Following:{following.following.length}
+                          </Typography>
+                        </Grid>
+                      </div>
+                    );
+                  })
+                ))}
             </Grid>
           </Grid>
         </Grid>

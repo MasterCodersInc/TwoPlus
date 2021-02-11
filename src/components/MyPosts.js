@@ -9,11 +9,11 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
-import DeletePost from './DeletePost';
+import DeletePost from "./DeletePost";
 
 import rect from "../assets/userACCrec.svg";
-import UserFollowers from "../components/UserFollowers";
-import UserFollowing from "../components/UserFollowing";
+import UserFollowers from "./UserFollowers";
+import UserFollowing from "./UserFollowing";
 
 const useStyles = makeStyles((theme) => ({
   shadowRectangle: {
@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function UserProfile() {
+export default function MyPosts() {
   const classes = useStyles();
   const theme = useTheme();
   const [user, setUser] = useState({});
@@ -140,7 +140,13 @@ export default function UserProfile() {
             userPosts.map((post) => (
               <Card className={classes.card}>
                 <Grid container direction="row" alignContent="flex-start">
-                  <Grid item container lg={5} direction="column" style={{ marginLeft: "1em"}}>
+                  <Grid
+                    item
+                    container
+                    lg={5}
+                    direction="column"
+                    style={{ marginLeft: "1em" }}
+                  >
                     <Link to={`/posts/${post.id}`} className={classes.postLink}>
                       <Typography>{post.title}</Typography>
                     </Link>
@@ -159,7 +165,7 @@ export default function UserProfile() {
                     <Typography variant="body2">Created By</Typography>
                     <Typography variant="body2">{user.firstName}</Typography>
                   </Grid>
-                  <DeletePost fontSize='small' postId={post.id} />
+                  <DeletePost fontSize="small" postId={post.id} />
                 </Grid>
               </Card>
             ))

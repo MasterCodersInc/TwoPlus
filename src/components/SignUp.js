@@ -74,6 +74,8 @@ export default function SignUp() {
             .toUpperCase()
             .concat(lastName.slice(1).toLowerCase()),
           email,
+          following: [],
+          followers: [],
           isAdmin,
           uid: newUser.user.uid,
           userName,

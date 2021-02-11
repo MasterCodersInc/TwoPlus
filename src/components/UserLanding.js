@@ -371,7 +371,8 @@ export default function Landing() {
                           {post.userName}
                         </Typography>
                         <div></div>
-                        {!followingUIDs.includes(post.userRef) && (
+                        {(!followingUIDs.includes(post.userRef) ||
+                          post.userRef !== firestoreUser.uid) && (
                           <Button
                             ref={followButtonRef}
                             classes={{ root: classes.followButt }}
