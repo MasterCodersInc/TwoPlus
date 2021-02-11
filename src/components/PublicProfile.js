@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
 import { useParams, useHistory } from "react-router-dom";
+import * as timeago from "timeago.js";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: -1,
   },
   tabs: {
-    marginLeft: "5em",
+    marginLeft: "3em",
     marginTop: "3em",
   },
   tab: {
@@ -41,12 +42,13 @@ const useStyles = makeStyles((theme) => ({
     //     marginTop: "2em",
     marginLeft: "5em",
   },
-  editButton: {
+  followButton: {
     color: "#fff",
     backgroundColor: theme.palette.common.colorOne,
     fontFamily: "Montserrat",
-    width: "5em",
-    marginLeft: "15em",
+    padding: ".3em",
+    marginLeft: "2em",
+    height: "fit-content",
   },
 }));
 
@@ -56,16 +58,13 @@ export default function PublicProfile() {
   const classes = useStyles();
   const theme = useTheme();
   const [user, setUser] = useState({});
-  const { currentUser } = useAuth();
-
-  const db = firebase.firestore();
-  const followersRef = db.collection("followers");
-  const followingRef = db.collection("following");
+  const { currentUser, firestoreUser } = useAuth();
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [userPostList, setUserPostList] = useState(null);
-  const [userFollowers, setUserFollowers] = useState([]);
-  const [userFollowing, setUserFollowing] = useState([]);
+
+  const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
+  const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
 
   useEffect(() => {
     async function getUserAndPosts() {
@@ -74,11 +73,13 @@ export default function PublicProfile() {
         .collection("users")
         .where("uid", "==", profileUID);
       let userData = await userObjLoc.get();
-      userData = userData.docs[0].data();
-      setUser(userData);
-      const postRefs = db
+      let publicUser = userData.docs[0];
+      setUser({ ...publicUser.data(), docID: publicUser.id });
+
+      const postRefs = firebase
+        .firestore()
         .collection("posts")
-        .where("userRef", "==", userData.uid);
+        .where("userRef", "==", publicUser.data().uid);
 
       let postsArr = await postRefs.get();
       postsArr = postsArr.docs.map((doc) => ({ ...doc.data(), docID: doc.id }));
@@ -87,203 +88,116 @@ export default function PublicProfile() {
     getUserAndPosts();
   }, []);
 
-  // const createNewUsersFollowweAndFollowingCollection = async () => {
-  //   if (
-  //     currentUser.uid &&
-  //     userFollowing.length === 0 &&
-  //     currentUser.uid &&
-  //     userFollowers.length === 0
-  //   ) {
-
-  //   } else {
-  //     console.log('u hav an account');
-  //   }
-  //   // console.log('this is whats in data', data[0].id, data[0].id.map((el) => el === profileUID))
-  // };
-  // createNewUsersFollowweAndFollowingCollection();
-
-  useEffect(() => {
-    const getUserFollowingsFunc = async () => {
-      const getUserFollowings = await followingRef
-        .doc(profileUID)
-        .collection("userFollowing")
-        .onSnapshot((queryFollowingSnapShot) => {
-          const userFollowingData = queryFollowingSnapShot.docs.map((doc) => ({
-            ...doc.data(),
-          }));
-
-          setUserFollowing(userFollowingData[0].userFollowing);
-        });
-    };
-    getUserFollowingsFunc();
-  }, []);
-
-  useEffect(() => {
-    const getUserFollowersFunc = async () => {
-      const getUserFollowers = await followersRef
-        .doc(profileUID)
-        .collection("userFollowers")
-        .onSnapshot((queryFollowingSnapShot) => {
-          const userFollowersData = queryFollowingSnapShot.docs.map((doc) => ({
-            ...doc.data(),
-          }));
-
-          setUserFollowers(userFollowersData[0].userFollowers);
-        });
-    };
-    getUserFollowersFunc();
-  }, []);
-
   const followUser = async (e) => {
-    const updateFollowingData = await followingRef
-      .doc(currentUser.uid)
-      .collection("userFollowing")
-      .doc(currentUser.uid)
-      .update({
-        userFollowing: firebase.firestore.FieldValue.arrayUnion(profileUID), // I used update to avoid to prevent it from adding same user twice
-      });
-
-    const updateFollowedUserFollowingData = await followersRef
-      .doc(profileUID)
-      .collection("userFollowers")
-      .doc(currentUser.uid)
-      .update({
-        userFollowers: firebase.firestore.FieldValue.arrayUnion(
-          currentUser.uid
-        ),
-      });
+    await firestoreUser.update({ following: arrayUnion(user.uid) });
+    await user.docID.update({ followers: arrayUnion(firestoreUser.uid) });
   };
 
-  const clickToUserProfilePage = (e) => {
-    history.push(`/users/${currentUser.uid}`);
+  const unfollowUser = async (e) => {
+    await firestoreUser.update({ following: arrayRemove(user.uid) });
+    await user.docID.update({ followers: arrayRemove(firestoreUser.uid) });
   };
 
-  const handleUnfollowUser = async (e) => {
-    await followingRef
-      .doc(currentUser.uid)
-      .collection("userFollowing")
-      .doc(currentUser.uid)
-      .update({
-        userFollowing: firebase.firestore.FieldValue.arrayRemove(profileUID),
-      });
-
-    // const getData = followingRef
-    //   .doc(currentUser.uid)
-    //   .collection('userFollowing')
-    //   .onSnapshot((queryFollowingSnapShot) => {
-    //     const userFollowingData = queryFollowingSnapShot.docs.map((doc) => ({
-    //       ...doc.data(),
-    //     }));
-    //     if (userFollowingData[0].id.forEach((el) => el === profileUID)) {
-    //       setIsFollowing(false);
-
-    //       // setUserFollowing([userFollowingData]);
-    //     } else {
-    //       console.log(
-    //         "this user doesn't seem to be found in your followers list"
-    //       );
-    //     }
-    //   });
-  };
-
-  const followAndUnfollowClickHandler = (e) => {
-    if (!currentUser) {
-      return;
-    }
-
-    if (!isFollowing && currentUser.uid !== profileUID) {
-      followUser();
-      setIsFollowing(true);
-    } else if (isFollowing && currentUser.uid !== profileUID) {
-      handleUnfollowUser();
-      setIsFollowing(false);
-    } else if (currentUser.uid === profileUID) {
-      clickToUserProfilePage();
-    }
-  };
+  const followAndUnfollowClickHandler = (e) => {};
 
   return (
     <Grid container>
       <Grid item container direction="column">
-        <Grid item style={{ marginLeft: "5em" }}>
+        <Grid item container direction="row" style={{ marginLeft: "5em" }}>
           <Typography variant="h1" style={{ marginBottom: ".25em" }}>
             {user.firstName} {user.lastName}
           </Typography>
-          <Grid item container direction="row">
+          <Button
+            classes={{ root: classes.followButton }}
+            onClick={followAndUnfollowClickHandler}
+          >
+            {profileUID !== currentUser.uid &&
+              (!isFollowing ? "Follow" : "Unfollow")}
+          </Button>
+        </Grid>
+        <Grid container direction="row" style={{ marginLeft: "5em" }}>
+          <Grid item>
             <img
               style={{
                 width: 150,
                 height: 150,
                 borderRadius: 20,
                 border: "2px solid #F8F8F8",
+                objectFit: "cover",
               }}
-              src="https://icon-library.com/images/default-user-icon/default-user-icon-4.jpg"
+              src={user.profilePhotoURL}
             />
-            <Grid item>
+          </Grid>
+          <Grid
+            item
+            container
+            direction="column"
+            style={{ width: "fit-content" }}
+          >
+            <Grid item direction="row" style={{ marginLeft: "1em" }}>
               <Tabs>
                 <Tab
                   label={user.firstName + "'s posts"}
                   className={classes.tab}
                 />
-                <Button onClick={followAndUnfollowClickHandler}>
-                  {profileUID !== currentUser.uid &&
-                    (!isFollowing ? "Follow" : "Unfollow")}
-                </Button>
-                <Button
+                <Tab
                   component={Link}
                   to="/userFollowers"
-                  onClick={() => {
-                    <UserFollowers />;
-                  }}
-                >
-                  {`Followers ${userFollowers.length}`}
-                </Button>
-                <Button
+                  className={classes.tab}
+                  label="Followers"
+                ></Tab>
+                <Tab
                   component={Link}
                   to="/userFollowings"
-                  onClick={() => {
-                    <UserFollowing />;
-                  }}
-                >
-                  {`Following ${userFollowing.length}`}
-                </Button>
+                  className={classes.tab}
+                  label="Following"
+                ></Tab>
               </Tabs>
-              <Grid container id="postsContainer">
-                {userPostList &&
-                  userPostList.map((post) => {
-                    return (
-                      <div
-                        style={{
-                          marginLeft: "2em",
-                          backgroundColor: "#F8F8F8",
-                          boxShadow: "6px 7px 12px 1px rgba(136,157,226,0.39)",
-                          width: "60vw",
-                          padding: 10,
-                          paddingTop: 0,
-                          borderRadius: 10,
-                          marginBottom: 15,
-                        }}
+            </Grid>
+
+            <Grid item id="postsContainer">
+              {userPostList &&
+                userPostList.map((post) => {
+                  return (
+                    <div
+                      style={{
+                        marginLeft: "2em",
+                        backgroundColor: "#F8F8F8",
+                        boxShadow: "5px 5px 9px -3px rgba(136,157,226,0.25)",
+                        width: "60vw",
+                        padding: 10,
+                        paddingTop: 10,
+                        borderRadius: 10,
+                        marginBottom: 15,
+                      }}
+                    >
+                      <Typography
+                        component={Link}
+                        style={{ textDecoration: "none", color: "#5B56E9" }}
+                        to={`/posts/${post.docID}`}
+                        variant="h2"
                       >
+                        {post.title}
+                      </Typography>
+                      <Typography variant="body2" style={{ marginTop: 4 }}>
+                        {post.description}
+                      </Typography>
+                      {post.timestamp && (
                         <Typography
-                          component={Link}
-                          style={{ textDecoration: "none", color: "#5B56E9" }}
-                          to={`/posts/${post.docID}`}
-                          variant="h2"
+                          variant="subtitle1"
+                          style={{ fontFamily: "Montserrat" }}
                         >
-                          {post.title}
+                          Asked {timeago.format(post.timestamp.seconds * 1000)}
                         </Typography>
-                        <h4>{post.description}</h4>
-                        {post.timestamp && (
-                          <small>Asked on {post.timestamp.toString()}</small>
-                        )}
-                        <br></br>
-                        {post.postType && (
-                          <small>post type: {post.postType}</small>
-                        )}
-                      </div>
-                    );
-                  })}
-              </Grid>
+                      )}
+                      {post.postType && (
+                        <Typography variant="subtitle1">
+                          Post type: {post.postType}
+                        </Typography>
+                      )}
+                    </div>
+                  );
+                })}
             </Grid>
           </Grid>
         </Grid>
