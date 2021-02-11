@@ -66,7 +66,7 @@ const EditorUID = ({ disabled, enableCollab }) => {
       documentReference.current.onSnapshot(async () => {
         let updatedInfoRef = await documentReference.current.get();
         let updatedInfo = updatedInfoRef.data();
-        if(!updatedInfo) return;
+        if (!updatedInfo) return;
         let userWhoMadeChanges = updatedInfo.docChanges[0].changeID;
 
         if (userWhoMadeChanges === uid) {
@@ -106,7 +106,6 @@ const EditorUID = ({ disabled, enableCollab }) => {
           <AceEditor ref={reactAceRef} mode="javascript" theme="chaos" />
           <AceEditor ref={editorOutput} mode="javascript" />
         </Grid>
-        {/* evaluate code in editor */}
         <Grid item>
           <Button
             classes={{ root: classes.buttonEval }}
@@ -120,7 +119,7 @@ const EditorUID = ({ disabled, enableCollab }) => {
               return;
             }}
           >
-            EVAL CODE
+            RUN CODE
           </Button>
         </Grid>
       </Grid>

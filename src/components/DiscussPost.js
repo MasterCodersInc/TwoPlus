@@ -10,7 +10,7 @@ import * as timeago from "timeago.js";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { TextField, Button, Typography, ListItem } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import DeletePost from './DeletePost'
+import DeletePost from "./DeletePost";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -55,12 +55,12 @@ const useStyles = makeStyles((theme) => ({
     width: "fit-content",
   },
   commentLink: {
-    textDecoration: 'none',
+    textDecoration: "none",
     color: theme.palette.common.colorOne,
-    fontWeight: '500'
+    fontWeight: "500",
   },
   authorLink: {
-    textDecoration: 'none',
+    textDecoration: "none",
     color: theme.palette.common.colorFive,
     fontWeight: '530',
     paddingBottom: '2em',
@@ -144,12 +144,7 @@ const DiscussPost = ({ post }) => {
             backgroundColor: "white",
           }}
         >
-          {actualPostData && (
-            <PlusPlusButton
-              documentRef={actualPostRef}
-              documentData={actualPostData}
-            />
-          )}
+          {actualPostData && <PlusPlusButton documentRef={postId} />}
         </div>
 
         <div
@@ -157,33 +152,34 @@ const DiscussPost = ({ post }) => {
             backgroundColor: theme.palette.common.colorTwo,
             padding: 10,
             marginBottom: 10,
-            paddingLeft: '1.5em',
-            paddingBottom: '1.5em',
+            paddingLeft: "1.5em",
+            paddingBottom: "1.5em",
             width: "100%",
             borderRadius: 5,
           }}
         >
           <div
             style={{
-              display: 'flex',
-              alignItems: 'center'
-            }}>
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             <Typography style={{ marginTop: 5 }} variant="h2">
               {post.title} &nbsp;
             </Typography>
-            {
-              (post.userRef === currentUser.uid || firestoreUser.isAdmin) &&
-              <DeletePost postId={postId} fontSize='small' />
-            }
+            {(post.userRef === currentUser.uid || firestoreUser.isAdmin) && (
+              <DeletePost postId={postId} fontSize="small" />
+            )}
           </div>
           {actualPostData && (
             <Grid item containter direction="row" >
               <Typography style={{maxWidth: 'max-content'}}>Asked by&nbsp; 
+
               <Typography
                 component={Link}
                 to={`/users/${actualPostData.userRef}`}
                 variant="body1"
-                style={{ marginTop: "1em"}}
+                style={{ marginTop: "1em" }}
                 className={classes.authorLink}
               >
                 {actualPostData?.userName},{" "}
@@ -195,19 +191,20 @@ const DiscussPost = ({ post }) => {
           {post.imageURL && (
             <img style={{ width: 300, height: 300 }} src={post.imageURL} />
           )}
-          <Typography 
+          <Typography
             variant="body1"
             style={{
-              marginTop: '1em',
-              marginLeft: '1em',
-              fontWeight: 'normal',
-              paddingBottom: '1em',
-              marginRight: '2em',
-              textAlign: 'justify'
-            }}>
-              {post.description}
+              marginTop: "1em",
+              marginLeft: "1em",
+              fontWeight: "normal",
+              paddingBottom: "1em",
+              marginRight: "2em",
+              textAlign: "justify",
+            }}
+          >
+            {post.description}
           </Typography>
-          <div style={{ display: "flex", paddingBottom: '0.7em' }}>
+          <div style={{ display: "flex", paddingBottom: "0.7em" }}>
             {post.tags.map((tag, idx) => {
               return (
                 <ListItem
@@ -259,7 +256,13 @@ const DiscussPost = ({ post }) => {
                   {response.doc.content}
                 </Typography>
                 <Typography variant="body2">
-                  Author: <Link to={`/users/${response.doc.userRef}`} className={classes.commentLink}>{response.doc.userName}</Link>
+                  Author:{" "}
+                  <Link
+                    to={`/users/${response.doc.userRef}`}
+                    className={classes.commentLink}
+                  >
+                    {response.doc.userName}
+                  </Link>
                 </Typography>
               </Grid>
             );

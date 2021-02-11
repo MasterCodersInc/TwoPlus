@@ -7,7 +7,8 @@ import firebase from "../firebase";
 import { Typography, Button, Grid } from "@material-ui/core";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import DiscussPost from "./DiscussPost";
-import DeletePost from './DeletePost'
+import DeletePost from "./DeletePost";
+import PlusPlusButton from "./PlusPlusButton";
 
 const useStyles = makeStyles((theme) => ({
   button1: {
@@ -45,7 +46,7 @@ const Post = (props) => {
     async function getPostData() {
       const postFromDb = await postRef.get();
       const postData = postFromDb.data();
-      setPost({...postData, postId: postFromDb.id});
+      setPost({ ...postData, postId: postFromDb.id });
       setEnableCollab(postData.enableCollab);
     }
     getPostData();
@@ -85,47 +86,51 @@ const Post = (props) => {
             style={{ marginLeft: "3.2em" }}
           >
             {" "}
-            <Typography variant="h2">{post?.title || ""}</Typography>
-            <Typography
-              variant="body2"
-              style={{ marginTop: "1em", marginBottom: "2em" }}
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{ marginBottom: "1.5em" }}
             >
-              {post.description || ""}
-            </Typography>
-            <Grid container direction="row">
-              {post.tags.map((tag) => (
-                <Link
-                  className={classes.link}
-                  style={{ marginRight: "1em" }}
-                  to={`/posts?tag=${tag}`}
+              <Grid item style={{ marginRight: "2em" }}>
+                <PlusPlusButton documentRef={postId} />
+              </Grid>
+              <Grid item alignContent="flex-end">
+                <Typography variant="h2">{post?.title || ""}</Typography>
+                <Typography
+                  variant="body2"
+                  style={{ marginTop: "1em", marginBottom: "1em" }}
                 >
-                  #{tag}
-                </Link>
-              ))}
+                  {post.description || ""}
+                </Typography>
+                <Grid item container direction="row">
+                  {post.tags.map((tag) => (
+                    <Link
+                      className={classes.link}
+                      style={{ marginRight: "1em" }}
+                      to={`/posts?tag=${tag}`}
+                    >
+                      #{tag}
+                    </Link>
+                  ))}
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
-          <Grid item container style={{marginTop: '1em'}}>
-            {currentUser && (currentUser.uid === post.userRef  || firestoreUser.isAdmin) && (
-              <Grid
-                item 
-                container>
-                {/* <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={toggleEditor}
-                >
-                  Enable Collab
-                </Button> */}
-                <Button
-                  variant="contained"
-                  classes={{ root: classes.buttonN }}
-                  onClick={toggleActive}
-                >
-                  {buttonName}
-                </Button>
-                <DeletePost postId={post.postId} fontSize='medium'/>
-              </Grid>
-            )}
+          <Grid item container style={{ marginTop: ".6em" }}>
+            {currentUser &&
+              (currentUser.uid === post.userRef || firestoreUser.isAdmin) && (
+                <Grid item container>
+                  <Button
+                    variant="contained"
+                    classes={{ root: classes.buttonN }}
+                    onClick={toggleActive}
+                  >
+                    {buttonName}
+                  </Button>
+                  <DeletePost postId={post.postId} fontSize="medium" />
+                </Grid>
+              )}
           </Grid>
         </Grid>
 
