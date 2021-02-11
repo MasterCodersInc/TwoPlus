@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 const Post = (props) => {
   const classes = useStyles();
   const theme = useTheme();
-  const { currentUser } = useAuth();
+  const { currentUser, firestoreUser } = useAuth();
   const { postId } = useParams();
   const [post, setPost] = useState("");
   const [enableCollab, setEnableCollab] = useState(false);
@@ -104,8 +104,8 @@ const Post = (props) => {
               ))}
             </Grid>
           </Grid>
-          <Grid item container>
-            {currentUser && currentUser.uid === post.userRef && (
+          <Grid item container style={{marginTop: '1em'}}>
+            {currentUser && (currentUser.uid === post.userRef  || firestoreUser.isAdmin) && (
               <Grid
                 item 
                 container>

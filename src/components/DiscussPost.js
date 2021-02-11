@@ -174,8 +174,8 @@ const DiscussPost = ({ post }) => {
             }
           </div>
           {actualPostData && (
-            <Grid containter direction='row'>
-              <Typography>Asked by:</Typography>
+            <Grid item containter direction='row'>
+              <Typography>Asked by </Typography>
               <Typography
                 component={Link}
                 to={`/users/${actualPostData.userRef}`}
