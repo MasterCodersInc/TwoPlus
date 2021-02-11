@@ -1,6 +1,6 @@
 import React from 'react'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import {Button, IconButton} from '@material-ui/core'
+import {Button, IconButton, Tooltip} from '@material-ui/core'
 import { makeStyles, useTheme } from '@material-ui/styles';
 import firebase from '../firebase';
 import { useHistory } from 'react-router-dom'
@@ -51,16 +51,18 @@ const DeletePost = ({postId, fontSize}) => {
                   <DeleteOutlineIcon fontSize={fontSize}/> Delete &nbsp;
             </Button>
           );
-    } else{
-        return (
+    }
+    return (
+        <Tooltip title="Delete" placement="right" arrow>
             <IconButton 
-                aria-label='delete' 
+                aria-label='delete'
+                tooltip="Delete"
                 className={classes.deleteIcon} 
                 onClick={deletePost}>
                     <DeleteOutlineIcon fontSize='small'/>
             </IconButton>
-        )
-    }
+        </Tooltip>
+    )
 }
 
 export default DeletePost;
