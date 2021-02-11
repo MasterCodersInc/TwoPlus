@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+import PlusPlusButton from "./PlusPlusButton";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -51,6 +53,8 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: "black",
     fontWeight: 500,
+    marginTop: ".5em",
+    fontSize: "1.2em",
     width: "90%",
     "&:hover": {
       color: theme.palette.common.colorThree,
@@ -72,6 +76,15 @@ const useStyles = makeStyles((theme) => ({
     width: "90%",
     "&:hover": {
       color: "black",
+    },
+  },
+  postLink4: {
+    textDecoration: "none",
+    color: "black",
+    fontWeight: 500,
+    width: "90%",
+    "&:hover": {
+      color: theme.palette.common.colorThree,
     },
   },
 }));
@@ -243,7 +256,7 @@ export default function Landing() {
                 return (
                   <Card
                     style={{
-                      width: "18em",
+                      width: "22em",
                       margin: ".5em",
                       paddingBottom: "1em",
                       backgroundColor: theme.palette.common.colorFive,
@@ -258,10 +271,35 @@ export default function Landing() {
                       alignItems="center"
                     >
                       <Grid
+                        container
+                        alignItems="flex-start"
+                        style={{ width: "90%", marginTop: ".5em" }}
+                      >
+                        <img
+                          src={openPost}
+                          alt="greencircle"
+                          style={{ marginRight: ".5em", marginTop: ".9em" }}
+                        />
+                        <Typography
+                          component={Link}
+                          to={`/posts/${post.postId}`}
+                          variant="body2"
+                          className={classes.postLink}
+                        >
+                          {post.title.length > 40
+                            ? post.title.slice(0, 40).concat("...")
+                            : post.title}
+                        </Typography>
+                      </Grid>
+                      <Grid
                         item
                         container
                         alignItems="center"
-                        style={{ marginTop: "1em", marginLeft: "1em" }}
+                        style={{
+                          marginTop: "1em",
+                          marginLeft: "1em",
+                          marginBottom: ".5em",
+                        }}
                       >
                         <img
                           src={post.userPhotoURL || defaultProfile}
@@ -276,6 +314,7 @@ export default function Landing() {
                         <Typography
                           component={Link}
                           to={`users/${post.userRef}`}
+                          variant="body2"
                           style={{ marginLeft: ".5em", textDecoration: "none" }}
                         >
                           {post.userName}
@@ -284,38 +323,20 @@ export default function Landing() {
                           follow
                         </Button>
                       </Grid>
-                      <Grid
-                        container
-                        alignItems="flex-start"
-                        style={{ width: "90%", marginTop: ".5em" }}
-                      >
-                        <img
-                          src={post.isActive ? openPost : closedPost}
-                          alt={post.isActive ? "greencircle" : "redcircle"}
-                          style={{ marginRight: ".5em" }}
-                        />
-                        <Typography
-                          component={Link}
-                          to={`/posts/${post.postId}`}
-                          variant="body2"
-                          className={classes.postLink}
-                        >
-                          {post.title}
-                        </Typography>
-                        <Grid
-                          item
-                          style={{ marginTop: ".5em", marginLeft: "1em" }}
-                        ></Grid>
-                      </Grid>
 
-                      <Grid item container direction="row">
+                      <Grid
+                        item
+                        container
+                        direction="row"
+                        style={{ marginLeft: "1.2em" }}
+                      >
                         {post.tags.slice(0, 3).map((tag) => {
                           return (
-                            <Grid item>
+                            <Grid item zeroMinWidth>
                               <Typography
                                 component={Link}
                                 to={`/posts/?tag=${tag}`}
-                                className={classes.postLink}
+                                className={classes.postLink4}
                                 variant="body2"
                                 noWrap
                                 style={{
@@ -336,6 +357,12 @@ export default function Landing() {
                           );
                         })}
                       </Grid>
+
+                      <PlusPlusButton
+                        documentData={post}
+                        size="small"
+                        style={{ marginRight: "3em" }}
+                      />
                     </Grid>
                   </Card>
                 );
