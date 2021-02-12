@@ -143,7 +143,6 @@ export default function Landing() {
       followingList.push(followingData.docs[0].data());
     }
     setUserFollowing(followingList);
-    // setFollowingUIDs(followingList.map((user) => user.uid));
   }
 
   useEffect(() => {
