@@ -89,13 +89,12 @@ export default function MyPosts() {
     const userPosts = db.collection("posts").where("userRef", "==", `${UID}`);
     userPosts.get().then((postObj) => {
       let postsArr = postObj.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      console.log(postsArr);
       setUserPosts(postsArr);
     });
   }, []);
 
   return (
-    <Grid container>
+    <Grid container style={{ maxWidth: "90vh", minHeight: "53.5vh" }}>
       <Grid item container direction="column">
         <Grid item>
           <Typography variant="h1" style={{ marginLeft: "2.3em" }}>
