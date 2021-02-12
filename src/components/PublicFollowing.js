@@ -37,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "8em",
   },
   infoText: {
-    //     marginTop: "2em",
     marginLeft: "5em",
   },
   followButton: {
@@ -201,7 +200,7 @@ export default function PublicFollowing() {
                     This user isn't following anyone.
                   </Typography>
                 ) : (
-                  userFollowingList.map((following) => {
+                  userFollowingList.map((user) => {
                     return (
                       <div
                         style={{
@@ -224,7 +223,7 @@ export default function PublicFollowing() {
                               objectFit: "cover",
                               marginRight: 5,
                             }}
-                            src={following.profilePhotoURL}
+                            src={user.profilePhotoURL}
                           />
                           <Typography
                             component={Link}
@@ -233,19 +232,19 @@ export default function PublicFollowing() {
                               color: "#5B56E9",
                               marginRight: 10,
                             }}
-                            to={`/users/${following.uid}`}
+                            to={`/users/${user.uid}`}
                             variant="h2"
                           >
-                            {following.userName}
+                            {user.userName}
                           </Typography>
                           <Typography
                             variant="body2"
                             style={{ marginRight: 10 }}
                           >
-                            following:{following.following.length}
+                            Followers:{user.followers.length}
                           </Typography>
                           <Typography variant="body2">
-                            Following:{following.following.length}
+                            Following:{user.following.length}
                           </Typography>
                         </Grid>
                       </div>
