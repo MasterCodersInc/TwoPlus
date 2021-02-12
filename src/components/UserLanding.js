@@ -282,7 +282,7 @@ export default function Landing() {
                         }}
                       >
                         <img
-                          src={openPost}
+                          src={post.isActive ? openPost : closedPost}
                           alt="greencircle"
                           style={{ marginRight: ".5em", marginTop: ".9em" }}
                         />
