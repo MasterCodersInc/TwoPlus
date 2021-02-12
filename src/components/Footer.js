@@ -30,38 +30,101 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "1.5em",
     fontSize: ".7em",
   },
+  linkedIn: {
+    marginLeft: ".8em",
+    marginRight: ".8em",
+    textDecoration: "none",
+    marginTop: "-8em",
+    color: theme.palette.common.colorFour,
+    fontSize: ".8em",
+    "&:hover": {
+      color: theme.palette.common.colorThree,
+    },
+  },
 }));
 
 export default function Footer() {
   const classes = useStyles();
   const theme = useTheme();
   return (
-    <Grid
-      container
-      alignItems="center"
-      justify="center"
-      className={classes.container}
-    >
-      <Grid item style={{ marginRight: "1em" }}>
-        <img src={line} alt="line" />
+    <Grid container className={classes.container}>
+      <Grid container alignItems="center" justify="center">
+        <Grid item style={{ marginRight: "1em" }}>
+          <img src={line} alt="line" />
+        </Grid>
+        <Grid item>
+          <Typography className={classes.navLink}>HOME</Typography>
+        </Grid>
+        <Grid item>
+          <Typography className={classes.navLink}>ACCOUNT</Typography>
+        </Grid>
+        <Grid item>
+          <img src={logo} alt="two plus logo" className={classes.logo} />
+        </Grid>
+        <Grid item>
+          <Typography className={classes.navLink}>FAQ</Typography>
+        </Grid>
+        <Grid item>
+          <Typography className={classes.navLink}>CONTACT</Typography>
+        </Grid>
+        <Grid item style={{ marginLeft: "1em" }}>
+          <img src={line} alt="line" />
+        </Grid>
       </Grid>
-      <Grid item>
-        <Typography className={classes.navLink}>HOME</Typography>
-      </Grid>
-      <Grid item>
-        <Typography className={classes.navLink}>ACCOUNT</Typography>
-      </Grid>
-      <Grid item>
-        <img src={logo} alt="two plus logo" className={classes.logo} />
-      </Grid>
-      <Grid item>
-        <Typography className={classes.navLink}>FAQ</Typography>
-      </Grid>
-      <Grid item>
-        <Typography className={classes.navLink}>CONTACT</Typography>
-      </Grid>
-      <Grid item style={{ marginLeft: "1em" }}>
-        <img src={line} alt="line" />
+      <Grid
+        container
+        alignItems="center"
+        justify="center"
+        style={{ marginTop: "-4em" }}
+      >
+        <Grid item>
+          <Typography
+            component="a"
+            href="https://www.linkedin.com/in/kirstierodriguez/"
+            rel="noopener noreferrer"
+            target="_blank"
+            variant="body1"
+            className={classes.linkedIn}
+          >
+            Kirstie Rodrigues
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography
+            component="a"
+            href="https://www.linkedin.com/in/joetoenails/"
+            rel="noopener noreferrer"
+            target="_blank"
+            variant="body1"
+            className={classes.linkedIn}
+          >
+            Joe Tonelli
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography
+            component="a"
+            href="https://www.linkedin.com/in/lindsey-pak-babaaa12b/"
+            rel="noopener noreferrer"
+            target="_blank"
+            variant="body1"
+            className={classes.linkedIn}
+          >
+            Lindsey Pak
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography
+            component="a"
+            href="https://www.linkedin.com/in/mati-dejene/"
+            rel="noopener noreferrer"
+            target="_blank"
+            variant="body1"
+            className={classes.linkedIn}
+          >
+            Sintayehu Dejene
+          </Typography>
+        </Grid>
       </Grid>
     </Grid>
   );
