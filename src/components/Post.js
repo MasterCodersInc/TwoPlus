@@ -9,6 +9,8 @@ import { useTheme, makeStyles } from "@material-ui/core/styles";
 import DiscussPost from "./DiscussPost";
 import DeletePost from "./DeletePost";
 import PlusPlusButton from "./PlusPlusButton";
+import openPost from "../assets/openPostCircle.svg";
+import closedPost from "../assets/closedPostCircle.svg";
 
 const useStyles = makeStyles((theme) => ({
   button1: {
@@ -100,7 +102,14 @@ const Post = (props) => {
                 <PlusPlusButton documentRef={postId} />
               </Grid>
               <Grid item alignContent="flex-end">
-                <Typography variant="h2">{post?.title || ""}</Typography>
+                <Grid item container direction='row' align="center">
+                  <Typography variant="h2">{post?.title || ""}</Typography>
+                  <img
+                    src={post.isActive ? openPost : closedPost}
+                    alt={post.isActive ? 'greencircle' : 'redcircle'}
+                    style={{ marginRight: ".5em", marginTop: ".9em" }}
+                  />
+                </Grid>
                 <Typography
                   variant="body2"
                   style={{ marginTop: "1em", marginBottom: "1em" }}
