@@ -50,8 +50,11 @@ const EditorUID = ({ disabled, enableCollab }) => {
       let documentData = documentInfo.current.data();
       ownerId.current = documentData.userRef;
       editor.current.setValue(documentData.editorData);
+      editorOutput.current.editor.setValue(
+        "//Hi developers! Just a heads up ,this second editor can only \n//handle the returned values of functions. However if you want \n//to console.log() something from the code editor on the left,\n//it will show up in your browser's dev tools!"
+      );
+      editorOutput.current.editor.setReadOnly(true);
 
-      //set up editor event listener. This is mostly for newUsers entering.
       editor.current.on("change", (e) => {
         if (applyingDeltas) {
           return;

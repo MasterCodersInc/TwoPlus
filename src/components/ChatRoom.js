@@ -75,7 +75,6 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
             ...doc.data(),
             id: doc.id,
           }));
-          console.log("whats data in postRef", data);
           //then update the state
           setMessages(data);
         });
@@ -102,7 +101,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
         username: username,
       });
     }
-    setNewMessage('');
+    setNewMessage("");
   };
 
   return (
