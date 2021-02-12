@@ -4,7 +4,7 @@ import EditorUID from "./EditorUID";
 import { useAuth } from "../contexts/AuthContext";
 import ChatRoom from "./ChatRoom";
 import firebase from "../firebase";
-import { Typography, Button, Grid } from "@material-ui/core";
+import { Typography, Button, Grid, Tooltip } from "@material-ui/core";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import DiscussPost from "./DiscussPost";
 import DeletePost from "./DeletePost";
@@ -103,12 +103,18 @@ const Post = (props) => {
               </Grid>
               <Grid item alignContent="flex-end">
                 <Grid item container direction='row' align="center">
-                  <Typography variant="h2">{post?.title || ""}</Typography>
-                  <img
-                    src={post.isActive ? openPost : closedPost}
-                    alt={post.isActive ? 'greencircle' : 'redcircle'}
-                    style={{ marginRight: ".5em", marginTop: ".9em" }}
-                  />
+                  <Typography variant="h2">{post?.title || ""}&nbsp;</Typography>
+                  <Tooltip 
+                    title={post.isActive ? 'Live' : 'Closed'}
+                    arrow
+                    placement="right"
+                    >
+                    <img
+                      src={post.isActive ? openPost : closedPost}
+                      alt={post.isActive ? 'greencircle' : 'redcircle'}
+                      style={{ marginRight: ".5em" }}
+                    />
+                  </Tooltip>
                 </Grid>
                 <Typography
                   variant="body2"
