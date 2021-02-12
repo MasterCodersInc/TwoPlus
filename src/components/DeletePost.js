@@ -3,7 +3,7 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import {Button, IconButton, Tooltip} from '@material-ui/core'
 import { makeStyles, useTheme } from '@material-ui/styles';
 import firebase from '../firebase';
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     deleteButton: {
@@ -27,15 +27,20 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const DeletePost = ({postId, fontSize, location}) => { 
+const DeletePost = ({postId, fontSize}) => { 
     const theme = useTheme();  
     const classes = useStyles();
     const history = useHistory();
+    const location = useLocation();
 console.log(location);
     async function deletePost(e){
         try {
             await firebase.firestore().collection('posts').doc(postId).delete()
-            history.push('/userhome/deleted')
+            if(location.pathname ==='/savedcollabs'){
+                history.push('/savedcollabs/deleted')
+            } else {
+                history.push('/userhome/deleted')
+            }
         } catch (error) {
             console.log('Unable to delete post', error)
         }
