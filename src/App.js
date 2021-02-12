@@ -59,6 +59,7 @@ function App() {
             <Route exact path="/posts/add" component={AddPost} />
             <Route exact path="/posts" component={Posts} />
             <Route exact path="/posts/:postId" component={Post} />
+            <Redirect from="/savedcollabs/deleted" to="/savedcollabs" />
             <Route exact path="/savedcollabs" component={userSavedCollabs} />
             <Route exact path="/savedcontent" component={savedContent} />
             <Route exact path="/users" component={Users} />

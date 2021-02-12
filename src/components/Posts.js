@@ -15,6 +15,8 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "2%",
     marginRight: "2%",
     marginBottom: "2%",
+    minWidth: '47.5vw',
+    minHeight: '47.5vh'
   },
   pageHeader: {
     margin: "2%",
