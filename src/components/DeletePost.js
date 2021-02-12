@@ -27,11 +27,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const DeletePost = ({postId, fontSize}) => { 
+const DeletePost = ({postId, fontSize, location}) => { 
     const theme = useTheme();  
     const classes = useStyles();
     const history = useHistory();
-
+console.log(location);
     async function deletePost(e){
         try {
             await firebase.firestore().collection('posts').doc(postId).delete()
