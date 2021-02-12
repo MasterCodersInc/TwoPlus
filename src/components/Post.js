@@ -123,7 +123,7 @@ const Post = (props) => {
           </Grid>
           <Grid item container style={{ marginTop: ".6em" }}>
             {currentUser &&
-              (currentUser.uid === post.userRef || firestoreUser.isAdmin) && (
+              (currentUser.uid === post.userRef || firestoreUser?.isAdmin) && (
                 <Grid item container>
                   <Button
                     variant="contained"

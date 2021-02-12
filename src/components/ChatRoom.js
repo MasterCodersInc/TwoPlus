@@ -54,11 +54,12 @@ const formatDate = (date) => {
 const ChatRoom = ({ postId, postRef, disabled }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const { currentUser } = useAuth();
+  const { currentUser, firestoreUser } = useAuth();
   const db = firebase.firestore();
   const uid = currentUser?.uid;
+  const username = firestoreUser?.username;
 
-  const [messages, setMessage] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
@@ -76,7 +77,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
           }));
           console.log("whats data in postRef", data);
           //then update the state
-          setMessage(data);
+          setMessages(data);
         });
 
       //detach listener
@@ -98,6 +99,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
         text: newMessage,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         uid,
+        username,
       });
     }
   };
@@ -112,61 +114,6 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
         </Grid>
       </Grid>
       <Grid container component={Paper} className={classes.chatSection}>
-        {/* // DISCUSSED THAT WE DONT REALLY NEED THE USER LIVE INFORMATION */}
-        {/* <Grid item xs={3} className={classes.borderRight500}>
-          <List>
-            <ListItem button key="RemySharp">
-              <ListItemIcon>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://material-ui.com/static/images/avatar/1.jpg"
-                />
-              </ListItemIcon>
-              <ListItemText primary={currentUser.email}></ListItemText>
-            </ListItem>
-          </List>
-          <Divider />
-          <Grid item xs={12} style={{ padding: "10px" }}>
-            <TextField
-              id="outlined-basic-email"
-              label="Search"
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-          <Divider />
-          <List>
-            <ListItem button key="RemySharp">
-              <ListItemIcon>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://material-ui.com/static/images/avatar/1.jpg"
-                />
-              </ListItemIcon>
-              <ListItemText primary="Remy Sharp">Remy Sharp</ListItemText>
-              <ListItemText secondary="online" align="right"></ListItemText>
-            </ListItem>
-            <ListItem button key="Alice">
-              <ListItemIcon>
-                <Avatar
-                  alt="Alice"
-                  src="https://material-ui.com/static/images/avatar/3.jpg"
-                />
-              </ListItemIcon>
-              <ListItemText primary="Alice">Alice</ListItemText>
-            </ListItem>
-            <ListItem button key="CindyBaker">
-              <ListItemIcon>
-                <Avatar
-                  alt="Cindy Baker"
-                  src="https://material-ui.com/static/images/avatar/2.jpg"
-                />
-              </ListItemIcon>
-              <ListItemText primary="Cindy Baker">Cindy Baker</ListItemText>
-            </ListItem>
-          </List>
-        </Grid> */}
-
         <Grid item style={{ width: "100%" }}>
           <List className={classes.messageArea}>
             {messages.map((message) =>
@@ -183,7 +130,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
                       <ListItemText
                         align="right"
                         secondary={`${formatDate(
-                          new Date(message.createdAt * 1000)
+                          new Date(message.createdAt.seconds*1000)
                         )}`}
                       ></ListItemText>
                     </Grid>
@@ -202,7 +149,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
                       <ListItemText
                         align="left"
                         secondary={`${formatDate(
-                          new Date(message.createdAt * 1000)
+                          new Date(message.createdAt.seconds*1000)
                         )}`}
                       ></ListItemText>
                     </Grid>
@@ -222,6 +169,8 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
                   value={newMessage}
                   onChange={handleOnChange}
                   fullWidth
+                  multiline
+                  rowsMax={4}
                 />
                 <Grid xs={1} align="right">
                   <Fab color="primary" aria-label="add">
