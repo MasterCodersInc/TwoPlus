@@ -100,9 +100,8 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
         uid,
         username: username,
       });
-      setNewMessage("");
     }
-    setNewMessage('');
+    setNewMessage("");
   };
 
   return (
