@@ -31,8 +31,9 @@ const useStyles = makeStyles((theme) => ({
     width: "30%",
   },
   popTopLi: {
-    marginTop: ".5em",
-    marginBottom: ".5em",
+    marginTop: ".2em",
+    marginBottom: ".2em",
+    fontSize: '1em'
   },
   testBox: {
     backgroundColor: "black",
@@ -76,6 +77,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: theme.palette.common.colorOne,
     fontWeight: 600,
+    fontSize: '0.9em',
     width: "90%",
     "&:hover": {
       color: "black",
@@ -225,7 +227,7 @@ export default function Landing() {
           className={classes.popTopCont}
           lg={2}
         >
-          <Typography style={{ marginBottom: "1em", marginTop: "4.5em" }}>
+          <Typography style={{ marginBottom: "1em", marginTop: "4.5em", fontSize: '1.3em' }}>
             Popular Topics
           </Typography>
 
@@ -249,7 +251,7 @@ export default function Landing() {
             </div>
           ))}
 
-          <Typography style={{ marginBottom: ".5em", marginTop: "4.5em" }}>
+          <Typography style={{ marginBottom: ".5em", marginTop: "2.5em", fontSize: '1.3em' }}>
             Followed Users
           </Typography>
           {userFollowing &&
@@ -260,7 +262,7 @@ export default function Landing() {
                   to={`/users/${user.uid}`}
                   variant="body2"
                   className={(classes.popTopLi, classes.postLink3)}
-                  style={{ marginBottom: "1em" }}
+                  // style={{ marginBottom: "1em" }}
                 >
                   {user.userName}
                 </Typography>
