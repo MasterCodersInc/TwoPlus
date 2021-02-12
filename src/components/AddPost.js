@@ -61,7 +61,11 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "500",
   },
   tagInput: {
+    display:'flex',
     background: "none",
+    width: '100%',
+    alignItems: 'center',
+    justifyContent:'center',
     flexGrow: "1",
   },
   removeTag: {
@@ -81,6 +85,9 @@ const useStyles = makeStyles((theme) => ({
     transform: "rotate(45deg)",
   },
   tags: {
+    display:'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     align: "center",
     textAlign: "center",
     outline: "none",
@@ -200,7 +207,7 @@ const AddPost = ({ history }) => {
   };
 
   return (
-    <div>
+    <div style={{minHeight: '53.5vh'}}>
       <form onSubmit={onSubmitHandler}>
         <Grid container direction="column" alignItems="center" justify="center">
           <Grid
@@ -249,7 +256,7 @@ const AddPost = ({ history }) => {
               style={{ marginTop: "1em", marginBottom: "1em" }}
               variant="filled"
             />
-            <Grid className={classes.tags}>
+            <Grid container className={classes.tags}>
               <List className={classes.tagList}>
                 {tags.map((tag, idx) => {
                   return (
