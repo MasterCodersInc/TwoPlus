@@ -56,6 +56,7 @@ function App() {
             <Route exact path="/posts" component={Posts} />
             <Route exact path="/posts/:postId" component={Post} />
             <Route exact path="/myposts" component={MyPosts} />
+            <Redirect from="/myposts/deleted" to="/myposts" />
             <Route exact path="/savedcontent" component={savedContent} />
             <Route exact path="/users" component={Users} />
             <Route exact path="/users/:profileUID" component={PublicProfile} />

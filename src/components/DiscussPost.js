@@ -13,8 +13,12 @@ import Grid from "@material-ui/core/Grid";
 import DeletePost from "./DeletePost";
 
 const useStyles = makeStyles((theme) => ({
+  pageContainer:{
+    minWidth: '100vw',
+    minHeight: '53vh'
+  },
   form: {
-    align: "center",
+    // align: "center",
     textAlign: "center",
   },
   button1: {
@@ -128,8 +132,8 @@ const DiscussPost = ({ post }) => {
       id="pageContainer"
       container
       direction="column"
-      justify="center"
       alignItems="center"
+      className={classes.pageContainer}
     >
       <div
         id="postAndPlus"

@@ -109,13 +109,15 @@ export default function SignUp() {
   }
 
   return (
-    <Grid container direction="column" justify="center" alignItems="center">
+    <Grid container direction="column" justify="center" alignItems="center" style={{
+      minWidth: '100vw',
+      minHeight: '53.5vh',
+      margin: '0 auto'}}>
       <Grid item>
         <Typography
           variant="h1"
           style={{
             marginBottom: "1em",
-
             color: theme.palette.common.colorOne,
           }}
         >

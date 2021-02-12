@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
   buttonN: {
     ...theme.button.normal,
   },
+  livePost: {
+    minWidth: '47.5vw',
+    minHeight: '47.5vh'
+  }
 }));
 
 const Post = (props) => {
@@ -72,7 +76,7 @@ const Post = (props) => {
   }
   if (post.postType === "live") {
     return (
-      <Grid container>
+      <Grid container className={classes.livePost}>
         <Grid
           container
           direction="row"
@@ -119,7 +123,7 @@ const Post = (props) => {
           </Grid>
           <Grid item container style={{ marginTop: ".6em" }}>
             {currentUser &&
-              (currentUser.uid === post.userRef || firestoreUser.isAdmin) && (
+              (currentUser.uid === post.userRef || firestoreUser?.isAdmin) && (
                 <Grid item container>
                   <Button
                     variant="contained"
