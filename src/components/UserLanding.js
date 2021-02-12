@@ -13,11 +13,13 @@ import Card from "@material-ui/core/Card";
 import firebase from "../firebase";
 
 import addButt from "../assets/addButt.svg";
+import FrontPageFollowButton from "./FrontPageFollowButton";
 import userLandingRec from "../assets/userLandingRec.svg";
 import defaultProfile from "../assets/defaultProfile.svg";
 import openPost from "../assets/openPostCircle.svg";
 import closedPost from "../assets/closedPostCircle.svg";
 import DeletePost from "./DeletePost";
+import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -93,9 +95,30 @@ const useStyles = makeStyles((theme) => ({
 export default function Landing() {
   const classes = useStyles();
   const theme = useTheme();
+  const { firestoreUser } = useAuth();
+
   const [posts, setPosts] = useState([]);
-  const [disccuss, setDiscuss] = useState([]);
+  const [discuss, setDiscuss] = useState([]);
   const [tags, setTags] = useState([]);
+  const [userFollowing, setUserFollowing] = useState([]);
+  const [followingUIDs, setFollowingUIDs] = useState([]);
+
+  const followButtonRef = React.useRef();
+
+  const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
+  const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
+
+  const isInitialMount = React.useRef(true);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    }
+
+    if (tags && firestoreUser) {
+      getFollowing();
+    }
+  });
 
   async function updatePhotos(arr) {
     const postCopy = arr.slice();
@@ -107,6 +130,20 @@ export default function Landing() {
       }
     }
     setPosts(postCopy);
+  }
+
+  async function getFollowing() {
+    let followingList = [];
+    for (const user of firestoreUser.following) {
+      const followingRef = firebase
+        .firestore()
+        .collection("users")
+        .where("uid", "==", user);
+      const followingData = await followingRef.get();
+      followingList.push(followingData.docs[0].data());
+    }
+    setUserFollowing(followingList);
+    // setFollowingUIDs(followingList.map((user) => user.uid));
   }
 
   useEffect(() => {
@@ -159,7 +196,26 @@ export default function Landing() {
     });
   }, []);
 
-  console.log(posts);
+  async function followUser(userUIDToFollow) {
+    const userObjLoc = await firebase
+      .firestore()
+      .collection("users")
+      .where("uid", "==", userUIDToFollow);
+    let userData = await userObjLoc.get();
+    let userDocToFollow = userData.docs[0];
+
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(firestoreUser.userDocRef)
+      .update({ following: arrayUnion(userUIDToFollow) });
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(userDocToFollow.id)
+      .update({ followers: arrayUnion(firestoreUser.uid) });
+  }
+
   return (
     <Grid container direction="column" className={classes.container}>
       <Grid item container style={{ marginTop: "5em" }}>
@@ -194,27 +250,23 @@ export default function Landing() {
             </div>
           ))}
 
-          <Typography style={{ marginBottom: "1em", marginTop: "4.5em" }}>
-            Followed People
+          <Typography style={{ marginBottom: ".5em", marginTop: "4.5em" }}>
+            Followed Users
           </Typography>
-          <Typography variant="body2" className={classes.popTopLi}>
-            c0dergal_4555
-          </Typography>
-          <Typography variant="body2" className={classes.popTopLi}>
-            gillywick786
-          </Typography>
-          <Typography variant="body2" className={classes.popTopLi}>
-            LInLEExx
-          </Typography>
-          <Typography variant="body2" className={classes.popTopLi}>
-            BOBAKween
-          </Typography>
-          <Typography variant="body2" className={classes.popTopLi}>
-            cowcow456
-          </Typography>
-          <Typography variant="body2" className={classes.popTopLi}>
-            sdfkjoive
-          </Typography>
+          {userFollowing &&
+            userFollowing.map((user) => {
+              return (
+                <Typography
+                  component={Link}
+                  to={`/users/${user.uid}`}
+                  variant="body2"
+                  className={(classes.popTopLi, classes.postLink3)}
+                  style={{ marginBottom: "1em" }}
+                >
+                  {user.userName}
+                </Typography>
+              );
+            })}
         </Grid>
         <Grid item container direction="column" lg>
           <Grid item>
@@ -326,9 +378,15 @@ export default function Landing() {
                         >
                           {post.userName}
                         </Typography>
-                        <Button classes={{ root: classes.followButt }}>
-                          follow
-                        </Button>
+                        <div></div>
+                        {followingUIDs && (
+                          <FrontPageFollowButton
+                            followUser={followUser}
+                            firestoreUser={firestoreUser}
+                            post={post}
+                            followingUIDs={followingUIDs}
+                          />
+                        )}
                       </Grid>
 
                       <Grid
@@ -379,8 +437,8 @@ export default function Landing() {
             <Typography variant="h1" style={{ fontSize: "1.5em" }}>
               Recent Discussions
             </Typography>
-            {disccuss &&
-              disccuss.map((disc, index) => (
+            {discuss &&
+              discuss.map((disc, index) => (
                 <Grid key={index} item container alignItems="center">
                   <Grid
                     direction="row"
