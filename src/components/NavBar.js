@@ -131,7 +131,7 @@ export default function NavBar() {
                 >
                   Log Out
                 </Button>
-                {firestoreUser.isAdmin && (
+                {firestoreUser?.isAdmin && (
                   <Tab
                     component={Link}
                     to="/users"
@@ -139,7 +139,7 @@ export default function NavBar() {
                     className={classes.tab}
                   />
                 )}
-                {firestoreUser.isAdmin && (
+                {firestoreUser?.isAdmin && (
                   <Tab
                     component={Link}
                     to="/signup"
