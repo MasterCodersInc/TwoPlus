@@ -7,6 +7,8 @@ import firebase from "../firebase";
 import { Typography, Button, Grid } from "@material-ui/core";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import DiscussPost from "./DiscussPost";
+import QuestionAnswerRoundedIcon from '@material-ui/icons/QuestionAnswerRounded';
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles((theme) => ({
   button1: {
@@ -25,6 +27,7 @@ const Post = (props) => {
   const { postId } = useParams();
   const [post, setPost] = useState("");
   const [enableCollab, setEnableCollab] = useState(false);
+  const [chat, setChat] = useState(false)
   const buttonName = post.isActive ? "Close Post" : "Open Post";
   const colorToToggleActive = post?.isActive
     ? theme.palette.common.colorRed
@@ -116,18 +119,24 @@ const Post = (props) => {
             )}
           </Grid>
         </Grid>
-
+       
         <Grid item container>
           <EditorUID
             uid={currentUser?.uid}
             disabled={!post?.isActive}
             enableCollab={enableCollab}
           />
-          <ChatRoom
+          <Divider />
+          <Grid>
+          {chat ? <ChatRoom
+            chat={chat}
             disabled={!post?.isActive}
             postId={postId}
             postRef={postRef}
-          />
+          /> : <QuestionAnswerRoundedIcon onClick={() => {
+            setChat(true)
+          }} />}
+          </Grid>
         </Grid>
       </Grid>
     );
