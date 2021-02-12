@@ -57,7 +57,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
   const { currentUser, firestoreUser } = useAuth();
   const db = firebase.firestore();
   const uid = currentUser?.uid;
-  const username = firestoreUser?.username;
+  const username = firestoreUser?.userName;
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -97,9 +97,9 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
       // Add new message in Firestore
       postRef.collection("messages").add({
         text: newMessage,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        createdAt: Date.now(),
         uid,
-        username,
+        username: username,
       });
     }
   };
@@ -130,7 +130,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
                       <ListItemText
                         align="right"
                         secondary={`${formatDate(
-                          new Date(message.createdAt.seconds*1000)
+                          new Date(message.createdAt)
                         )}`}
                       ></ListItemText>
                     </Grid>
@@ -148,8 +148,14 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
                     <Grid item xs={12}>
                       <ListItemText
                         align="left"
+                        secondary={`${message.username}`}
+                      ></ListItemText>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <ListItemText
+                        align="left"
                         secondary={`${formatDate(
-                          new Date(message.createdAt.seconds*1000)
+                          new Date(message.createdAt)
                         )}`}
                       ></ListItemText>
                     </Grid>
