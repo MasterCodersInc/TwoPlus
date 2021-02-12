@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.common.colorOne,
     fontWeight: 600,
     fontFamily: "Montserrat",
-    fontSize: ".8em",
+    fontSize: "0.99em",
     textTransform: "none",
     padding: 0,
     width: "3em",
