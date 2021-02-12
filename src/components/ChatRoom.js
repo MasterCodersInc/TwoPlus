@@ -102,6 +102,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
         username: username,
       });
     }
+    setNewMessage('');
   };
 
   return (
@@ -166,24 +167,27 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
           </List>
           <Divider />
 
-          <Grid container style={{ padding: "20px" }}>
+          <Grid container direction="row" style={{ padding: "20px" }}>
             <Grid item xs={11}>
-              <form type="submit" onSubmit={handleOnSubmit}>
+              <form type="submit" onSubmit={handleOnSubmit} style={{display: 'flex'}}>
                 <TextField
                   id="outlined-basic-email"
                   label="Type Something"
                   value={newMessage}
                   onChange={handleOnChange}
-                  fullWidth
                   multiline
                   rowsMax={4}
                 />
                 <Grid xs={1} align="right">
-                  <Fab color="primary" aria-label="add">
-                    <button color="primary" disabled={!newMessage || disabled}>
-                      {" "}
-                      send
-                    </button>
+                  <Fab 
+                    type='submit'
+                    color="primary" 
+                    aria-label="add" 
+                    disabled={!newMessage || disabled} 
+                    variant 
+                    extended 
+                    style={{marginLeft: '1em'}}>
+                    Send
                   </Fab>
                 </Grid>
               </form>
