@@ -143,7 +143,6 @@ export default function Landing() {
       followingList.push(followingData.docs[0].data());
     }
     setUserFollowing(followingList);
-    // setFollowingUIDs(followingList.map((user) => user.uid));
   }
 
   useEffect(() => {
@@ -498,7 +497,12 @@ export default function Landing() {
                     >
                       Created By:
                     </Typography>
-                    <Typography variant="body2" style={{ fontWeight: 300 }}>
+                    <Typography
+                      component={Link}
+                      to={`/users/${disc.userRef}`}
+                      variant="body2"
+                      style={{ fontWeight: 500, textDecoration: "none" }}
+                    >
                       {disc.userName}
                     </Typography>
                   </Grid>
