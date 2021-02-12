@@ -13,6 +13,7 @@ import Card from "@material-ui/core/Card";
 import firebase from "../firebase";
 
 import addButt from "../assets/addButt.svg";
+import FrontPageFollowButton from "./FrontPageFollowButton";
 import userLandingRec from "../assets/userLandingRec.svg";
 import defaultProfile from "../assets/defaultProfile.svg";
 import openPost from "../assets/openPostCircle.svg";
@@ -107,6 +108,18 @@ export default function Landing() {
   const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
   const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
 
+  const isInitialMount = React.useRef(true);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    }
+
+    if (tags && firestoreUser) {
+      getFollowing();
+    }
+  });
+
   async function updatePhotos(arr) {
     const postCopy = arr.slice();
     for (const post of postCopy) {
@@ -119,24 +132,19 @@ export default function Landing() {
     setPosts(postCopy);
   }
 
-  useEffect(() => {
-    async function getFollowing() {
-      let followingList = [];
-      for (const user of firestoreUser.following) {
-        const followingRef = firebase
-          .firestore()
-          .collection("users")
-          .where("uid", "==", user);
-        const followingData = await followingRef.get();
-        followingList.push(followingData.docs[0].data());
-      }
-      setUserFollowing(followingList);
-      setFollowingUIDs(followingList.map((user) => user.uid));
+  async function getFollowing() {
+    let followingList = [];
+    for (const user of firestoreUser.following) {
+      const followingRef = firebase
+        .firestore()
+        .collection("users")
+        .where("uid", "==", user);
+      const followingData = await followingRef.get();
+      followingList.push(followingData.docs[0].data());
     }
-    if (firestoreUser) {
-      getFollowing();
-    }
-  });
+    setUserFollowing(followingList);
+    // setFollowingUIDs(followingList.map((user) => user.uid));
+  }
 
   useEffect(() => {
     const postsLoc = firebase
@@ -371,18 +379,13 @@ export default function Landing() {
                           {post.userName}
                         </Typography>
                         <div></div>
-                        {(!followingUIDs.includes(post.userRef) ||
-                          post.userRef !== firestoreUser.uid) && (
-                          <Button
-                            ref={followButtonRef}
-                            classes={{ root: classes.followButt }}
-                            onClick={(e) => {
-                              e.currentTarget.style.visibility = "hidden";
-                              followUser(post.userRef);
-                            }}
-                          >
-                            follow
-                          </Button>
+                        {followingUIDs && (
+                          <FrontPageFollowButton
+                            followUser={followUser}
+                            firestoreUser={firestoreUser}
+                            post={post}
+                            followingUIDs={followingUIDs}
+                          />
                         )}
                       </Grid>
 
