@@ -120,7 +120,7 @@ export default function Landing() {
     if (tags && firestoreUser) {
       getFollowing();
     }
-  });
+  },[userFollowing]);
 
   async function updatePhotos(arr) {
     const postCopy = arr.slice();

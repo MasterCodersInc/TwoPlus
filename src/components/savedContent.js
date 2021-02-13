@@ -95,7 +95,7 @@ export default function UserProfile() {
   }, []);
 
   return (
-    <Grid container>
+    <Grid container style={{ maxWidth: '95vw', minHeight:'53.5vh'}}>
       <Grid item container direction="column">
         <Grid item>
           <Typography variant="h1" style={{ marginLeft: "2.3em" }}>
