@@ -179,7 +179,7 @@ const AddPost = ({ history }) => {
       postType: postType,
       editorData: "Start Coding Here!",
       docChanges: [{ changeID: "" }],
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      timestamp: Date.now(),
       isActive: true,
       enableCollab: true,
       imageURL: imageURL,
