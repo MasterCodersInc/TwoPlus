@@ -36,10 +36,8 @@ const useStyles = makeStyles((theme) => ({
   infoCont: {
     marginTop: "2em",
     marginLeft: "2.3em",
-    // maxWidth: '50%'
   },
   infoText: {
-    //     marginTop: "2em",
     marginLeft: "5em",
   },
   editButton: {
@@ -58,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     padding: "1em",
-    width: "90%",
+    width: "60%",
     marginTop: "1em",
     marginBottom: "1em",
     borderRadius: 30,
@@ -94,7 +92,7 @@ export default function MyPosts() {
   }, []);
 
   return (
-    <Grid container style={{ maxWidth: "90vh", minHeight: "53.5vh" }}>
+    <Grid container style={{ minHeight: "53.5vh" }}>
       <Grid item container direction="column">
         <Grid item>
           <Typography variant="h1" style={{ marginLeft: "2.3em" }}>
@@ -144,19 +142,20 @@ export default function MyPosts() {
                     container
                     lg={5}
                     direction="column"
-                    style={{ marginLeft: "1em" }}
+                    style={{ marginLeft: "1em", width: 'fit-content', maxWidth: '45%' }}
                   >
-                    <Link to={`/posts/${post.id}`} className={classes.postLink}>
+                    <Link to={`/posts/${post.id}`} className={classes.postLink} style={{ width: 'fit-content', maxWidth:'50%'}}>
                       <Typography>{post.title}</Typography>
                     </Link>
-                    <Typography>{post.description}</Typography>
+                    <Typography style={{width: 'fit-content', maxWidth:'50%'}}>{post.description}</Typography>
                   </Grid>
                   <Grid
                     item
                     container
                     direction="column"
                     style={{
-                      width: "50%",
+                      width:'fit-content',
+                      maxWidth: "45%",
                       color: theme.palette.common.colorTwo,
                     }}
                     lg
