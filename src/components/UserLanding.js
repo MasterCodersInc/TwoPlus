@@ -319,34 +319,9 @@ export default function Landing() {
                 alignItems="center"
                 style={{ marginTop: "1.5em" }}
               >
-                <Grid
-                  item
-                  className={
-                    frontPageSort === "timestamp"
-                      ? classes.sortButtonSelected
-                      : classes.sortButton
-                  }
-                  onClick={() => {
-                    setFrontPageSort("timestamp");
-                  }}
-                >
+                <Grid item>
                   <Typography variant="h1" style={{ fontSize: "1.2em" }}>
-                    Recent
-                  </Typography>
-                </Grid>
-                <Grid
-                  item
-                  className={
-                    frontPageSort === "plusplusCount"
-                      ? classes.sortButtonSelected
-                      : classes.sortButton
-                  }
-                  onClick={() => {
-                    setFrontPageSort("plusplusCount");
-                  }}
-                >
-                  <Typography variant="h1" style={{ fontSize: "1.2em" }}>
-                    Top
+                    Recent Questions
                   </Typography>
                 </Grid>
               </Grid>
