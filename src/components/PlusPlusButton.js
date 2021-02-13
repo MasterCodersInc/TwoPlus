@@ -3,7 +3,6 @@ import { TextField, Button, Typography, ListItem } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useAuth } from "../contexts/AuthContext";
 import { useParams } from "react-router-dom";
-import { PolicyRounded, WhereToVote } from "@material-ui/icons";
 import firebase from "../firebase";
 
 import Grid from "@material-ui/core/Grid";
@@ -60,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //expects a "documentRef" prop so that the upvote goes to the right place
-const PlusPlusButton = ({ documentRef, size }) => {
+const PlusPlusButton = ({ documentRef, size, frontPageSort }) => {
   const { currentUser, firestoreUser } = useAuth();
 
   const classes = useStyles();
@@ -76,30 +75,26 @@ const PlusPlusButton = ({ documentRef, size }) => {
   const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
   const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
 
-  useEffect(() => {
-    async function getPost() {
-      let postRef = await firebase
-        .firestore()
-        .collection("posts")
-        .doc(documentRef);
-      setPostRef(postRef);
-      const postInfo = await postRef.get();
-      setPostData(postInfo.data());
+  async function getPost() {
+    let postRef = firebase.firestore().collection("posts").doc(documentRef);
+    setPostRef(postRef);
+    const postInfo = await postRef.get();
+
+    setPostData(postInfo.data());
+    setPlusplusCount(postInfo.data().plusplusCount);
+
+    if (!postInfo.data().plusplusList) {
+      return;
     }
-    getPost();
-  }, []);
+
+    if (postInfo.data().plusplusList.includes(currentUser.uid)) {
+      setButtonState(false);
+    }
+  }
 
   useEffect(() => {
-    if (postData) {
-      setPlusplusCount(postData.plusplusCount);
-      if (!postData.plusplusList) {
-        return;
-      }
-      if (postData.plusplusList.includes(currentUser.uid)) {
-        setButtonState(false);
-      }
-    }
-  }, [postData]);
+    getPost();
+  }, []);
 
   async function upvoteHandler() {
     if (!buttonState) {
@@ -116,6 +111,7 @@ const PlusPlusButton = ({ documentRef, size }) => {
       await postRef.update({ plusplusCount: plusplusCount + 1 });
     }
   }
+
   if (size === "small") {
     return (
       <Grid

@@ -149,7 +149,6 @@ export default function Landing() {
       followingList.push(followingData.docs[0].data());
     }
     setUserFollowing(followingList);
-    console.log(followingList);
     setFollowingUIDs(followingList.map((user) => user.uid));
   }
 
@@ -214,7 +213,7 @@ export default function Landing() {
       setTags(tagsArr);
     });
     isInitialMount.current = false;
-  }, []);
+  }, [frontPageSort]);
 
   async function followUser(userUIDToFollow) {
     const userObjLoc = await firebase
@@ -327,6 +326,9 @@ export default function Landing() {
                       ? classes.sortButtonSelected
                       : classes.sortButton
                   }
+                  onClick={() => {
+                    setFrontPageSort("timestamp");
+                  }}
                 >
                   <Typography variant="h1" style={{ fontSize: "1.2em" }}>
                     Recent
@@ -339,6 +341,9 @@ export default function Landing() {
                       ? classes.sortButtonSelected
                       : classes.sortButton
                   }
+                  onClick={() => {
+                    setFrontPageSort("plusplusCount");
+                  }}
                 >
                   <Typography variant="h1" style={{ fontSize: "1.2em" }}>
                     Top
@@ -466,6 +471,7 @@ export default function Landing() {
                       </Grid>
 
                       <PlusPlusButton
+                        frontPageSort={frontPageSort}
                         documentRef={post.postId}
                         size="small"
                         style={{ marginRight: "3em" }}
