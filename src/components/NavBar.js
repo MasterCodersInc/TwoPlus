@@ -11,10 +11,6 @@ import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import logo from "../assets/logo.png";
-import Lottie from "react-lottie";
-import animationData from "../lotties/animation_kkyxn6gq.json";
-
-// import logoAni from "../assets/logoAni.json";
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -63,12 +59,10 @@ export default function NavBar() {
   const theme = useTheme();
   const history = useHistory();
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
   const { firestoreUser, currentUser, logout } = useAuth();
 
   async function handleLogout() {
     setError("");
-
     try {
       await logout();
       history.push("/login");
@@ -77,33 +71,6 @@ export default function NavBar() {
     }
   }
 
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
-
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 2000);
-  }, []);
-
-  if (loading) {
-    return (
-      <Box style={{ height: "100vh", width: "100vw" }}>
-        <Grid
-          item
-          justify="center"
-          alignItems="center"
-          style={{ marginTop: "20%" }}
-        >
-          <Lottie options={defaultOptions} height={400} width={400} />
-        </Grid>
-      </Box>
-    );
-  }
   return (
     <React.Fragment>
       <AppBar className={classes.appBar}>
@@ -133,6 +100,7 @@ export default function NavBar() {
                 </Button>
                 {firestoreUser?.isAdmin && (
                   <Tab
+                    value={false}
                     component={Link}
                     to="/users"
                     label="Users"
@@ -141,6 +109,7 @@ export default function NavBar() {
                 )}
                 {firestoreUser?.isAdmin && (
                   <Tab
+                    value={false}
                     component={Link}
                     to="/signup"
                     label="Sign Up"
@@ -148,6 +117,7 @@ export default function NavBar() {
                   />
                 )}
                 <Tab
+                  value={false}
                   component={Link}
                   to="/profile"
                   label="Account"
@@ -157,12 +127,14 @@ export default function NavBar() {
             ) : (
               <Tabs>
                 <Tab
+                  value={false}
                   component={Link}
                   to="/login"
                   label="Sign In"
                   className={classes.tab}
                 />
                 <Tab
+                  value={false}
                   component={Link}
                   to="/signup"
                   label="Sign Up"

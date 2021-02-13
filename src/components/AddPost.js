@@ -327,7 +327,7 @@ const AddPost = ({ history }) => {
                 {imageURL && (
                   <div>
                     <Typography variant="body1">File to Upload:</Typography>
-                    <img style={{ width: 150, height: 150 }} src={imageURL} />
+                    <img style={{ width: 150, height: 150 }} src={imageURL} alt='profile' />
                   </div>
                 )}
               </div>

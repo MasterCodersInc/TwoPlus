@@ -69,6 +69,7 @@ export default function MyPosts() {
   const theme = useTheme();
   const [user, setUser] = useState({});
   const [userPosts, setUserPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { currentUser } = useAuth();
   const db = firebase.firestore();
   const email = currentUser.email;
@@ -89,8 +90,13 @@ export default function MyPosts() {
       let postsArr = postObj.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
       setUserPosts(postsArr);
     });
+
+    setLoading(false);
   }, []);
 
+  if(loading){
+    return <div>Loading...</div>
+  }
   return (
     <Grid container style={{ minHeight: "53.5vh" }}>
       <Grid item container direction="column">

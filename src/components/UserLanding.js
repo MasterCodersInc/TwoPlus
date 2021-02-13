@@ -20,6 +20,8 @@ import openPost from "../assets/openPostCircle.svg";
 import closedPost from "../assets/closedPostCircle.svg";
 import DeletePost from "./DeletePost";
 import { useAuth } from "../contexts/AuthContext";
+import Loading from './Loading'
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -104,12 +106,9 @@ export default function Landing() {
   const [tags, setTags] = useState([]);
   const [userFollowing, setUserFollowing] = useState([]);
   const [followingUIDs, setFollowingUIDs] = useState([]);
-
-  const followButtonRef = React.useRef();
+  const [loading, setLoading] = useState(true);
 
   const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
-  const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
-
   const isInitialMount = React.useRef(true);
 
   useEffect(() => {
@@ -120,7 +119,7 @@ export default function Landing() {
     if (tags && firestoreUser) {
       getFollowing();
     }
-  },[userFollowing]);
+  });
 
   async function updatePhotos(arr) {
     const postCopy = arr.slice();
@@ -195,6 +194,9 @@ export default function Landing() {
       }));
       setTags(tagsArr);
     });
+
+    setTimeout(() => setLoading(false), 1000);
+
   }, []);
 
   async function followUser(userUIDToFollow) {
@@ -217,6 +219,9 @@ export default function Landing() {
       .update({ followers: arrayUnion(firestoreUser.uid) });
   }
 
+  if(loading){
+    return <Loading />
+  }
   return (
     <Grid container direction="column" className={classes.container}>
       <Grid item container style={{ marginTop: "5em" }}>
@@ -251,7 +256,7 @@ export default function Landing() {
             </div>
           ))}
 
-          <Typography style={{ marginBottom: ".5em", marginTop: "2.5em", fontSize: '1.3em' }}>
+          <Typography style={{ marginBottom: ".5em", marginTop: "4.5em", fontSize: '1.3em' }}>
             Followed Users
           </Typography>
           {userFollowing &&
@@ -262,7 +267,7 @@ export default function Landing() {
                   to={`/users/${user.uid}`}
                   variant="body2"
                   className={(classes.popTopLi, classes.postLink3)}
-                  // style={{ marginBottom: "1em" }}
+                  style={{ marginBottom: "1em" }}
                 >
                   {user.userName}
                 </Typography>
