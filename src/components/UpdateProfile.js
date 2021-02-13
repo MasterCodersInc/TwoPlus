@@ -47,17 +47,19 @@ export default function UpdateProfile() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
-    const promises = [];
-    setLoading(true);
-    setError("");
-    if(password === currentUser.password){
-      await firebase.firestore().collection('users').doc(`${firestoreUser.userDocRef}`).update({firstName, lastName, email})
+    const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, password)
+    const authenticatedUser = await currentUser.reauthenticateWithCredential(credential)
+    if(authenticatedUser){
+      const res = await firebase.firestore().collection('users').doc(`${firestoreUser.userDocRef}`).update({firstName:firstName, lastName: lastName, email:email})
       if (email !== currentUser.email) {
         await updateEmail(email);
       }
+      if(res){
+        setError('Successfully updated your account')
+      } else{
+        setError('Unable to update your account')
+      }
     }
-    setError('Successfully updated your account')
     setLoading(false);
   }
 
@@ -95,7 +97,8 @@ export default function UpdateProfile() {
           <form onSubmit={handleSubmit} className={classes.form}>
             <TextField
               label="First Name"
-              onChange={(e) => setFirstName(e.currentTarget.value)}
+              value={firstName}
+              onChange={(e) =>setFirstName(e.currentTarget.value)}
               fullWidth
               variant="filled"
               style={{ marginTop: "1em", marginBottom: "1em" }}
