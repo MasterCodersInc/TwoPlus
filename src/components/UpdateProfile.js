@@ -41,7 +41,7 @@ export default function UpdateProfile() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { currentUser, updatePassword, updateEmail } = useAuth();
+  const { currentUser, firestoreUser, updatePassword, updateEmail } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -51,30 +51,14 @@ export default function UpdateProfile() {
     const promises = [];
     setLoading(true);
     setError("");
-    if (email !== currentUser.email) {
-      promises.push(updateEmail(email));
+    if(password === currentUser.password){
+      await firebase.firestore().collection('users').doc(`${firestoreUser.userDocRef}`).update({firstName, lastName, email})
+      if (email !== currentUser.email) {
+        await updateEmail(email);
+      }
     }
-    if (password !== currentUser.password) {
-      promises.push(updatePassword(password));
-    }
-    if (firstName !== currentUser.firstName) {
-      promises.push(
-        firebase.firestore().collection("users").update({ firstName })
-      );
-    }
-    if (lastName !== currentUser.lastName) {
-      promises.push(firebase.firestore().collection("users").add({ lastName }));
-    }
-    Promise.all(promises)
-      .then(() => {
-        history.push("/");
-      })
-      .catch(() => {
-        setError("Failed to update account");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    setError('Successfully updated your account')
+    setLoading(false);
   }
 
   return (
@@ -135,7 +119,7 @@ export default function UpdateProfile() {
             <TextField
               name="password"
               type="password"
-              label="Password"
+              label="Confirm Password"
               onChange={(e) => setPassword(e.currentTarget.value)}
               fullWidth
               variant="filled"
