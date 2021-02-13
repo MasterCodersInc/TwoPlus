@@ -90,6 +90,24 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.common.colorThree,
     },
   },
+  sortButton: {
+    cursor: "pointer",
+    backgroundColor: theme.palette.common.colorFive,
+    "&:hover": {
+      backgroundColor: theme.palette.common.colorFour,
+    },
+    padding: 5,
+    borderRadius: 10,
+    marginRight: "1em",
+  },
+  sortButtonSelected: {
+    cursor: "pointer",
+    backgroundColor: theme.palette.common.colorFour,
+    color: theme.palette.common.colorOne,
+    padding: 5,
+    borderRadius: 10,
+    marginRight: "1em",
+  },
 }));
 
 export default function Landing() {
@@ -102,6 +120,7 @@ export default function Landing() {
   const [tags, setTags] = useState([]);
   const [userFollowing, setUserFollowing] = useState([]);
   const [followingUIDs, setFollowingUIDs] = useState([]);
+  const [frontPageSort, setFrontPageSort] = useState("timestamp");
 
   const followButtonRef = React.useRef();
 
@@ -112,13 +131,27 @@ export default function Landing() {
 
   useEffect(() => {
     if (isInitialMount.current) {
-      isInitialMount.current = false;
-    }
-
-    if (tags && firestoreUser) {
+      return;
+    } else {
       getFollowing();
+      isInitialMount.current = true;
     }
   });
+
+  async function getFollowing() {
+    let followingList = [];
+    for (const user of firestoreUser.following) {
+      const followingRef = firebase
+        .firestore()
+        .collection("users")
+        .where("uid", "==", user);
+      const followingData = await followingRef.get();
+      followingList.push(followingData.docs[0].data());
+    }
+    setUserFollowing(followingList);
+    console.log(followingList);
+    setFollowingUIDs(followingList.map((user) => user.uid));
+  }
 
   async function updatePhotos(arr) {
     const postCopy = arr.slice();
@@ -132,25 +165,12 @@ export default function Landing() {
     setPosts(postCopy);
   }
 
-  async function getFollowing() {
-    let followingList = [];
-    for (const user of firestoreUser.following) {
-      const followingRef = firebase
-        .firestore()
-        .collection("users")
-        .where("uid", "==", user);
-      const followingData = await followingRef.get();
-      followingList.push(followingData.docs[0].data());
-    }
-    setUserFollowing(followingList);
-  }
-
   useEffect(() => {
     const postsLoc = firebase
       .firestore()
       .collection("posts")
       .where("postType", "==", "live")
-      .orderBy("timestamp", "desc")
+      .orderBy(frontPageSort, "desc")
       .limit(6);
 
     postsLoc
@@ -169,7 +189,7 @@ export default function Landing() {
     const discussLoc = firebase
       .firestore()
       .collection("posts")
-      .orderBy("timestamp", "desc")
+      .orderBy(frontPageSort, "desc")
       .where("postType", "==", "discuss")
       .limit(6);
 
@@ -193,6 +213,7 @@ export default function Landing() {
       }));
       setTags(tagsArr);
     });
+    isInitialMount.current = false;
   }, []);
 
   async function followUser(userUIDToFollow) {
@@ -271,16 +292,7 @@ export default function Landing() {
           <Grid item>
             <Typography variant="h1">Your Feed</Typography>
           </Grid>
-          <Grid
-            item
-            container
-            alignItems="center"
-            style={{ marginTop: "1.5em" }}
-          >
-            <Typography variant="h1" style={{ fontSize: "1.5em" }}>
-              Recent Q's
-            </Typography>
-          </Grid>
+
           <Grid
             item
             container
@@ -302,6 +314,37 @@ export default function Landing() {
               >
                 <img src={addButt} alt="add button" />
               </Button>
+              <Grid
+                item
+                container
+                alignItems="center"
+                style={{ marginTop: "1.5em" }}
+              >
+                <Grid
+                  item
+                  className={
+                    frontPageSort === "timestamp"
+                      ? classes.sortButtonSelected
+                      : classes.sortButton
+                  }
+                >
+                  <Typography variant="h1" style={{ fontSize: "1.2em" }}>
+                    Recent
+                  </Typography>
+                </Grid>
+                <Grid
+                  item
+                  className={
+                    frontPageSort === "plusplusCount"
+                      ? classes.sortButtonSelected
+                      : classes.sortButton
+                  }
+                >
+                  <Typography variant="h1" style={{ fontSize: "1.2em" }}>
+                    Top
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
             {posts &&
               posts.map((post, index) => {
