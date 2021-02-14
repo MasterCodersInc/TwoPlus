@@ -41,40 +41,26 @@ export default function UpdateProfile() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { currentUser, updatePassword, updateEmail } = useAuth();
+  const { currentUser, firestoreUser, updatePassword, updateEmail } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
-
-    const promises = [];
-    setLoading(true);
-    setError("");
-    if (email !== currentUser.email) {
-      promises.push(updateEmail(email));
+    const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, password)
+    const authenticatedUser = await currentUser.reauthenticateWithCredential(credential)
+    if(authenticatedUser){
+      const res = await firebase.firestore().collection('users').doc(`${firestoreUser.userDocRef}`).update({firstName:firstName, lastName: lastName, email:email})
+      if (email !== currentUser.email) {
+        await updateEmail(email);
+      }
+      if(res){
+        setError('Successfully updated your account')
+      } else{
+        setError('Unable to update your account')
+      }
     }
-    if (password !== currentUser.password) {
-      promises.push(updatePassword(password));
-    }
-    if (firstName !== currentUser.firstName) {
-      promises.push(
-        firebase.firestore().collection("users").update({ firstName })
-      );
-    }
-    if (lastName !== currentUser.lastName) {
-      promises.push(firebase.firestore().collection("users").add({ lastName }));
-    }
-    Promise.all(promises)
-      .then(() => {
-        history.push("/");
-      })
-      .catch(() => {
-        setError("Failed to update account");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    setLoading(false);
   }
 
   return (
@@ -111,7 +97,8 @@ export default function UpdateProfile() {
           <form onSubmit={handleSubmit} className={classes.form}>
             <TextField
               label="First Name"
-              onChange={(e) => setFirstName(e.currentTarget.value)}
+              value={firstName}
+              onChange={(e) =>setFirstName(e.currentTarget.value)}
               fullWidth
               variant="filled"
               style={{ marginTop: "1em", marginBottom: "1em" }}
@@ -135,7 +122,7 @@ export default function UpdateProfile() {
             <TextField
               name="password"
               type="password"
-              label="Password"
+              label="Confirm Password"
               onChange={(e) => setPassword(e.currentTarget.value)}
               fullWidth
               variant="filled"
