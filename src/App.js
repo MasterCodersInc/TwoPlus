@@ -4,8 +4,6 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "./components/theme";
 
-import firebase from "./firebase";
-
 import ChatRoom from "./components/ChatRoom";
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -26,12 +24,11 @@ import UserLanding from "./components/UserLanding";
 import PublicProfile from "./components/PublicProfile";
 import GuestLanding from "./components/GuestLanding";
 import Posts from "./components/Posts";
-import UserFollowers from "./components/UserFollowers";
 import UserFollowing from "./components/UserFollowing";
-import AllUsersIn2Plus from "./components/AllUsersIn2+";
 import Footer from "./components/Footer";
 import PublicFollowers from "./components/PublicFollowers";
 import PublicFollowing from "./components/PublicFollowing";
+import NotFound from './components/NotFound'
 
 function App() {
   return (
@@ -74,6 +71,7 @@ function App() {
             <Redirect from="/userhome/deleted" to="/userhome" />
             <Route exact path="/userhome" component={UserLanding} />
             <Route exact path="/guesthome" component={GuestLanding} />
+            <Route component={NotFound} />
           </Switch>
           <Footer />
         </AuthProvider>
