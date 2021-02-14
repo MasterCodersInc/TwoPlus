@@ -4,7 +4,7 @@ import { useLocation, Link, useHistory } from "react-router-dom";
 import firebase from "../firebase";
 import Box from "@material-ui/core/Box";
 import * as timeago from "timeago.js";
-// import logoSpin from "../assets/logo-spin.gif";
+import Loading from './Loading';
 
 const useStyles = makeStyles((theme) => ({
   searchPage: {
@@ -58,7 +58,7 @@ const Posts = (props) => {
   const postsRef = firebase.firestore().collection("posts");
 
   //states
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState();
 
   //query
   const location = useLocation();
@@ -101,18 +101,9 @@ const Posts = (props) => {
     }
   }
 
-  //     if(!posts){
-  //         return (
-  //             <Grid container
-  //             height="100%"
-  //             justify='center'
-  //             alignItems='center'
-  //             >
-  //                 <img src={logoSpin} className={classes.loading}/>
-  //           </Grid>
-  //         )
-  //     }
-
+  if(!posts){
+      return <Loading />
+  }
   return (
     <Grid className={classes.searchPage}>
       <Typography className={classes.pageHeader} variant="h1">
@@ -153,7 +144,7 @@ const Posts = (props) => {
                 </Typography>
               </Typography>
               <Typography variant="body2">
-                {timeago.format(post.timestamp.seconds * 1000)}
+                {timeago.format(post.timestamp)}
               </Typography>
             </Grid>
           </Box>
