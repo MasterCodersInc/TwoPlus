@@ -147,19 +147,20 @@ export default function Landing() {
     setPosts(postCopy);
   }
 
-
   async function getFollowing() {
-    let followingList = [];
-    for (const user of firestoreUser.following) {
-      const followingRef = firebase
-        .firestore()
-        .collection("users")
-        .where("uid", "==", user);
-      const followingData = await followingRef.get();
-      followingList.push(followingData.docs[0].data());
+    if (firestoreUser) {
+      let followingList = [];
+      for (const user of firestoreUser?.following) {
+        const followingRef = firebase
+          .firestore()
+          .collection("users")
+          .where("uid", "==", user);
+        const followingData = await followingRef.get();
+        followingList.push(followingData.docs[0].data());
+      }
+      setUserFollowing(followingList);
+      setFollowingUIDs(followingList.map((user) => user.uid));
     }
-    setUserFollowing(followingList);
-    setFollowingUIDs(followingList.map((user) => user.uid));
   }
 
   async function updatePhotos(arr) {
@@ -257,10 +258,19 @@ export default function Landing() {
             item
             container
             direction="column"
-            className={classes.popTopCont}
             lg={2}
+            style={{
+              width: matchesMD ? "95%" : undefined,
+              marginLeft: matchesMD ? "5%" : undefined,
+            }}
           >
-            <Typography style={{ marginBottom: "1em", marginTop: "4.5em" }}>
+            <Typography
+              style={{
+                marginBottom: "1em",
+                marginTop: "4.5em",
+                fontSize: "1.3em",
+              }}
+            >
               Popular Topics
             </Typography>
 
@@ -284,7 +294,13 @@ export default function Landing() {
               </div>
             ))}
 
-            <Typography style={{ marginBottom: ".5em", marginTop: "4.5em" }}>
+            <Typography
+              style={{
+                marginBottom: ".5em",
+                marginTop: "4.5em",
+                fontSize: "1.3em",
+              }}
+            >
               Followed Users
             </Typography>
             {userFollowing &&
@@ -303,71 +319,6 @@ export default function Landing() {
               })}
           </Grid>
         </Hidden>
-        <Grid
-          item
-          container
-          direction="column"
-          lg
-          style={{
-            width: matchesMD ? "95%" : undefined,
-            marginLeft: matchesMD ? "20%" : undefined,
-          }}
-        >
-          <Typography
-            style={{
-              marginBottom: "1em",
-              marginTop: "4.5em",
-              fontSize: "1.3em",
-            }}
-          >
-
-            Popular Topics
-          </Typography>
-
-          {tags.map((tag, idx) => (
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <div>
-                <Typography variant="body2" className={classes.popTopLi}>
-                  {idx}. &nbsp;
-                </Typography>
-              </div>
-              <div>
-                <Typography
-                  variant="body2"
-                  className={(classes.popTopLi, classes.postLink3)}
-                  component={Link}
-                  to={`/posts?tag=${tag.name}`}
-                >
-                  #{tag.name}
-                </Typography>
-              </div>
-            </div>
-          ))}
-
-          <Typography
-            style={{
-              marginBottom: ".5em",
-              marginTop: "4.5em",
-              fontSize: "1.3em",
-            }}
-          >
-            Followed Users
-          </Typography>
-          {userFollowing &&
-            userFollowing.map((user) => {
-              return (
-                <Typography
-                  component={Link}
-                  to={`/users/${user.uid}`}
-                  variant="body2"
-                  className={(classes.popTopLi, classes.postLink3)}
-                  style={{ marginBottom: "1em" }}
-                >
-                  {user.userName}
-                </Typography>
-              );
-            })}
-        </Grid>
         <Grid item container direction="column" lg>
           <Grid item>
             <Typography variant="h1">Your Feed</Typography>
@@ -507,7 +458,7 @@ export default function Landing() {
                           {post.userName}
                         </Typography>
                         <div></div>
-                        {followingUIDs && (
+                        {followingUIDs && firestoreUser && (
                           <FrontPageFollowButton
                             followUser={followUser}
                             firestoreUser={firestoreUser}
