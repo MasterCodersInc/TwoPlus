@@ -51,7 +51,6 @@ export default function SignUp() {
     try {
       setError("");
       setLoading(true);
-      console.log("!!!!!", email, password);
       await login(email, password);
 
       history.push("/userhome");

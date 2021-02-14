@@ -20,6 +20,8 @@ import openPost from "../assets/openPostCircle.svg";
 import closedPost from "../assets/closedPostCircle.svg";
 import DeletePost from "./DeletePost";
 import { useAuth } from "../contexts/AuthContext";
+import Loading from './Loading'
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -31,8 +33,9 @@ const useStyles = makeStyles((theme) => ({
     width: "30%",
   },
   popTopLi: {
-    marginTop: ".5em",
-    marginBottom: ".5em",
+    marginTop: ".2em",
+    marginBottom: ".2em",
+    fontSize: '1em'
   },
   testBox: {
     backgroundColor: "black",
@@ -76,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: theme.palette.common.colorOne,
     fontWeight: 600,
+    fontSize: '0.9em',
     width: "90%",
     "&:hover": {
       color: "black",
@@ -121,12 +125,10 @@ export default function Landing() {
   const [userFollowing, setUserFollowing] = useState([]);
   const [followingUIDs, setFollowingUIDs] = useState([]);
   const [frontPageSort, setFrontPageSort] = useState("timestamp");
-
+  const [loading, setLoading] = useState(true);
+  
   const followButtonRef = React.useRef();
-
   const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
-  const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
-
   const isInitialMount = React.useRef(true);
 
   useEffect(() => {
@@ -183,6 +185,8 @@ export default function Landing() {
       })
       .then((postsArr) => {
         updatePhotos(postsArr);
+        isInitialMount.current = false;
+
       });
 
     const discussLoc = firebase
@@ -212,8 +216,10 @@ export default function Landing() {
       }));
       setTags(tagsArr);
     });
-    isInitialMount.current = false;
-  }, [frontPageSort]);
+
+    setTimeout(() => setLoading(false), 1000);
+  }, []);
+
 
   async function followUser(userUIDToFollow) {
     const userObjLoc = await firebase
@@ -235,6 +241,9 @@ export default function Landing() {
       .update({ followers: arrayUnion(firestoreUser.uid) });
   }
 
+  if(loading){
+    return <Loading />
+  }
   return (
     <Grid container direction="column" className={classes.container}>
       <Grid item container style={{ marginTop: "5em" }}>
@@ -245,7 +254,7 @@ export default function Landing() {
           className={classes.popTopCont}
           lg={2}
         >
-          <Typography style={{ marginBottom: "1em", marginTop: "4.5em" }}>
+          <Typography style={{ marginBottom: "1em", marginTop: "4.5em", fontSize: '1.3em' }}>
             Popular Topics
           </Typography>
 
@@ -269,7 +278,7 @@ export default function Landing() {
             </div>
           ))}
 
-          <Typography style={{ marginBottom: ".5em", marginTop: "4.5em" }}>
+          <Typography style={{ marginBottom: ".5em", marginTop: "4.5em", fontSize: '1.3em' }}>
             Followed Users
           </Typography>
           {userFollowing &&

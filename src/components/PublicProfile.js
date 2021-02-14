@@ -235,7 +235,7 @@ export default function PublicProfile() {
                             style={{ fontFamily: "Montserrat" }}
                           >
                             Asked{" "}
-                            {timeago.format(post.timestamp.seconds * 1000)}
+                            {timeago.format(post.timestamp)}
                           </Typography>
                         )}
                         {post.postType && (
