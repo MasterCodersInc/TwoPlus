@@ -52,6 +52,11 @@ function App() {
               path="/userFollowings"
               component={UserFollowing}
             />
+            <PrivateRoute
+            exact
+            path="/userFollowers"
+            component={UserFollowers}
+          />
             <Route exact path="/posts/add" component={AddPost} />
             <Route exact path="/posts" component={Posts} />
             <Route exact path="/posts/:postId" component={Post} />

@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import EditorUID from "./EditorUID";
-import { useAuth } from "../contexts/AuthContext";
-import ChatRoom from "./ChatRoom";
-import firebase from "../firebase";
-import { Typography, Button, Grid } from "@material-ui/core";
-import { useTheme, makeStyles } from "@material-ui/core/styles";
-import DiscussPost from "./DiscussPost";
-import DeletePost from "./DeletePost";
-import PlusPlusButton from "./PlusPlusButton";
-
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import EditorUID from './EditorUID';
+import { useAuth } from '../contexts/AuthContext';
+import ChatRoom from './ChatRoom';
+import firebase from '../firebase';
+import { Typography, Button, Grid } from '@material-ui/core';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
+import DiscussPost from './DiscussPost';
+import DeletePost from './DeletePost';
+import PlusPlusButton from './PlusPlusButton';
+import ChatIcon from '@material-ui/icons/Chat';
 const useStyles = makeStyles((theme) => ({
   button1: {
-    color: "white",
+    color: 'white',
     backgroundColor: theme.palette.common.colorTwo,
   },
   link: {
@@ -23,8 +23,8 @@ const useStyles = makeStyles((theme) => ({
   },
   livePost: {
     minWidth: '47.5vw',
-    minHeight: '47.5vh'
-  }
+    minHeight: '47.5vh',
+  },
 }));
 
 const Post = (props) => {
@@ -32,9 +32,9 @@ const Post = (props) => {
   const theme = useTheme();
   const { currentUser, firestoreUser } = useAuth();
   const { postId } = useParams();
-  const [post, setPost] = useState("");
+  const [post, setPost] = useState('');
   const [enableCollab, setEnableCollab] = useState(false);
-  const buttonName = post.isActive ? "Close Post" : "Open Post";
+  const buttonName = post.isActive ? 'Close Post' : 'Open Post';
   const colorToToggleActive = post?.isActive
     ? theme.palette.common.colorRed
     : theme.palette.common.colorGreen;
@@ -43,7 +43,7 @@ const Post = (props) => {
     : theme.palette.common.colorGreenHover;
 
   //get post's doc reference
-  const postRef = firebase.firestore().collection("posts").doc(`${postId}`);
+  const postRef = firebase.firestore().collection('posts').doc(`${postId}`);
 
   //get post from database
   useEffect(() => {
@@ -71,10 +71,10 @@ const Post = (props) => {
     return <div>Loading...</div>;
   }
 
-  if (post.postType === "discuss" || post.postType === "you") {
+  if (post.postType === 'discuss' || post.postType === 'you') {
     return <DiscussPost post={post} />;
   }
-  if (post.postType === "live") {
+  if (post.postType === 'live') {
     return (
       <Grid container className={classes.livePost}>
         <Grid
@@ -87,31 +87,31 @@ const Post = (props) => {
             item
             container
             direction="column"
-            style={{ marginLeft: "3.2em" }}
+            style={{ marginLeft: '3.2em' }}
           >
-            {" "}
+            {' '}
             <Grid
               container
               direction="row"
               alignItems="center"
-              style={{ marginBottom: "1.5em" }}
+              style={{ marginBottom: '1.5em' }}
             >
-              <Grid item style={{ marginRight: "2em" }}>
+              <Grid item style={{ marginRight: '2em' }}>
                 <PlusPlusButton documentRef={postId} />
               </Grid>
               <Grid item alignContent="flex-end">
-                <Typography variant="h2">{post?.title || ""}</Typography>
+                <Typography variant="h2">{post?.title || ''}</Typography>
                 <Typography
                   variant="body2"
-                  style={{ marginTop: "1em", marginBottom: "1em" }}
+                  style={{ marginTop: '1em', marginBottom: '1em' }}
                 >
-                  {post.description || ""}
+                  {post.description || ''}
                 </Typography>
                 <Grid item container direction="row">
                   {post.tags.map((tag) => (
                     <Link
                       className={classes.link}
-                      style={{ marginRight: "1em" }}
+                      style={{ marginRight: '1em' }}
                       to={`/posts?tag=${tag}`}
                     >
                       #{tag}
@@ -121,7 +121,7 @@ const Post = (props) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item container style={{ marginTop: ".6em" }}>
+          <Grid item container style={{ marginTop: '.6em' }}>
             {currentUser &&
               (currentUser.uid === post.userRef || firestoreUser?.isAdmin) && (
                 <Grid item container>
@@ -146,7 +146,8 @@ const Post = (props) => {
               enableCollab={enableCollab}
             />
           </Grid>
-          <Grid item lg style={{ maxWidth: "25em", marginLeft: "-2em" }}>
+          <div />
+          <Grid item lg style={{ maxWidth: '25em', marginLeft: '-2em' }}>
             <ChatRoom
               disabled={!post?.isActive}
               postId={postId}
