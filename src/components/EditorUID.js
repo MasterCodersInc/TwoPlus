@@ -14,9 +14,8 @@ const collabData = firestore.collection("posts");
 
 const useStyles = makeStyles((theme) => ({
   buttonEval: {
-    color: "#fff",
-    backgroundColor: theme.palette.common.colorOne,
-    height: "fit-content",
+    ...theme.button.normal,
+    marginTop: "2em",
   },
 }));
 
@@ -51,8 +50,11 @@ const EditorUID = ({ disabled, enableCollab }) => {
       let documentData = documentInfo.current.data();
       ownerId.current = documentData.userRef;
       editor.current.setValue(documentData.editorData);
+      editorOutput.current.editor.setValue(
+        "//Hi developers! Just a heads up ,this second editor can only \n//handle the returned values of functions. However if you want \n//to console.log() something from the code editor on the left,\n//it will show up in your browser's dev tools!"
+      );
+      editorOutput.current.editor.setReadOnly(true);
 
-      //set up editor event listener. This is mostly for newUsers entering.
       editor.current.on("change", (e) => {
         if (applyingDeltas) {
           return;
@@ -67,6 +69,7 @@ const EditorUID = ({ disabled, enableCollab }) => {
       documentReference.current.onSnapshot(async () => {
         let updatedInfoRef = await documentReference.current.get();
         let updatedInfo = updatedInfoRef.data();
+        if (!updatedInfo) return;
         let userWhoMadeChanges = updatedInfo.docChanges[0].changeID;
 
         if (userWhoMadeChanges === uid) {
@@ -93,27 +96,35 @@ const EditorUID = ({ disabled, enableCollab }) => {
 
   return (
     <>
-      <Grid container>
-        <div style={{ display: "flex", flexDirection: "row", marginLeft: 50 }}>
-          <AceEditor ref={reactAceRef} mode="javascript" theme="chaos" />
-          <AceEditor ref={editorOutput} mode="javascript" />
-        </div>
-        {/* evaluate code in editor */}
-        <Button
-          classes={{ root: classes.buttonEval }}
-          style={{ root: { fontFamily: "Montserrat" } }}
-          onClick={() => {
-            try {
-              let ans = eval(reactAceRef.current.editor.getValue());
-              editorOutput.current.editor.setValue(String(ans), 1);
-            } catch (e) {
-              editorOutput.current.editor.setValue(e.message, 1);
-            }
-            return;
+      <Grid container direction="column" style={{ marginTop: "2em" }}>
+        <Grid
+          item
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            marginLeft: 50,
+            width: "90%",
           }}
         >
-          EVAL CODE
-        </Button>
+          <AceEditor ref={reactAceRef} mode="javascript" theme="chaos" />
+          <AceEditor ref={editorOutput} mode="javascript" />
+        </Grid>
+        <Grid item>
+          <Button
+            classes={{ root: classes.buttonEval }}
+            onClick={() => {
+              try {
+                let ans = eval(reactAceRef.current.editor.getValue());
+                editorOutput.current.editor.setValue(String(ans), 1);
+              } catch (e) {
+                editorOutput.current.editor.setValue(e.message, 1);
+              }
+              return;
+            }}
+          >
+            RUN CODE
+          </Button>
+        </Grid>
       </Grid>
     </>
   );

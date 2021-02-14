@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
-
 import { useAuth } from "../contexts/AuthContext";
-
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Grid from "@material-ui/core/Grid";
@@ -10,8 +8,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-
 import logo from "../assets/logo.png";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,10 +34,23 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.common.colorOne,
     fontWeight: 600,
     fontFamily: "Montserrat",
-    fontSize: ".8em",
+    fontSize: "0.99em",
     textTransform: "none",
     padding: 0,
     width: "3em",
+  },
+  loading: {
+    height: "100%",
+  },
+  button2: {
+    backgroundColor: theme.palette.common.colorOne,
+    color: "white",
+    height: "2em",
+    alignSelf: "center",
+    fontFamily: "Montserrat",
+    "&:hover": {
+      color: "black",
+    },
   },
 }));
 
@@ -52,7 +63,6 @@ export default function NavBar() {
 
   async function handleLogout() {
     setError("");
-
     try {
       await logout();
       history.push("/login");
@@ -60,9 +70,7 @@ export default function NavBar() {
       setError("Failed to log out");
     }
   }
-  if (!firestoreUser && currentUser) {
-    return <div>Loading...</div>;
-  }
+
   return (
     <React.Fragment>
       <AppBar className={classes.appBar}>
@@ -90,16 +98,18 @@ export default function NavBar() {
                 >
                   Log Out
                 </Button>
-                {firestoreUser.isAdmin && (
+                {firestoreUser?.isAdmin && (
                   <Tab
+                    value={false}
                     component={Link}
                     to="/users"
                     label="Users"
                     className={classes.tab}
                   />
                 )}
-                {firestoreUser.isAdmin && (
+                {firestoreUser?.isAdmin && (
                   <Tab
+                    value={false}
                     component={Link}
                     to="/signup"
                     label="Sign Up"
@@ -107,6 +117,7 @@ export default function NavBar() {
                   />
                 )}
                 <Tab
+                  value={false}
                   component={Link}
                   to="/profile"
                   label="Account"
@@ -116,12 +127,14 @@ export default function NavBar() {
             ) : (
               <Tabs>
                 <Tab
+                  value={false}
                   component={Link}
                   to="/login"
                   label="Sign In"
                   className={classes.tab}
                 />
                 <Tab
+                  value={false}
                   component={Link}
                   to="/signup"
                   label="Sign Up"

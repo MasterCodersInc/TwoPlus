@@ -19,6 +19,9 @@
 .env.test.local
 .env.production.local
 .eslintcache
+functions
+/functions
+/function/node_modules
 
 npm-debug.log*
 yarn-debug.log*

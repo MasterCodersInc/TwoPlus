@@ -6,11 +6,10 @@ const colorThree = "#9CCBF4";
 const colorFour = "#BEBEBE";
 const colorFive = "#F5F5FA";
 const colorWhite = "#fff";
-const colorRed = '#f44336'; 
-const colorGreen = '#68b36b';
-const colorRedHover = '#aa2e25'; 
-const colorGreenHover = '#357a38'; 
-
+const colorRed = "#f44336";
+const colorGreen = "#68b36b";
+const colorRedHover = "#aa2e25";
+const colorGreenHover = "#357a38";
 
 export default createMuiTheme({
   spacing: 4,
@@ -63,6 +62,28 @@ export default createMuiTheme({
       fontSize: ".6em",
       fontWeight: 400,
       fontFamily: "Montserrat",
+    },
+  },
+  button: {
+    normal: {
+      marginLeft: "3.3em",
+      backgroundColor: colorOne,
+      color: "#fff",
+      fontFamily: "Montserrat",
+      '&:hover': {
+        color: 'black'
+      }
+    },
+  },
+  link: {
+    normal: {
+      textDecoration: "none",
+      backgroundColor: colorOne,
+      color: "#fff",
+      fontFamily: "Montserrat",
+      padding: ".3em",
+      fontSize: ".8em",
+      borderRadius: 10,
     },
   },
 });

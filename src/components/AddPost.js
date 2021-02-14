@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   TextField,
   Button,
@@ -57,9 +57,15 @@ const useStyles = makeStyles((theme) => ({
     margin: "5px",
     padding: "5px",
     width: "fit-content",
+    fontFamily: "Montserrat",
+    fontWeight: "500",
   },
   tagInput: {
+    display:'flex',
     background: "none",
+    width: '100%',
+    alignItems: 'center',
+    justifyContent:'center',
     flexGrow: "1",
   },
   removeTag: {
@@ -79,6 +85,9 @@ const useStyles = makeStyles((theme) => ({
     transform: "rotate(45deg)",
   },
   tags: {
+    display:'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     align: "center",
     textAlign: "center",
     outline: "none",
@@ -101,13 +110,12 @@ const AddPost = ({ history }) => {
   //hooks
   const classes = useStyles();
   const theme = useTheme();
-  const { currentUser } = useAuth();
+  const { currentUser, firestoreUser } = useAuth();
 
   //state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [postType, setPostType] = useState("");
-  const [userMedia, setUserMedia] = useState(null);
   const [imageURL, setImageURL] = useState(null);
   const [tags, setTags] = useState([]);
 
@@ -131,7 +139,6 @@ const AddPost = ({ history }) => {
     let imageURL = await photoRef.getDownloadURL();
     setImageURL(imageURL);
     submitButton.current.disabled = false;
-    console.log("IMAGE??", imageURL);
   };
 
   //functions
@@ -157,45 +164,50 @@ const AddPost = ({ history }) => {
     }
   };
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
 
-    postsRef
-      .add({
-        userRef: currentUser.uid,
-        title: title,
-        description,
-        postType: postType,
-        editorData: "Start Coding Here!",
-        docChanges: [{ changeID: "" }],
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        isActive: true,
-        enableCollab: true,
-        imageURL: imageURL,
-        tags,
-      })
-      .then((postDocRef) => {
-        tags.forEach((tag) => {
-          tag = tag.toLowerCase();
-          tagsRef.where("name","==",`${tag}`).get().then((tagsCol) => {
-            if(!tagsCol.docs.length){
-              tagsRef.add({name: `${tag}`, count: 1})
-            } else{
-              tagsCol.docs.forEach((tagDoc) => {
-                const tagDocRef = tagsRef.doc(tagDoc.id)
-                tagDocRef.update({
-                  count: firebase.firestore.FieldValue.increment(1)
-                })
-              })
-            }
+    const postDocRef = await postsRef.add({
+      userRef: currentUser.uid,
+      userName: firestoreUser.userName,
+      userPhotoURL: firebase
+        .firestore()
+        .doc(`users/${firestoreUser.userDocRef}`),
+
+      title: title,
+      description,
+      postType: postType,
+      editorData: "Start Coding Here!",
+      docChanges: [{ changeID: "" }],
+      timestamp: Date.now(),
+      isActive: true,
+      enableCollab: true,
+      imageURL: imageURL,
+      tags,
+      plusplusCount: 0,
+      plusplusList: [],
+    });
+
+    tags.forEach(async (tag) => {
+      tag = tag.toLowerCase();
+      const tagsCol = await tagsRef.where("name", "==", `${tag}`).get();
+      if (!tagsCol.docs.length) {
+        await tagsRef.add({ name: `${tag}`, count: 1 });
+      } else {
+        tagsCol.docs.forEach(async (tagDoc) => {
+          const tagDocRef = tagsRef.doc(tagDoc.id);
+          await tagDocRef.update({
+            count: firebase.firestore.FieldValue.increment(1),
           });
-        })
-        history.push({ pathname: `/posts/${postDocRef.id}`, postType: postType });
-      });
+        });
+      }
+    });
+
+    history.push({ pathname: `/posts/${postDocRef.id}`, postType: postType });
   };
 
   return (
-    <div>
+    <div style={{minHeight: '53.5vh'}}>
       <form onSubmit={onSubmitHandler}>
         <Grid container direction="column" alignItems="center" justify="center">
           <Grid
@@ -244,7 +256,7 @@ const AddPost = ({ history }) => {
               style={{ marginTop: "1em", marginBottom: "1em" }}
               variant="filled"
             />
-            <Grid className={classes.tags}>
+            <Grid container className={classes.tags}>
               <List className={classes.tagList}>
                 {tags.map((tag, idx) => {
                   return (
@@ -302,7 +314,7 @@ const AddPost = ({ history }) => {
                     fileRef.current.click();
                   }}
                 >
-                  Upload a pic of your sick rig!
+                  Upload a photo to be displayed with your post...
                 </Button>
                 <input
                   ref={fileRef}
@@ -310,13 +322,12 @@ const AddPost = ({ history }) => {
                   hidden={true}
                   onChange={(e) => {
                     imageUpload(e.target.files[0]);
-                    setUserMedia(e.target.files[0]);
                   }}
                 />
                 {imageURL && (
                   <div>
                     <Typography variant="body1">File to Upload:</Typography>
-                    <img style={{ width: 150, height: 150 }} src={imageURL} />
+                    <img style={{ width: 150, height: 150 }} src={imageURL} alt='profile' />
                   </div>
                 )}
               </div>

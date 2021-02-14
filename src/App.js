@@ -14,15 +14,18 @@ import UpdateProfile from "./components/UpdateProfile";
 import NavBar from "./components/NavBar";
 import Post from "./components/Post";
 import AddPost from "./components/AddPost";
-import userSavedCollabs from "./components/userSavedCollabs";
+import MyPosts from "./components/MyPosts";
 import savedContent from "./components/savedContent";
 import Users from "./components/Users";
 import UserLanding from "./components/UserLanding";
 import PublicProfile from "./components/PublicProfile";
 import GuestLanding from "./components/GuestLanding";
-import UserFollowers from "./components/UserFollowers"
-import UserFollowing from "./components/UserFollowing"
-import AllUsersIn2Plus from './components/AllUsersIn2+'
+import Posts from "./components/Posts";
+import UserFollowing from "./components/UserFollowing";
+import Footer from "./components/Footer";
+import PublicFollowers from "./components/PublicFollowers";
+import PublicFollowing from "./components/PublicFollowing";
+import NotFound from './components/NotFound'
 
 function App() {
   return (
@@ -38,20 +41,36 @@ function App() {
             <Route exact path="/chat" component={ChatRoom} />
             <PrivateRoute exact path="/profile" component={UserProfile} />
             <PrivateRoute exact path="/updateprof" component={UpdateProfile} />
-            <PrivateRoute exact path="/2PlusFam" component={AllUsersIn2Plus} />
-            <PrivateRoute exact path="/userFollowings" component={UserFollowing} />
-            <PrivateRoute exact path="/userFollowers" component={UserFollowers} />
+            <PrivateRoute
+              exact
+              path="/userFollowings"
+              component={UserFollowing}
+            />
             <Route exact path="/posts/add" component={AddPost} />
+            <Route exact path="/posts" component={Posts} />
             <Route exact path="/posts/:postId" component={Post} />
-            <Route exact path="/savedcollabs" component={userSavedCollabs} />
+            <Route exact path="/myposts" component={MyPosts} />
+            <Redirect from="/myposts/deleted" to="/myposts" />
             <Route exact path="/savedcontent" component={savedContent} />
             <Route exact path="/users" component={Users} />
-            <Route exact path="/users/:userID" component={PublicProfile} />
+            <Route exact path="/users/:profileUID" component={PublicProfile} />
+            <Route
+              exact
+              path="/users/:profileUID/followers"
+              component={PublicFollowers}
+            />
+            <Route
+              exact
+              path="/users/:profileUID/following"
+              component={PublicFollowing}
+            />
             <Redirect from="/users/deleted" to="/users" />
+            <Redirect from="/userhome/deleted" to="/userhome" />
             <Route exact path="/userhome" component={UserLanding} />
             <Route exact path="/guesthome" component={GuestLanding} />
-         
+            <Route component={NotFound} />
           </Switch>
+          <Footer />
         </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>

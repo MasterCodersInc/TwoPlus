@@ -10,6 +10,10 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    minWidth: '100vw',
+    minHeight: '53vh'
+  },
   form: {
     align: "center",
     textAlign: "center",
@@ -47,7 +51,6 @@ export default function SignUp() {
     try {
       setError("");
       setLoading(true);
-      console.log("!!!!!", email, password);
       await login(email, password);
 
       history.push("/userhome");
@@ -59,7 +62,7 @@ export default function SignUp() {
   }
 
   return (
-    <Grid container direction="column" justify="center" alignItems="center">
+    <Grid container direction="column" justify="center" alignItems="center" className={classes.container}>
       <Grid
         item
         container
