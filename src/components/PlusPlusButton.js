@@ -59,16 +59,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //expects a "documentRef" prop so that the upvote goes to the right place
-const PlusPlusButton = ({ documentRef, size, frontPageSort }) => {
+const PlusPlusButton = ({
+  documentRef,
+  size,
+  frontPageSort,
+  noChange,
+  plusCountProp,
+}) => {
   const { currentUser, firestoreUser } = useAuth();
 
   const classes = useStyles();
   const theme = useTheme();
 
-  const plusPlusRef = React.useRef();
-
   const [buttonState, setButtonState] = React.useState(true);
-  const [plusplusCount, setPlusplusCount] = React.useState(0);
+  const [plusplusCount, setPlusplusCount] = React.useState();
   const [postRef, setPostRef] = React.useState();
   const [postData, setPostData] = React.useState();
 
@@ -81,7 +85,12 @@ const PlusPlusButton = ({ documentRef, size, frontPageSort }) => {
     const postInfo = await postRef.get();
 
     setPostData(postInfo.data());
-    setPlusplusCount(postInfo.data().plusplusCount);
+
+    if (plusCountProp) {
+      setPlusplusCount(plusCountProp);
+    } else {
+      setPlusplusCount(postInfo.data().plusplusCount);
+    }
 
     if (!postInfo.data().plusplusList) {
       return;
@@ -94,7 +103,7 @@ const PlusPlusButton = ({ documentRef, size, frontPageSort }) => {
 
   useEffect(() => {
     getPost();
-  }, []);
+  }, [frontPageSort, plusCountProp]);
 
   async function upvoteHandler() {
     if (!buttonState) {
@@ -110,6 +119,11 @@ const PlusPlusButton = ({ documentRef, size, frontPageSort }) => {
       await postRef.update({ plusplusList: arrayUnion(firestoreUser.uid) });
       await postRef.update({ plusplusCount: plusplusCount + 1 });
     }
+  }
+
+  //returns/renders
+  if (!postData) {
+    return null;
   }
 
   if (size === "small") {
@@ -128,7 +142,6 @@ const PlusPlusButton = ({ documentRef, size, frontPageSort }) => {
           {plusplusCount}
         </Typography>
         <Button
-          ref={plusPlusRef}
           onClick={upvoteHandler}
           classes={
             buttonState
@@ -141,22 +154,28 @@ const PlusPlusButton = ({ documentRef, size, frontPageSort }) => {
       </Grid>
     );
   }
-  return (
-    <div>
-      <Typography style={{ textAlign: "center", marginBottom: 5 }} variant="h2">
-        {plusplusCount}
-      </Typography>
-      <Button
-        ref={plusPlusRef}
-        onClick={upvoteHandler}
-        classes={
-          buttonState ? { root: classes.unpressed } : { root: classes.pressed }
-        }
-      >
-        ++
-      </Button>
-    </div>
-  );
+  if (postData) {
+    return (
+      <div>
+        <Typography
+          style={{ textAlign: "center", marginBottom: 5 }}
+          variant="h2"
+        >
+          {plusplusCount}
+        </Typography>
+        <Button
+          onClick={upvoteHandler}
+          classes={
+            buttonState
+              ? { root: classes.unpressed }
+              : { root: classes.pressed }
+          }
+        >
+          ++
+        </Button>
+      </div>
+    );
+  }
 };
 
 export default PlusPlusButton;

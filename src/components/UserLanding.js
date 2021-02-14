@@ -183,6 +183,7 @@ export default function Landing() {
       })
       .then((postsArr) => {
         updatePhotos(postsArr);
+        isInitialMount.current = false;
       });
 
     const discussLoc = firebase
@@ -212,7 +213,7 @@ export default function Landing() {
       }));
       setTags(tagsArr);
     });
-    isInitialMount.current = false;
+
     setTimeout(() => setLoading(false), 1000);
   }, [frontPageSort]);
 
@@ -489,6 +490,7 @@ export default function Landing() {
                       <PlusPlusButton
                         frontPageSort={frontPageSort}
                         documentRef={post.postId}
+                        plusCountProp={post.plusplusCount}
                         size="small"
                         style={{ marginRight: "3em" }}
                       />
