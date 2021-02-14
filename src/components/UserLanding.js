@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import PlusPlusButton from "./PlusPlusButton";
-import Footer from "./Footer";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
+import Hidden from "@material-ui/core/Hidden";
 
 import firebase from "../firebase";
 
@@ -95,6 +95,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Landing() {
   const classes = useStyles();
   const theme = useTheme();
+  const matchesMD = theme.breakpoints.down("md");
+
   const { firestoreUser } = useAuth();
 
   const [posts, setPosts] = useState([]);
@@ -219,56 +221,67 @@ export default function Landing() {
   return (
     <Grid container direction="column" className={classes.container}>
       <Grid item container style={{ marginTop: "5em" }}>
+        <Hidden mdDown>
+          <Grid
+            item
+            container
+            direction="column"
+            className={classes.popTopCont}
+            lg={2}
+          >
+            <Typography style={{ marginBottom: "1em", marginTop: "4.5em" }}>
+              Popular Topics
+            </Typography>
+
+            {tags.map((tag, idx) => (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div>
+                  <Typography variant="body2" className={classes.popTopLi}>
+                    {idx}. &nbsp;
+                  </Typography>
+                </div>
+                <div>
+                  <Typography
+                    variant="body2"
+                    className={(classes.popTopLi, classes.postLink3)}
+                    component={Link}
+                    to={`/posts?tag=${tag.name}`}
+                  >
+                    #{tag.name}
+                  </Typography>
+                </div>
+              </div>
+            ))}
+
+            <Typography style={{ marginBottom: ".5em", marginTop: "4.5em" }}>
+              Followed Users
+            </Typography>
+            {userFollowing &&
+              userFollowing.map((user) => {
+                return (
+                  <Typography
+                    component={Link}
+                    to={`/users/${user.uid}`}
+                    variant="body2"
+                    className={(classes.popTopLi, classes.postLink3)}
+                    style={{ marginBottom: "1em" }}
+                  >
+                    {user.userName}
+                  </Typography>
+                );
+              })}
+          </Grid>
+        </Hidden>
         <Grid
           item
           container
           direction="column"
-          className={classes.popTopCont}
-          lg={2}
+          lg
+          style={{
+            width: matchesMD ? "95%" : undefined,
+            marginLeft: matchesMD ? "20%" : undefined,
+          }}
         >
-          <Typography style={{ marginBottom: "1em", marginTop: "4.5em" }}>
-            Popular Topics
-          </Typography>
-
-          {tags.map((tag, idx) => (
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <div>
-                <Typography variant="body2" className={classes.popTopLi}>
-                  {idx}. &nbsp;
-                </Typography>
-              </div>
-              <div>
-                <Typography
-                  variant="body2"
-                  className={(classes.popTopLi, classes.postLink3)}
-                  component={Link}
-                  to={`/posts?tag=${tag.name}`}
-                >
-                  #{tag.name}
-                </Typography>
-              </div>
-            </div>
-          ))}
-
-          <Typography style={{ marginBottom: ".5em", marginTop: "4.5em" }}>
-            Followed Users
-          </Typography>
-          {userFollowing &&
-            userFollowing.map((user) => {
-              return (
-                <Typography
-                  component={Link}
-                  to={`/users/${user.uid}`}
-                  variant="body2"
-                  className={(classes.popTopLi, classes.postLink3)}
-                  style={{ marginBottom: "1em" }}
-                >
-                  {user.userName}
-                </Typography>
-              );
-            })}
-        </Grid>
-        <Grid item container direction="column" lg>
           <Grid item>
             <Typography variant="h1">Your Feed</Typography>
           </Grid>
