@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
 import PlusPlusButton from "./PlusPlusButton";
-import Footer from "./Footer";
-
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
+import Hidden from "@material-ui/core/Hidden";
 import firebase from "../firebase";
-
 import addButt from "../assets/addButt.svg";
 import FrontPageFollowButton from "./FrontPageFollowButton";
 import userLandingRec from "../assets/userLandingRec.svg";
@@ -115,8 +112,9 @@ const useStyles = makeStyles((theme) => ({
 export default function Landing() {
   const classes = useStyles();
   const theme = useTheme();
-  const { firestoreUser } = useAuth();
+  const matchesMD = theme.breakpoints.down("md");
 
+  const { firestoreUser } = useAuth();
   const [posts, setPosts] = useState([]);
   const [discuss, setDiscuss] = useState([]);
   const [tags, setTags] = useState([]);
@@ -136,6 +134,19 @@ export default function Landing() {
       isInitialMount.current = true;
     }
   });
+
+  async function updatePhotos(arr) {
+    const postCopy = arr.slice();
+    for (const post of postCopy) {
+      let picRef = post.userPhotoURL;
+      if (typeof picRef !== "string" && picRef) {
+        let pic = await picRef.get();
+        post.userPhotoURL = pic.data().profilePhotoURL;
+      }
+    }
+    setPosts(postCopy);
+  }
+
 
   async function getFollowing() {
     let followingList = [];
@@ -162,7 +173,6 @@ export default function Landing() {
     }
     setPosts(postCopy);
   }
-
   useEffect(() => {
     const postsLoc = firebase
       .firestore()
@@ -242,12 +252,66 @@ export default function Landing() {
   return (
     <Grid container direction="column" className={classes.container}>
       <Grid item container style={{ marginTop: "5em" }}>
+        <Hidden mdDown>
+          <Grid
+            item
+            container
+            direction="column"
+            className={classes.popTopCont}
+            lg={2}
+          >
+            <Typography style={{ marginBottom: "1em", marginTop: "4.5em" }}>
+              Popular Topics
+            </Typography>
+
+            {tags.map((tag, idx) => (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div>
+                  <Typography variant="body2" className={classes.popTopLi}>
+                    {idx}. &nbsp;
+                  </Typography>
+                </div>
+                <div>
+                  <Typography
+                    variant="body2"
+                    className={(classes.popTopLi, classes.postLink3)}
+                    component={Link}
+                    to={`/posts?tag=${tag.name}`}
+                  >
+                    #{tag.name}
+                  </Typography>
+                </div>
+              </div>
+            ))}
+
+            <Typography style={{ marginBottom: ".5em", marginTop: "4.5em" }}>
+              Followed Users
+            </Typography>
+            {userFollowing &&
+              userFollowing.map((user) => {
+                return (
+                  <Typography
+                    component={Link}
+                    to={`/users/${user.uid}`}
+                    variant="body2"
+                    className={(classes.popTopLi, classes.postLink3)}
+                    style={{ marginBottom: "1em" }}
+                  >
+                    {user.userName}
+                  </Typography>
+                );
+              })}
+          </Grid>
+        </Hidden>
         <Grid
           item
           container
           direction="column"
-          className={classes.popTopCont}
-          lg={2}
+          lg
+          style={{
+            width: matchesMD ? "95%" : undefined,
+            marginLeft: matchesMD ? "20%" : undefined,
+          }}
         >
           <Typography
             style={{
@@ -256,6 +320,7 @@ export default function Landing() {
               fontSize: "1.3em",
             }}
           >
+
             Popular Topics
           </Typography>
 

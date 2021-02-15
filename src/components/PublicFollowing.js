@@ -71,6 +71,8 @@ export default function PublicFollowing() {
         .where("uid", "==", profileUID);
       let userData = await userObjLoc.get();
       let publicUser = userData.docs[0];
+
+      console.log('what is public user', publicUser.data())
       setPublicUser({ ...publicUser.data(), docID: publicUser.id });
 
       if (publicUser.data().following.includes(currentUser.uid)) {
@@ -83,6 +85,9 @@ export default function PublicFollowing() {
           .collection("users")
           .where("uid", "==", user);
         const followingData = await followingRef.get();
+
+        console.log('what is the following ref', followingData)
+        console.log('what is folllowing user data', followingData.docs[0].data())
         followingList.push(followingData.docs[0].data());
       }
       setuserFollowingList(followingList);
