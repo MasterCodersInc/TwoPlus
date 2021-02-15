@@ -11,8 +11,8 @@ import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    minWidth: '100vw',
-    minHeight: '53vh'
+    minWidth: "100vw",
+    minHeight: "54.5vh",
   },
   form: {
     align: "center",
@@ -62,7 +62,13 @@ export default function SignUp() {
   }
 
   return (
-    <Grid container direction="column" justify="center" alignItems="center" className={classes.container}>
+    <Grid
+      container
+      direction="column"
+      justify="center"
+      alignItems="center"
+      className={classes.container}
+    >
       <Grid
         item
         container

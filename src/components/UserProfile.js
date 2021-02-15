@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
-import Loading from './Loading'
+import Loading from "./Loading";
 
 import rect from "../assets/userACCrec.svg";
 
@@ -61,7 +61,6 @@ export default function UserProfile() {
   const fileRef = React.useRef();
   const imgRef = React.useRef();
 
-
   const imageUpload = async (imageFile) => {
     let imageRefId = `profile_pic${String(
       Math.floor(Math.random() * 100000)
@@ -82,14 +81,14 @@ export default function UserProfile() {
   };
 
   if (!firestoreUser) {
-    return <Loading />
+    return <Loading />;
   }
   return (
-    <Grid container style={{maxWidth: '90vw', minHeight: '53.5vh'}}>
+    <Grid container style={{ maxWidth: "90vw", minHeight: "53.5vh" }}>
       <Grid item container direction="column">
         <Grid item>
           <Typography variant="h1" style={{ marginLeft: "2.3em" }}>
-            Welcome {firestoreUser && firestoreUser.firstName}
+            Welcome, {firestoreUser && firestoreUser.firstName}
           </Typography>
         </Grid>
         <Grid item container className={classes.tabs}>
