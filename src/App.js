@@ -25,6 +25,7 @@ import PublicProfile from "./components/PublicProfile";
 import GuestLanding from "./components/GuestLanding";
 import Posts from "./components/Posts";
 import UserFollowing from "./components/UserFollowing";
+import UserFollowers from "./components/UserFollowers"
 import Footer from "./components/Footer";
 import PublicFollowers from "./components/PublicFollowers";
 import PublicFollowing from "./components/PublicFollowing";
