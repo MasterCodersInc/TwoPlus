@@ -130,14 +130,14 @@ const UserFollowers = () => {
               value={false}
               component={Link}
               to="/userFollowers"
-              label="followers"
+              label="Followers"
               className={classes.tab}
             />
             <Tab
               value={false}
               component={Link}
               to="/userFollowings"
-              label="following"
+              label="Following"
               className={classes.tab}
             />
           </Tabs>

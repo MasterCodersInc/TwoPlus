@@ -123,13 +123,13 @@ export default function MyPosts() {
             <Tab
               component={Link}
               to="/userFollowers"
-              label="followers"
+              label="Followers"
               className={classes.tab}
             />
             <Tab
               component={Link}
               to="/userFollowings"
-              label="following"
+              label="Following"
               className={classes.tab}
             />
           </Tabs>
