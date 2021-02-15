@@ -100,7 +100,6 @@ export default function Landing() {
   const classes = useStyles();
   const theme = useTheme();
   const { firestoreUser } = useAuth();
-
   const [posts, setPosts] = useState([]);
   const [discuss, setDiscuss] = useState([]);
   const [tags, setTags] = useState([]);
@@ -120,7 +119,7 @@ export default function Landing() {
       getFollowing();
     }
   });
-
+  // console.log('this is current user', firestoreUser)
   async function updatePhotos(arr) {
     const postCopy = arr.slice();
     for (const post of postCopy) {
@@ -145,7 +144,6 @@ export default function Landing() {
     }
     setUserFollowing(followingList);
   }
-
   useEffect(() => {
     const postsLoc = firebase
       .firestore()

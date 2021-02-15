@@ -25,6 +25,7 @@ import PublicProfile from "./components/PublicProfile";
 import GuestLanding from "./components/GuestLanding";
 import Posts from "./components/Posts";
 import UserFollowing from "./components/UserFollowing";
+import UserFollowers from "./components/UserFollowers"
 import Footer from "./components/Footer";
 import PublicFollowers from "./components/PublicFollowers";
 import PublicFollowing from "./components/PublicFollowing";
@@ -49,6 +50,11 @@ function App() {
               path="/userFollowings"
               component={UserFollowing}
             />
+            <PrivateRoute
+            exact
+            path="/userFollowers"
+            component={UserFollowers}
+          />
             <Route exact path="/posts/add" component={AddPost} />
             <Route exact path="/posts" component={Posts} />
             <Route exact path="/posts/:postId" component={Post} />
