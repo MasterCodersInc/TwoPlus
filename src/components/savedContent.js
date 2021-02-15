@@ -77,7 +77,6 @@ export default function UserProfile() {
   const [posts, setPosts] = useState([]);
   const { currentUser } = useAuth();
   const db = firebase.firestore();
-  const email = currentUser.email;
 
   // in a use effect to trigger the re-render
   useEffect(() => {
