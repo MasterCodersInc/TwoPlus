@@ -12,7 +12,7 @@ import Button from "@material-ui/core/Button";
 const useStyles = makeStyles((theme) => ({
   container: {
     minWidth: '100vw',
-    minHeight: '53vh'
+    minHeight: '54.5vh'
   },
   form: {
     align: "center",
