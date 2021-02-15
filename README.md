@@ -18,7 +18,8 @@ If you're using any code style like xo, standard etc. That will help others whil
  
 ## Screenshots
 Include logo/demo screenshot etc.
-![Welcome Screen](https://thumbs.gfycat.com/PeriodicUnsightlyCondor-size_restricted.gif)
+![Welcome Screen](https://thumbs.gfycat.com/PeriodicUnsightlyCondor-size_restricted.gif
+)
 
 ## Tech/framework used
 Ex. -

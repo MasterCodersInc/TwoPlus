@@ -61,11 +61,11 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "500",
   },
   tagInput: {
-    display:'flex',
+    display: "flex",
     background: "none",
-    width: '100%',
-    alignItems: 'center',
-    justifyContent:'center',
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
     flexGrow: "1",
   },
   removeTag: {
@@ -85,9 +85,9 @@ const useStyles = makeStyles((theme) => ({
     transform: "rotate(45deg)",
   },
   tags: {
-    display:'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     align: "center",
     textAlign: "center",
     outline: "none",
@@ -207,7 +207,7 @@ const AddPost = ({ history }) => {
   };
 
   return (
-    <div style={{minHeight: '53.5vh'}}>
+    <div style={{ minHeight: "53.5vh" }}>
       <form onSubmit={onSubmitHandler}>
         <Grid container direction="column" alignItems="center" justify="center">
           <Grid
@@ -247,6 +247,7 @@ const AddPost = ({ history }) => {
               </Typography>
             )}
             <TextField
+              fullWidth
               label="description"
               name="description"
               multiline
@@ -327,7 +328,11 @@ const AddPost = ({ history }) => {
                 {imageURL && (
                   <div>
                     <Typography variant="body1">File to Upload:</Typography>
-                    <img style={{ width: 150, height: 150 }} src={imageURL} alt='profile' />
+                    <img
+                      style={{ width: 150, height: 150 }}
+                      src={imageURL}
+                      alt="profile"
+                    />
                   </div>
                 )}
               </div>
