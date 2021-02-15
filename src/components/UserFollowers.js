@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
 
 const UserFollowers = () => {
   const db = firebase.firestore();
-  const { currentUser } = useAuth();
+  const { currentUser, firestoreUser } = useAuth();
   const classes = useStyles();
   const [personalData, setPersonalData] = useState({});
   const [filter, setFilter] = useState('');
@@ -102,8 +102,47 @@ const UserFollowers = () => {
     setFilter(e.target.value);
   };
   return (
-    <div>
-      <Grid item id="postsContainer">
+    <div style={{maxWidth: '95vw', minHeight: '54.5vh'}}>
+      <Grid item container direction="column">
+        <Grid item>
+          <Typography variant="h1" style={{ marginLeft: "2.3em" }}>
+            Welcome, {firestoreUser && firestoreUser.firstName}
+          </Typography>
+        </Grid>
+        <Grid item container className={classes.tabs}>
+          <Tabs>
+            <Tab label="Your Info" value={false} className={classes.tab} />
+            <Tab
+              value={false}
+              component={Link}
+              to="/myposts"
+              label="My Posts"
+              className={classes.tab}
+            />
+            <Tab
+              value={false}
+              component={Link}
+              to="/savedcontent"
+              label="++Content"
+              className={classes.tab}
+            />
+            <Tab
+              value={false}
+              component={Link}
+              to="/userFollowers"
+              label="followers"
+              className={classes.tab}
+            />
+            <Tab
+              value={false}
+              component={Link}
+              to="/userFollowings"
+              label="following"
+              className={classes.tab}
+            />
+          </Tabs>
+        </Grid>
+      <Grid item id="postsContainer" style={{marginLeft: '3.2em'}}>
         <Toolbar>
           <div className={classes.searchContainer}>
             <SearchIcon className={classes.searchIcon} />
@@ -174,6 +213,7 @@ const UserFollowers = () => {
               }
             })
           ))}
+      </Grid>
       </Grid>
     </div>
   );

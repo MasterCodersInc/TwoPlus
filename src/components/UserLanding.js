@@ -319,7 +319,9 @@ export default function Landing() {
               })}
           </Grid>
         </Hidden>
-        <Grid item container direction="column" lg>
+        <Grid item container direction="column" lg style={{
+          marginLeft: matchesMD ? '5em' : undefined
+        }}>
           <Grid item>
             <Typography variant="h1">Your Feed</Typography>
           </Grid>
