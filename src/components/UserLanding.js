@@ -124,16 +124,10 @@ export default function Landing() {
   const followButtonRef = React.useRef();
   const [loading, setLoading] = useState(true);
   const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
-  const isInitialMount = React.useRef(true);
 
   useEffect(() => {
-    if (isInitialMount.current) {
-      return;
-    } else {
-      getFollowing();
-      isInitialMount.current = true;
-    }
-  });
+    getFollowing();
+  }, [firestoreUser]);
 
   async function updatePhotos(arr) {
     const postCopy = arr.slice();
@@ -193,7 +187,6 @@ export default function Landing() {
       })
       .then((postsArr) => {
         updatePhotos(postsArr);
-        isInitialMount.current = false;
       });
 
     const discussLoc = firebase
@@ -319,9 +312,15 @@ export default function Landing() {
               })}
           </Grid>
         </Hidden>
-        <Grid item container direction="column" lg style={{
-          marginLeft: matchesMD ? '5em' : undefined
-        }}>
+        <Grid
+          item
+          container
+          direction="column"
+          lg
+          style={{
+            marginLeft: matchesMD ? "5em" : undefined,
+          }}
+        >
           <Grid item>
             <Typography variant="h1">Your Feed</Typography>
           </Grid>
@@ -478,7 +477,7 @@ export default function Landing() {
                       >
                         {post.tags.slice(0, 3).map((tag) => {
                           return (
-                            <Grid item zeroMinWidth>
+                            <Grid item zeroMinWidth style={{ marginBottom: 4 }}>
                               <Typography
                                 component={Link}
                                 to={`/posts/?tag=${tag}`}
