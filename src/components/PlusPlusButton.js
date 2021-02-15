@@ -3,7 +3,6 @@ import { TextField, Button, Typography, ListItem } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useAuth } from "../contexts/AuthContext";
 import { useParams } from "react-router-dom";
-import { PolicyRounded, WhereToVote } from "@material-ui/icons";
 import firebase from "../firebase";
 
 import Grid from "@material-ui/core/Grid";
@@ -60,46 +59,51 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //expects a "documentRef" prop so that the upvote goes to the right place
-const PlusPlusButton = ({ documentRef, size }) => {
+const PlusPlusButton = ({
+  documentRef,
+  size,
+  frontPageSort,
+  noChange,
+  plusCountProp,
+}) => {
   const { currentUser, firestoreUser } = useAuth();
 
   const classes = useStyles();
   const theme = useTheme();
 
-  const plusPlusRef = React.useRef();
-
   const [buttonState, setButtonState] = React.useState(true);
-  const [plusplusCount, setPlusplusCount] = React.useState(0);
+  const [plusplusCount, setPlusplusCount] = React.useState();
   const [postRef, setPostRef] = React.useState();
   const [postData, setPostData] = React.useState();
 
   const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
   const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
 
-  useEffect(() => {
-    async function getPost() {
-      let postRef = await firebase
-        .firestore()
-        .collection("posts")
-        .doc(documentRef);
-      setPostRef(postRef);
-      const postInfo = await postRef.get();
-      setPostData(postInfo.data());
+  async function getPost() {
+    let postRef = firebase.firestore().collection("posts").doc(documentRef);
+    setPostRef(postRef);
+    const postInfo = await postRef.get();
+
+    setPostData(postInfo.data());
+
+    if (plusCountProp) {
+      setPlusplusCount(plusCountProp);
+    } else {
+      setPlusplusCount(postInfo.data().plusplusCount);
     }
-    getPost();
-  }, []);
+
+    if (!postInfo.data().plusplusList) {
+      return;
+    }
+
+    if (postInfo.data().plusplusList.includes(currentUser.uid)) {
+      setButtonState(false);
+    }
+  }
 
   useEffect(() => {
-    if (postData) {
-      setPlusplusCount(postData.plusplusCount);
-      if (!postData.plusplusList) {
-        return;
-      }
-      if (postData.plusplusList.includes(currentUser.uid)) {
-        setButtonState(false);
-      }
-    }
-  }, [postData]);
+    getPost();
+  }, [frontPageSort, plusCountProp]);
 
   async function upvoteHandler() {
     if (!buttonState) {
@@ -116,6 +120,12 @@ const PlusPlusButton = ({ documentRef, size }) => {
       await postRef.update({ plusplusCount: plusplusCount + 1 });
     }
   }
+
+  //returns/renders
+  if (!postData) {
+    return null;
+  }
+
   if (size === "small") {
     return (
       <Grid
@@ -132,7 +142,6 @@ const PlusPlusButton = ({ documentRef, size }) => {
           {plusplusCount}
         </Typography>
         <Button
-          ref={plusPlusRef}
           onClick={upvoteHandler}
           classes={
             buttonState
@@ -145,22 +154,28 @@ const PlusPlusButton = ({ documentRef, size }) => {
       </Grid>
     );
   }
-  return (
-    <div>
-      <Typography style={{ textAlign: "center", marginBottom: 5 }} variant="h2">
-        {plusplusCount}
-      </Typography>
-      <Button
-        ref={plusPlusRef}
-        onClick={upvoteHandler}
-        classes={
-          buttonState ? { root: classes.unpressed } : { root: classes.pressed }
-        }
-      >
-        ++
-      </Button>
-    </div>
-  );
+  if (postData) {
+    return (
+      <div>
+        <Typography
+          style={{ textAlign: "center", marginBottom: 5 }}
+          variant="h2"
+        >
+          {plusplusCount}
+        </Typography>
+        <Button
+          onClick={upvoteHandler}
+          classes={
+            buttonState
+              ? { root: classes.unpressed }
+              : { root: classes.pressed }
+          }
+        >
+          ++
+        </Button>
+      </div>
+    );
+  }
 };
 
 export default PlusPlusButton;

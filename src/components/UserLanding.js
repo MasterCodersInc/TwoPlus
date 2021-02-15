@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
 import PlusPlusButton from "./PlusPlusButton";
-
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import Hidden from "@material-ui/core/Hidden";
-
 import firebase from "../firebase";
-
 import addButt from "../assets/addButt.svg";
 import FrontPageFollowButton from "./FrontPageFollowButton";
 import userLandingRec from "../assets/userLandingRec.svg";
@@ -20,8 +16,7 @@ import openPost from "../assets/openPostCircle.svg";
 import closedPost from "../assets/closedPostCircle.svg";
 import DeletePost from "./DeletePost";
 import { useAuth } from "../contexts/AuthContext";
-import Loading from './Loading'
-
+import Loading from "./Loading";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -35,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   popTopLi: {
     marginTop: ".2em",
     marginBottom: ".2em",
-    fontSize: '1em'
+    fontSize: "1em",
   },
   testBox: {
     backgroundColor: "black",
@@ -79,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: theme.palette.common.colorOne,
     fontWeight: 600,
-    fontSize: '0.9em',
+    fontSize: "0.9em",
     width: "90%",
     "&:hover": {
       color: "black",
@@ -94,6 +89,24 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.common.colorThree,
     },
   },
+  sortButton: {
+    cursor: "pointer",
+    backgroundColor: theme.palette.common.colorFive,
+    "&:hover": {
+      backgroundColor: theme.palette.common.colorFour,
+    },
+    padding: 5,
+    borderRadius: 10,
+    marginRight: "1em",
+  },
+  sortButtonSelected: {
+    cursor: "pointer",
+    backgroundColor: theme.palette.common.colorFour,
+    color: theme.palette.common.colorOne,
+    padding: 5,
+    borderRadius: 10,
+    marginRight: "1em",
+  },
 }));
 
 export default function Landing() {
@@ -107,21 +120,21 @@ export default function Landing() {
   const [tags, setTags] = useState([]);
   const [userFollowing, setUserFollowing] = useState([]);
   const [followingUIDs, setFollowingUIDs] = useState([]);
+  const [frontPageSort, setFrontPageSort] = useState("timestamp");
+  const followButtonRef = React.useRef();
   const [loading, setLoading] = useState(true);
-
   const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
   const isInitialMount = React.useRef(true);
 
   useEffect(() => {
     if (isInitialMount.current) {
-      isInitialMount.current = false;
-    }
-
-    if (tags && firestoreUser) {
+      return;
+    } else {
       getFollowing();
+      isInitialMount.current = true;
     }
   });
-  // console.log('this is current user', firestoreUser)
+
   async function updatePhotos(arr) {
     const postCopy = arr.slice();
     for (const post of postCopy) {
@@ -134,6 +147,7 @@ export default function Landing() {
     setPosts(postCopy);
   }
 
+
   async function getFollowing() {
     let followingList = [];
     for (const user of firestoreUser.following) {
@@ -145,13 +159,26 @@ export default function Landing() {
       followingList.push(followingData.docs[0].data());
     }
     setUserFollowing(followingList);
+    setFollowingUIDs(followingList.map((user) => user.uid));
+  }
+
+  async function updatePhotos(arr) {
+    const postCopy = arr.slice();
+    for (const post of postCopy) {
+      let picRef = post.userPhotoURL;
+      if (typeof picRef !== "string" && picRef) {
+        let pic = await picRef.get();
+        post.userPhotoURL = pic.data().profilePhotoURL;
+      }
+    }
+    setPosts(postCopy);
   }
   useEffect(() => {
     const postsLoc = firebase
       .firestore()
       .collection("posts")
       .where("postType", "==", "live")
-      .orderBy("timestamp", "desc")
+      .orderBy(frontPageSort, "desc")
       .limit(6);
 
     postsLoc
@@ -165,12 +192,13 @@ export default function Landing() {
       })
       .then((postsArr) => {
         updatePhotos(postsArr);
+        isInitialMount.current = false;
       });
 
     const discussLoc = firebase
       .firestore()
       .collection("posts")
-      .orderBy("timestamp", "desc")
+      .orderBy(frontPageSort, "desc")
       .where("postType", "==", "discuss")
       .limit(6);
 
@@ -196,8 +224,7 @@ export default function Landing() {
     });
 
     setTimeout(() => setLoading(false), 1000);
-
-  }, []);
+  }, [frontPageSort]);
 
   async function followUser(userUIDToFollow) {
     const userObjLoc = await firebase
@@ -219,8 +246,8 @@ export default function Landing() {
       .update({ followers: arrayUnion(firestoreUser.uid) });
   }
 
-  if(loading){
-    return <Loading />
+  if (loading) {
+    return <Loading />;
   }
   return (
     <Grid container direction="column" className={classes.container}>
@@ -286,8 +313,14 @@ export default function Landing() {
             marginLeft: matchesMD ? "20%" : undefined,
           }}
         >
+          <Typography
+            style={{
+              marginBottom: "1em",
+              marginTop: "4.5em",
+              fontSize: "1.3em",
+            }}
+          >
 
-          <Typography style={{ marginBottom: "1em", marginTop: "4.5em", fontSize: '1.3em' }}>
             Popular Topics
           </Typography>
 
@@ -311,7 +344,13 @@ export default function Landing() {
             </div>
           ))}
 
-          <Typography style={{ marginBottom: ".5em", marginTop: "4.5em", fontSize: '1.3em' }}>
+          <Typography
+            style={{
+              marginBottom: ".5em",
+              marginTop: "4.5em",
+              fontSize: "1.3em",
+            }}
+          >
             Followed Users
           </Typography>
           {userFollowing &&
@@ -333,16 +372,7 @@ export default function Landing() {
           <Grid item>
             <Typography variant="h1">Your Feed</Typography>
           </Grid>
-          <Grid
-            item
-            container
-            alignItems="center"
-            style={{ marginTop: "1.5em" }}
-          >
-            <Typography variant="h1" style={{ fontSize: "1.5em" }}>
-              Recent Q's
-            </Typography>
-          </Grid>
+
           <Grid
             item
             container
@@ -364,6 +394,43 @@ export default function Landing() {
               >
                 <img src={addButt} alt="add button" />
               </Button>
+              <Grid
+                item
+                container
+                alignItems="center"
+                style={{ marginTop: "1.5em" }}
+              >
+                <Grid
+                  item
+                  className={
+                    frontPageSort === "timestamp"
+                      ? classes.sortButtonSelected
+                      : classes.sortButton
+                  }
+                  onClick={() => {
+                    setFrontPageSort("timestamp");
+                  }}
+                >
+                  <Typography variant="h1" style={{ fontSize: "1.2em" }}>
+                    Recent
+                  </Typography>
+                </Grid>
+                <Grid
+                  item
+                  className={
+                    frontPageSort === "plusplusCount"
+                      ? classes.sortButtonSelected
+                      : classes.sortButton
+                  }
+                  onClick={() => {
+                    setFrontPageSort("plusplusCount");
+                  }}
+                >
+                  <Typography variant="h1" style={{ fontSize: "1.2em" }}>
+                    Top
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
             {posts &&
               posts.map((post, index) => {
@@ -485,7 +552,9 @@ export default function Landing() {
                       </Grid>
 
                       <PlusPlusButton
+                        frontPageSort={frontPageSort}
                         documentRef={post.postId}
+                        plusCountProp={post.plusplusCount}
                         size="small"
                         style={{ marginRight: "3em" }}
                       />
