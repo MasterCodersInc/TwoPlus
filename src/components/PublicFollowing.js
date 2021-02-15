@@ -37,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "8em",
   },
   infoText: {
-    //     marginTop: "2em",
     marginLeft: "5em",
   },
   followButton: {
@@ -72,6 +71,8 @@ export default function PublicFollowing() {
         .where("uid", "==", profileUID);
       let userData = await userObjLoc.get();
       let publicUser = userData.docs[0];
+
+      console.log('what is public user', publicUser.data())
       setPublicUser({ ...publicUser.data(), docID: publicUser.id });
 
       if (publicUser.data().following.includes(currentUser.uid)) {
@@ -84,6 +85,9 @@ export default function PublicFollowing() {
           .collection("users")
           .where("uid", "==", user);
         const followingData = await followingRef.get();
+
+        console.log('what is the following ref', followingData)
+        console.log('what is folllowing user data', followingData.docs[0].data())
         followingList.push(followingData.docs[0].data());
       }
       setuserFollowingList(followingList);
@@ -201,7 +205,7 @@ export default function PublicFollowing() {
                     This user isn't following anyone.
                   </Typography>
                 ) : (
-                  userFollowingList.map((following) => {
+                  userFollowingList.map((user) => {
                     return (
                       <div
                         style={{
@@ -224,7 +228,7 @@ export default function PublicFollowing() {
                               objectFit: "cover",
                               marginRight: 5,
                             }}
-                            src={following.profilePhotoURL}
+                            src={user.profilePhotoURL}
                           />
                           <Typography
                             component={Link}
@@ -233,19 +237,19 @@ export default function PublicFollowing() {
                               color: "#5B56E9",
                               marginRight: 10,
                             }}
-                            to={`/users/${following.uid}`}
+                            to={`/users/${user.uid}`}
                             variant="h2"
                           >
-                            {following.userName}
+                            {user.userName}
                           </Typography>
                           <Typography
                             variant="body2"
                             style={{ marginRight: 10 }}
                           >
-                            following:{following.following.length}
+                            Followers:{user.followers.length}
                           </Typography>
                           <Typography variant="body2">
-                            Following:{following.following.length}
+                            Following:{user.following.length}
                           </Typography>
                         </Grid>
                       </div>

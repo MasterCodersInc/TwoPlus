@@ -188,7 +188,7 @@ const DiscussPost = ({ post }) => {
               >
                 {actualPostData?.userName},{" "}
               </Typography>
-              {timeago.format(actualPostData.timestamp.seconds * 1000)}
+              {timeago.format(actualPostData.timestamp)}
               </Typography>
             </Grid>
           )}
@@ -222,18 +222,6 @@ const DiscussPost = ({ post }) => {
               );
             })}
           </div>
-          {/* {actualPostData && (
-            <Typography
-              component={Link}
-              to={`/users/${actualPostData.userRef}`}
-              variant="body1"
-              style={{ marginTop: "1em" }}
-              className={classes.authorLink}
-            >
-              Asked by: {actualPostData?.userName},{" "}
-              {timeago.format(actualPostData.timestamp.seconds * 1000)}
-            </Typography>
-          )} */}
         </div>
       </div>
       {responses && (

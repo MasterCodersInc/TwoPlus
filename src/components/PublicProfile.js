@@ -199,47 +199,54 @@ export default function PublicProfile() {
             </Grid>
             <Grid item id="postsContainer">
               {userPostList &&
-                userPostList.map((post) => {
-                  return (
-                    <div
-                      style={{
-                        marginLeft: "2em",
-                        backgroundColor: "#F8F8F8",
-                        boxShadow: "5px 5px 9px -3px rgba(136,157,226,0.25)",
-                        width: "60vw",
-                        padding: 10,
-                        paddingTop: 10,
-                        borderRadius: 10,
-                        marginBottom: 15,
-                      }}
-                    >
-                      <Typography
-                        component={Link}
-                        style={{ textDecoration: "none", color: "#5B56E9" }}
-                        to={`/posts/${post.docID}`}
-                        variant="h2"
+                (!userPostList.length ? (
+                  <Typography style={{ marginLeft: "3em" }}>
+                    This user doesn't have any posts yet.
+                  </Typography>
+                ) : (
+                  userPostList.map((post) => {
+                    return (
+                      <div
+                        style={{
+                          marginLeft: "2em",
+                          backgroundColor: "#F8F8F8",
+                          boxShadow: "5px 5px 9px -3px rgba(136,157,226,0.25)",
+                          width: "60vw",
+                          padding: 10,
+                          paddingTop: 10,
+                          borderRadius: 10,
+                          marginBottom: 15,
+                        }}
                       >
-                        {post.title}
-                      </Typography>
-                      <Typography variant="body2" style={{ marginTop: 4 }}>
-                        {post.description}
-                      </Typography>
-                      {post.timestamp && (
                         <Typography
-                          variant="subtitle1"
-                          style={{ fontFamily: "Montserrat" }}
+                          component={Link}
+                          style={{ textDecoration: "none", color: "#5B56E9" }}
+                          to={`/posts/${post.docID}`}
+                          variant="h2"
                         >
-                          Asked {timeago.format(post.timestamp.seconds * 1000)}
+                          {post.title}
                         </Typography>
-                      )}
-                      {post.postType && (
-                        <Typography variant="subtitle1">
-                          Post type: {post.postType}
+                        <Typography variant="body2" style={{ marginTop: 4 }}>
+                          {post.description}
                         </Typography>
-                      )}
-                    </div>
-                  );
-                })}
+                        {post.timestamp && (
+                          <Typography
+                            variant="subtitle1"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            Asked{" "}
+                            {timeago.format(post.timestamp)}
+                          </Typography>
+                        )}
+                        {post.postType && (
+                          <Typography variant="subtitle1">
+                            Post type: {post.postType}
+                          </Typography>
+                        )}
+                      </div>
+                    );
+                  })
+                ))}
             </Grid>
           </Grid>
         </Grid>

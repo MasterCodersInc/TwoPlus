@@ -18,7 +18,7 @@ import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import Button from "@material-ui/core/Button";
 import { formatRelative } from "date-fns";
-
+import ChatIcon from '@material-ui/icons/Chat';
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -100,9 +100,8 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
         uid,
         username: username,
       });
-      setNewMessage("");
     }
-    setNewMessage('');
+    setNewMessage("");
   };
 
   return (
@@ -110,7 +109,7 @@ const ChatRoom = ({ postId, postRef, disabled }) => {
       <Grid container>
         <Grid item>
           <Typography variant="h2" className="header-message">
-            Chat
+            <ChatIcon/>
           </Typography>
         </Grid>
       </Grid>

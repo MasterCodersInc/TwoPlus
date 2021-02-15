@@ -64,7 +64,7 @@ export default function Footer() {
             variant="body1"
             className={classes.linkedIn}
           >
-            Kirstie Rodrigues
+            Kirstie Rodriguez
           </Typography>
         </Grid>
         <Grid item>

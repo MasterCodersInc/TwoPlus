@@ -20,6 +20,8 @@ import openPost from "../assets/openPostCircle.svg";
 import closedPost from "../assets/closedPostCircle.svg";
 import DeletePost from "./DeletePost";
 import { useAuth } from "../contexts/AuthContext";
+import Loading from './Loading'
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -31,8 +33,9 @@ const useStyles = makeStyles((theme) => ({
     width: "30%",
   },
   popTopLi: {
-    marginTop: ".5em",
-    marginBottom: ".5em",
+    marginTop: ".2em",
+    marginBottom: ".2em",
+    fontSize: '1em'
   },
   testBox: {
     backgroundColor: "black",
@@ -76,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: theme.palette.common.colorOne,
     fontWeight: 600,
+    fontSize: '0.9em',
     width: "90%",
     "&:hover": {
       color: "black",
@@ -98,18 +102,14 @@ export default function Landing() {
   const matchesMD = theme.breakpoints.down("md");
 
   const { firestoreUser } = useAuth();
-
   const [posts, setPosts] = useState([]);
   const [discuss, setDiscuss] = useState([]);
   const [tags, setTags] = useState([]);
   const [userFollowing, setUserFollowing] = useState([]);
   const [followingUIDs, setFollowingUIDs] = useState([]);
-
-  const followButtonRef = React.useRef();
+  const [loading, setLoading] = useState(true);
 
   const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
-  const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
-
   const isInitialMount = React.useRef(true);
 
   useEffect(() => {
@@ -121,7 +121,7 @@ export default function Landing() {
       getFollowing();
     }
   });
-
+  // console.log('this is current user', firestoreUser)
   async function updatePhotos(arr) {
     const postCopy = arr.slice();
     for (const post of postCopy) {
@@ -145,9 +145,7 @@ export default function Landing() {
       followingList.push(followingData.docs[0].data());
     }
     setUserFollowing(followingList);
-    // setFollowingUIDs(followingList.map((user) => user.uid));
   }
-
   useEffect(() => {
     const postsLoc = firebase
       .firestore()
@@ -196,6 +194,9 @@ export default function Landing() {
       }));
       setTags(tagsArr);
     });
+
+    setTimeout(() => setLoading(false), 1000);
+
   }, []);
 
   async function followUser(userUIDToFollow) {
@@ -218,6 +219,9 @@ export default function Landing() {
       .update({ followers: arrayUnion(firestoreUser.uid) });
   }
 
+  if(loading){
+    return <Loading />
+  }
   return (
     <Grid container direction="column" className={classes.container}>
       <Grid item container style={{ marginTop: "5em" }}>
@@ -282,6 +286,50 @@ export default function Landing() {
             marginLeft: matchesMD ? "20%" : undefined,
           }}
         >
+
+          <Typography style={{ marginBottom: "1em", marginTop: "4.5em", fontSize: '1.3em' }}>
+            Popular Topics
+          </Typography>
+
+          {tags.map((tag, idx) => (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <div>
+                <Typography variant="body2" className={classes.popTopLi}>
+                  {idx}. &nbsp;
+                </Typography>
+              </div>
+              <div>
+                <Typography
+                  variant="body2"
+                  className={(classes.popTopLi, classes.postLink3)}
+                  component={Link}
+                  to={`/posts?tag=${tag.name}`}
+                >
+                  #{tag.name}
+                </Typography>
+              </div>
+            </div>
+          ))}
+
+          <Typography style={{ marginBottom: ".5em", marginTop: "4.5em", fontSize: '1.3em' }}>
+            Followed Users
+          </Typography>
+          {userFollowing &&
+            userFollowing.map((user) => {
+              return (
+                <Typography
+                  component={Link}
+                  to={`/users/${user.uid}`}
+                  variant="body2"
+                  className={(classes.popTopLi, classes.postLink3)}
+                  style={{ marginBottom: "1em" }}
+                >
+                  {user.userName}
+                </Typography>
+              );
+            })}
+        </Grid>
+        <Grid item container direction="column" lg>
           <Grid item>
             <Typography variant="h1">Your Feed</Typography>
           </Grid>
@@ -511,7 +559,12 @@ export default function Landing() {
                     >
                       Created By:
                     </Typography>
-                    <Typography variant="body2" style={{ fontWeight: 300 }}>
+                    <Typography
+                      component={Link}
+                      to={`/users/${disc.userRef}`}
+                      variant="body2"
+                      style={{ fontWeight: 500, textDecoration: "none" }}
+                    >
                       {disc.userName}
                     </Typography>
                   </Grid>

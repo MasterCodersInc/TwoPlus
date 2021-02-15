@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
+import Loading from './Loading'
 
 import rect from "../assets/userACCrec.svg";
 
@@ -55,10 +56,11 @@ export default function UserProfile() {
   const classes = useStyles();
   const theme = useTheme();
   const [newProfilePhoto, setNewProfilePhoto] = useState();
-  const { currentUser, firestoreUser } = useAuth();
+  const { firestoreUser } = useAuth();
   const storageRef = firebase.storage().ref();
   const fileRef = React.useRef();
   const imgRef = React.useRef();
+
 
   const imageUpload = async (imageFile) => {
     let imageRefId = `profile_pic${String(
@@ -79,6 +81,9 @@ export default function UserProfile() {
     setNewProfilePhoto(imageURL);
   };
 
+  if (!firestoreUser) {
+    return <Loading />
+  }
   return (
     <Grid container style={{maxWidth: '90vw', minHeight: '53.5vh'}}>
       <Grid item container direction="column">
@@ -89,26 +94,30 @@ export default function UserProfile() {
         </Grid>
         <Grid item container className={classes.tabs}>
           <Tabs>
-            <Tab label="Your Info" className={classes.tab} />
+            <Tab label="Your Info" value={false} className={classes.tab} />
             <Tab
+              value={false}
               component={Link}
               to="/myposts"
               label="My Posts"
               className={classes.tab}
             />
             <Tab
+              value={false}
               component={Link}
               to="/savedcontent"
               label="++Content"
               className={classes.tab}
             />
             <Tab
+              value={false}
               component={Link}
               to="/userFollowers"
               label="followers"
               className={classes.tab}
             />
             <Tab
+              value={false}
               component={Link}
               to="/userFollowings"
               label="following"
@@ -166,7 +175,7 @@ export default function UserProfile() {
               <Typography variant="body2">{firestoreUser.userName}</Typography>
             </Grid>
             <Button
-              variant="filled"
+              variant="contained"
               component={Link}
               to="updateprof"
               classes={{ root: classes.editButton }}
