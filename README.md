@@ -1,4 +1,4 @@
-## Two Plus <img src="build/static/media/logo.2cd8a03c.png" width="40" height="40" style="vertical-align=sub" /> https://two-plus.web.app
+## Two Plus <img src="build/static/media/logo.2cd8a03c.png" width="40" height="40" /> https://two-plus.web.app
 A platform where developers get social.
 
 ## Motivation
