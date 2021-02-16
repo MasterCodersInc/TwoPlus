@@ -5,14 +5,16 @@
 
 ## Motivation
 
-We were inspired to make Two Plus because we understood the frustrations experienced when asking for help and struggling to get a response. 
+We were inspired to make Two Plus because we understand the frustration experienced when asking for help and struggling to get a response. 
 
 ## Screenshots
+##### Welcome Screen
 ![Welcome Screen](https://thumbs.gfycat.com/PeriodicUnsightlyCondor-size_restricted.gif
 )
-<br/>
+##### User Homepage
 ![User Homepage](/src/assets/user-homepage.png)
-<br/>
+
+##### Live Post
 ![Live Post](/src/assets/live-post2.png)
 
 ## Tech/framework used
