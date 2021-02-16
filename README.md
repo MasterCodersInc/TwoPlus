@@ -1,4 +1,4 @@
-<div style='text-align: center'>
+<div style='display: flex; flex-direction: column; align-items: center'>
 <img src="https://i.imgur.com/hX0ZymL.png" width="40" height="40"/> 
 
 ## Two Plus https://two-plus.web.app
