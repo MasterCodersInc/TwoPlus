@@ -1,4 +1,4 @@
-## Two Plus <img src="https://i.imgur.com/hX0ZymL.png" width="40" height="40" /> https://two-plus.web.app
+## <img src="https://i.imgur.com/hX0ZymL.png" width="40" height="40" /> Two Plus https://two-plus.web.app
 A platform where developers get social.
 
 ## Motivation
