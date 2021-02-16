@@ -49,7 +49,9 @@ If you want to install the app locally, feel free to fork this repo. Once downlo
 ## Credits
 We want to thank Fullstack Academy and the NYC Tech Talent Pipeline for giving us the opportunity to learn and grow 
 
-![Fullstack Academy](https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.fullstackacademy.com%2Fimages%2Ffa-logo%402x.png&f=1&nofb=1)
-![NYC Tech Talent Pipeline](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fd140u095r09w96.cloudfront.net%2Fsites%2Fdefault%2Ffiles%2Fttp_logo_2.png&f=1&nofb=1)
+<img src='https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.fullstackacademy.com%2Fimages%2Ffa-logo%402x.png&f=1&nofb=1' width='240' height='80'/>
+
+<img src='https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fd140u095r09w96.cloudfront.net%2Fsites%2Fdefault%2Ffiles%2Fttp_logo_2.png&f=1&nofb=1' width='170' height='80'/>
+
 
 
