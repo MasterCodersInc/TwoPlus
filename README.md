@@ -1,9 +1,14 @@
-## <img src="https://i.imgur.com/hX0ZymL.png" width="40" height="40" /> Two Plus https://two-plus.web.app
+<div style='text-align: center'>
+<img src="https://i.imgur.com/hX0ZymL.png" width="40" height="40"/> 
+
+## Two Plus https://two-plus.web.app
 A platform where developers get social.
+</div>
+
 
 ## Motivation
 
-A short description of the motivation behind the creation and maintenance of the project. This should explain **why** the project exists.
+We were inspired to make Two Plus 
 
 ## Build status
 Build status of continus integration i.e. travis, appveyor etc. Ex. - 
