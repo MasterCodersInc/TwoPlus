@@ -5,15 +5,14 @@
 
 ## Motivation
 
-We were inspired to make Two Plus because we understand the frustration experienced when asking for help and struggling to get a response. 
+We were inspired to make Two Plus because we know what it is like to ask for help and struggle to get a response. Joining Two Plus gives you access to an entire community of software engineers and developers who understand the same frustrations and are willing to help.
 
 ## Screenshots
 ##### Welcome Screen
-![Welcome Screen](https://thumbs.gfycat.com/PeriodicUnsightlyCondor-size_restricted.gif
-)
+![Welcome Screen](https://thumbs.gfycat.com/PeriodicUnsightlyCondor-size_restricted.gif)
+
 ##### User Homepage
 ![User Homepage](/src/assets/user-homepage.png)
-
 ##### Live Post
 ![Live Post](/src/assets/live-post2.png)
 
@@ -23,25 +22,34 @@ We were inspired to make Two Plus because we understand the frustration experien
 - [Google's Firebase](https://firebase.google.com/)
 - [React Ace](https://github.com/securingsincity/react-ace#readme)
 - [React](https://reactjs.org/)
+- [Material UI](https://material-ui.com/)
 
 ## Features
-What makes your project stand out?
 
-## Code Example
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
+**Live Code Editor & Chat**\
+A Live post contains a chat client and a code editor. The code editor is available to and editable by all users who are viewing that post. No matter who is typing, all users are able to view any changes made. 
+
+**++ Button**\
+If you come across a post to which you would also like to know the answer, or a post you find interesting, use the ++ button to show your support! You can view the most popular posts on your feed, and also see all posts you have ++'ed in your personal account. 
+
+**Content Tagging**\
+When you create a post, you have the ability to label it with tags. You can also see all posts that have the same tags. On your homepage, you can quickly access a list of the most popular tags. 
+
+**Followers & Following**\
+If you find a user who posts interesting content, you can follow them! Posts on the homepage will have a follow button. You also can view a user's profile, see all posts they have created, and follow them from there.
 
 ## Installation
-Provide step by step series of examples and explanations about how to get a development env running.
+If you want to check out the app for yourself, please visit https://two-plus.web.app.
+
+If you want to install the app locally, feel free to fork this repo. Once downloaded, run `npm install`. You will need to create Firebase project and copy all config variables into a .env.local file that will accessed by `src/firebase.js`. 
 
 ## How to use?
-If people like your project they’ll want to learn how they can use it. To do so include step by step guide to use your project.
+![Video Walkthrough](VIDEO HERE!)
 
 ## Credits
-Give proper credits. This could be a link to any repo which inspired you to build this project, any blogposts or links to people who contrbuted in this project. 
+We want to thank Fullstack Academy and the NYC Tech Talent Pipeline for giving us the opportunity to learn and grow 
 
-#### Anything else that seems useful
+![Fullstack Academy](https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.fullstackacademy.com%2Fimages%2Ffa-logo%402x.png&f=1&nofb=1)
+![NYC Tech Talent Pipeline](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fd140u095r09w96.cloudfront.net%2Fsites%2Fdefault%2Ffiles%2Fttp_logo_2.png&f=1&nofb=1)
 
-## License
-A short snippet describing the license (MIT, Apache etc)
 
-MIT © [Two Plus]()
