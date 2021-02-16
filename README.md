@@ -1,10 +1,7 @@
-<div style='display: flex; flex-direction: column; align-items: center'>
-<img src="https://i.imgur.com/hX0ZymL.png" width="40" height="40"/> 
-
-## Two Plus https://two-plus.web.app
-A platform where developers get social.
-</div>
-
+<p align='center'>
+  <img src="https://i.imgur.com/hX0ZymL.png" width="80" height="80"/>
+</p>
+ <h2 align='center'>Two Plus https://two-plus.web.app <p align='center'>A platform where developers get social.<p></h2>
 
 ## Motivation
 
