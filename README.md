@@ -10,10 +10,10 @@ We were inspired to make Two Plus because we understood the frustrations experie
 ## Screenshots
 ![Welcome Screen](https://thumbs.gfycat.com/PeriodicUnsightlyCondor-size_restricted.gif
 )
-
+<br/>
 ![User Homepage](/src/assets/user-homepage.png)
-
-![Live Post](/src/assets/live-post.png)
+<br/>
+![Live Post](/src/assets/live-post2.png)
 
 ## Tech/framework used
 
