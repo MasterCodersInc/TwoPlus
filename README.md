@@ -47,7 +47,7 @@ If you want to install the app locally, feel free to fork this repo. Once downlo
 ![Video Walkthrough](https://youtu.be/rwAjSS4RlkE)
 
 ## Credits
-We want to thank ![Fullstack Academy](https://github.com/FullstackAcademy) and the ![NYC Tech Talent Pipeline](https://www.techtalentpipeline.nyc/) for giving us the opportunity to learn the art of code and grow during such a tumultous time. Special thanks to Orlando Caraballo and Pawan Benjamin for helping us make Two Plus a reality.
+We want to thank ![Fullstack Academy](https://github.com/FullstackAcademy) and the ![NYC Tech Talent Pipeline](https://www.techtalentpipeline.nyc/) for giving us the opportunity to learn the art of code and grow during such a tumultous time. Special thanks to ![Orlando Caraballo](https://github.com/orlandocaraballo) and ![Pawan Benjamin](https://github.com/pawanbenjamin) for helping us make Two Plus a reality.
 
 <p align='center'>
   <img src='https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.fullstackacademy.com%2Fimages%2Ffa-logo%402x.png&f=1&nofb=1' width='240' height='80'/>
