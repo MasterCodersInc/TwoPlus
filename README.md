@@ -1,70 +1,57 @@
-# Getting Started with Create React App
+<p align='center'>
+  <img src="https://i.imgur.com/hX0ZymL.png" width="80" height="80"/>
+</p>
+ <h2 align='center' border-bottom='none'>Two Plus https://two-plus.web.app <h4 align='center'>A platform where developers get social.<h4></h2>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Motivation
 
-## Available Scripts
+We were inspired to make Two Plus because we know what it is like to ask for help and struggle to get a response. Joining Two Plus gives you access to an entire community of software engineers and developers who understand the same frustrations and are willing to help.
 
-In the project directory, you can run:
+## Screenshots
+##### Welcome Screen
+![Welcome Screen](https://thumbs.gfycat.com/PeriodicUnsightlyCondor-size_restricted.gif)
 
-### `npm start`
+##### User Homepage
+![User Homepage](/src/assets/user-homepage.png)
+##### Live Post
+![Live Post](/src/assets/live-post2.png)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Tech/framework used
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+<b>Built with</b>
+- [Google's Firebase](https://firebase.google.com/)
+- [React Ace](https://github.com/securingsincity/react-ace#readme)
+- [React](https://reactjs.org/)
+- [Material UI](https://material-ui.com/)
 
-### `npm test`
+## Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Live Code Editor & Chat**\
+A Live post contains a chat client and a code editor. The code editor is available to and editable by all users who are viewing that post. No matter who is typing, all users are able to view any changes made. 
 
-### `npm run build`
+**++ Button**\
+If you come across a post to which you would also like to know the answer, or a post you find interesting, use the ++ button to show your support! You can view the most popular posts on your feed, and also see all posts you have ++'ed in your personal account. 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**Content Tagging**\
+When you create a post, you have the ability to label it with tags. You can also see all posts that have the same tags. On your homepage, you can quickly access a list of the most popular tags. 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+**Followers & Following**\
+If you find a user who posts interesting content, you can follow them! Posts on the homepage will have a follow button. You also can view a user's profile, see all posts they have created, and follow them from there.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Installation
+If you want to check out the app for yourself, please visit https://two-plus.web.app.
 
-### `npm run eject`
+If you want to install the app locally, feel free to fork this repo. Once downloaded, run `npm install`. You will need to create Firebase project and copy all config variables into a .env.local file that will accessed by `src/firebase.js`. 
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## How to use?
+![Video Walkthrough](https://youtu.be/rwAjSS4RlkE)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Credits
+We want to thank Fullstack Academy and the NYC Tech Talent Pipeline for giving us the opportunity to learn the art of code and grow during such a tumultous time. Special thanks to Orlando Caraballo and Pawan Benjamin for helping us make Two Plus a reality.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+<p align='center'>
+  <img src='https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.fullstackacademy.com%2Fimages%2Ffa-logo%402x.png&f=1&nofb=1' width='240' height='80'/>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src='https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fd140u095r09w96.cloudfront.net%2Fsites%2Fdefault%2Ffiles%2Fttp_logo_2.png&f=1&nofb=1'    
+       width='170' height='80'/>
+</p>
