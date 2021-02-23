@@ -44,7 +44,9 @@ If you want to check out the app for yourself, please visit https://two-plus.web
 If you want to install the app locally, feel free to fork this repo. Once downloaded, run `npm install`. You will need to create Firebase project and copy all config variables into a .env.local file that will accessed by `src/firebase.js`. 
 
 ## How to use?
+https://youtu.be/rwAjSS4RlkE
 ![Video Walkthrough](https://youtu.be/rwAjSS4RlkE)
+
 
 ## Credits
 We want to thank Fullstack Academy and the NYC Tech Talent Pipeline for giving us the opportunity to learn the art of code and grow during such a tumultous time. Special thanks to Orlando Caraballo and Pawan Benjamin for helping us make Two Plus a reality.
