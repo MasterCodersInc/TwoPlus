@@ -52,6 +52,5 @@ We want to thank ![Fullstack Academy](https://github.com/FullstackAcademy) and t
 <p align='center'>
   <img src='https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.fullstackacademy.com%2Fimages%2Ffa-logo%402x.png&f=1&nofb=1' width='240' height='80'/>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src='https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fd140u095r09w96.cloudfront.net%2Fsites%2Fdefault%2Ffiles%2Fttp_logo_2.png&f=1&nofb=1'    
-       width='170' height='80'/>
+  <img src='https://cunytechprep.nyc/img/ttp-logo.png' width='170' height='80'/>
 </p>
