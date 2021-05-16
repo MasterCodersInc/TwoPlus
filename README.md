@@ -41,7 +41,7 @@ If you find a user who posts interesting content, you can follow them! Posts on 
 ## Installation
 If you want to check out the app for yourself, please visit https://two-plus.web.app.
 
-If you want to install the app locally, feel free to fork this repo. Once downloaded, run `npm install`. You will need to create Firebase project and copy all config variables into a .env.local file that will accessed by `src/firebase.js`. 
+If you want to install the app locally, feel free to fork this repo. Once downloaded, run `npm install`. You will need to create Firebase project at [https://firebase.google.com](https://firebase.google.com) and copy all config variables from the project's settings into a .env.local file that will accessed by `src/firebase.js` file. Note: all the of the environment variables must start with 'REACT_APP'.
 
 ## How to use?
 ![Video Walkthrough](https://youtu.be/rwAjSS4RlkE)
