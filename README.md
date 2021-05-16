@@ -44,7 +44,7 @@ If you want to check out the app for yourself, please visit https://two-plus.web
 If you want to install the app locally, feel free to fork this repo. Once downloaded, run `npm install`. You will need to create Firebase project at [https://firebase.google.com](https://firebase.google.com) and copy all config variables from the project's settings into a .env.local file that will accessed by `src/firebase.js` file. Note: all the of the environment variables must start with 'REACT_APP'.
 
 ## How to use?
-![Video Walkthrough](https://www.youtube.com/watch?v=rwAjSS4RlkE&list=PLx0iOsdUOUmnwv1vrUcoOhP736-omYGMN&index=22)
+[Video Walkthrough](https://youtu.be/rwAjSS4RlkE)
 
 ## Credits
 We want to thank ![Fullstack Academy](https://github.com/FullstackAcademy) and the ![NYC Tech Talent Pipeline](https://www.techtalentpipeline.nyc/) for giving us the opportunity to learn the art of code and grow during such a tumultous time. Special thanks to ![Orlando Caraballo](https://github.com/orlandocaraballo) and ![Pawan Benjamin](https://github.com/pawanbenjamin) for helping us make Two Plus a reality.
